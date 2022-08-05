@@ -1,25 +1,8 @@
-FROM node:17
-
-# Working dir
+FROM node:lts-alpine
+ENV NODE_ENV=production
 WORKDIR /usr/src/app
-
-# Copy files from Build
-COPY package*.json ./
-
-# Install Globals
-RUN npm install prettier -g
-
-# Install Files
-RUN npm install 
-
-# Copy SRC
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+RUN npm install --production --silent && mv node_modules ../
 COPY . .
-
-# Build
-RUN npm run build
-
-# Open Port
-EXPOSE 1337
-
-# Docker Command to Start Service
+EXPOSE 3000
 CMD ["npm", "start"]
