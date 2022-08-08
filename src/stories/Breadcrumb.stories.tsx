@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
+import Breadcrumb from '../components/Breadcrumb';
 import { ReactComponent as IconHome } from '../assets/icons/icon-home.svg';
 import { ReactComponent as IconGallery } from '../assets/icons/icon-gallery.svg';
 import { ReactComponent as IconFolder } from '../assets/icons/icon-folder.svg';

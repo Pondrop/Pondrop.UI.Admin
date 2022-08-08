@@ -1,4 +1,4 @@
-import { ReactChild } from "react";
+import { ReactChild } from 'react';
 
 export type IButtonGroupProps = {
   children: ReactChild;

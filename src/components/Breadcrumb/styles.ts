@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { IBreadCrumbContainer } from './types';
 
 export const BreadcrumbContainer = styled.div<IBreadCrumbContainer>`
   display: flex;
-  color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => css`${theme.primary}`};
   list-style-type: none;
   text-align: center;
 
@@ -23,7 +23,7 @@ export const BreadcrumbContainer = styled.div<IBreadCrumbContainer>`
     }
 
     svg {
-      fill: ${({ theme }) => theme.primary};
+      fill: ${({ theme }) => css`${theme.primary}`};
     }
 
     span {
@@ -46,13 +46,13 @@ export const BreadcrumbContainer = styled.div<IBreadCrumbContainer>`
 
     &:last-of-type {
       pointer-events: none;
-      color: ${({ theme }) => theme.textDark};
+      color: ${({ theme }) => css`${theme.textExtraDark}`};
     }
   }
 
   ${({ breadcrumbImg }) =>
     !breadcrumbImg &&
-    `
+    css`
     & > li:first-child {
       p {
         margin-left: 0px;
@@ -62,7 +62,7 @@ export const BreadcrumbContainer = styled.div<IBreadCrumbContainer>`
 
   ${({ customSeparator, theme }) =>
     customSeparator &&
-    `
+    css`
     li {
       background: ${theme.secondaryAccent};
       position: relative;

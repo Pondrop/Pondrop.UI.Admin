@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import GlobalStyles from '../globalStyles';
 
-import Toggle from '../components/Toggle/Toggle';
+import Toggle from '../components/Toggle';
 export default {
   title: 'Forms/Toggle',
   component: Toggle,

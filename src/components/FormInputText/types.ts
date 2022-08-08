@@ -1,6 +1,6 @@
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, HTMLAttributes, ReactNode } from 'react';
 
-export interface FormInputTextProps {
+export interface FormInputTextProps extends HTMLAttributes<HTMLInputElement> {
   name: string;
   value: string;
   label?: string;
@@ -8,4 +8,5 @@ export interface FormInputTextProps {
   hasError?: boolean;
   onChange: ChangeEventHandler<HTMLInputElement>;
   type?: string;
+  icon?: ReactNode;
 }

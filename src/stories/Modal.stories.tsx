@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Modal from '../components/Modal/Modal';
+import Modal from '../components/Modal';
 import GlobalStyles from '../globalStyles';
 
 export default {

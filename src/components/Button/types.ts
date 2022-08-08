@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface IButtonProps {
-  color: "primary" | "secondary";
+  color: 'primary' | 'secondary';
   label?: string;
-  variant?: "contained" | "outlined";
+  variant?: 'contained' | 'outlined';
   disabled?: boolean;
   wide?: boolean;
   centered?: boolean;

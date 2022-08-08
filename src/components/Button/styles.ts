@@ -2,99 +2,143 @@ import styled, { css } from 'styled-components';
 
 import { IButtonContainerProps } from './types';
 
-export const ButtonContainer = styled.button<IButtonContainerProps>`
-  position: relative;
-  min-height: ${({ theme }) => theme.btHeight};
-  display: flex;
-  align-items: center;
-  user-select: none;
-  font-size: 16px;
-  margin: 4px;
-  width: 100%;
-  justify-content: center;
+// Button Types
+export const ContainedButton = css<IButtonContainerProps>`
+  ${({ color, disabled, theme }) => {
+    let containedStyles;
 
-  & svg {
-    display: block;
-  }
+    if (disabled) {
+      containedStyles = `
+        color: ${theme.textMedium};
+        background-color: ${theme.disabled};
+        pointer-events: none;
+        border: none;
+        border-color: transparent;
 
-  &:hover {
-    text-decoration: underline;
-  }
-
-  ${({ color, disabled, theme, variant }) => {
-    // Logic for setting css based on variant and disabled value
-    let tempColor;
-    let tempBgColor = 'transparent';
-    let tempBorder = 'none';
-    let hoverBgColor = 'transparent';
-    let hoverColor;
-    let hoverBorderColor;
-
-    if (variant === 'contained' && !disabled) {
-      tempColor = theme.textWhite;
-      tempBgColor = color === 'primary' ? theme.primary : theme.secondary;
-      tempBorder = `2px solid ${color === 'primary' ? theme.primary : theme.secondary}`;
-      hoverBgColor = color === 'primary' ? theme.primaryAccent : theme.secondaryAccent;
-      hoverColor = theme.textLight;
-      hoverBorderColor = color === 'primary' ? theme.primaryAccent : theme.secondaryAccent;
-    } else if (variant === 'outlined' && !disabled) {
-      tempColor = color === 'primary' ? theme.primary : theme.secondary;
-      tempBorder = `2px solid ${color === 'primary' ? theme.primary : theme.secondary}`;
-      hoverBgColor = color === 'primary' ? theme.primaryAccent : theme.secondaryAccent;
-      hoverColor = theme.textExtraLight;
-      hoverBorderColor = 'transparent';
-    } else if (variant === 'contained' && disabled) {
-      tempColor = theme.textMedium;
-      tempBgColor = theme.disabled;
-      hoverBgColor = theme.disabled;
-    } else if (variant === 'outlined' && disabled) {
-      tempColor = theme.disabled;
-      tempBgColor = theme.bgWhite;
-      hoverBgColor = theme.bgWhite;
-      tempBorder = `2px solid ${theme.disabled}`;
+        &:hover {
+          background-color: ${theme.disabled};
+        }
+      `;
     } else {
-      tempColor = color === 'primary' ? theme.primary : theme.secondary;
+      containedStyles = `
+        color: ${theme.textWhite};
+        background-color: ${theme[color]};
+        border: 2px solid ${theme[color]};
+
+        &:hover {
+          background-color: ${color === 'primary' ? theme.primaryAccent : theme.secondaryAccent};
+          color: ${theme.textLight};
+          border-color: ${color === 'primary' ? theme.primaryAccent : theme.secondaryAccent};
+        }
+      `;
     }
 
-    return css`
+    return `
+      ${containedStyles}
+
+      box-sizing: border-box;
+      border-radius: ${theme.borderRadiusMd};
+      padding: ${theme.btPadding};
+
       &:hover {
-        color: ${color === 'primary' ? theme.primaryAccent : theme.secondaryAccent};
-        background-color: ${hoverBgColor};
-        ${hoverColor && `color: ${hoverColor};`}
-        ${hoverBorderColor && `border-color: ${hoverBorderColor};`}
+        & svg {
+          fill: ${theme.textLight};
+        }
 
-        ${variant === 'outlined' &&
-        `
-          & svg {
-            fill: ${theme.textWhite};
-          }
-        `}
-        ${variant && `text-decoration: none;`}
+        text-decoration: none;
       }
-
-      cursor: ${disabled ? 'default' : 'pointer'};
-      color: ${tempColor};
-      background-color: ${tempBgColor};
-      border: ${tempBorder};
-      ${variant &&
-      `
-        box-sizing: border-box;
-        border-radius: ${theme.borderRadiusMd};
-        padding: ${theme.btPadding};
-      `}
-
-      ${disabled && 'pointer-events: none;'}
-      ${disabled &&
-      variant === 'contained' &&
-      `
-        border-color: transparent;
-      `}
-    `;
-  }};
-
-  ${({ wide }) => wide && 'width: 100%;'}
-  ${({ centered }) => centered && 'justify-content: center;'}
+    `
+  }}
 `;
+
+export const OutlinedButton = css<IButtonContainerProps>`
+  ${({ color, disabled, theme }) => {
+    let outlinedStyles;
+
+    if (disabled) {
+      outlinedStyles = `
+        color: ${theme.disabled};
+        background-color: ${theme.bgWhite};
+        border: 2px solid ${theme.disabled};
+        pointer-events: none;
+
+        &:hover {
+          background-color: ${theme.bgWhite};
+        }
+      `;
+    } else {
+      outlinedStyles = `
+        color: ${theme[color]};
+        background-color: transparent;
+        border: 2px solid ${theme[color]};
+
+        &:hover {
+          background-color: ${theme[color]};
+          color: ${theme.textExtraLight};
+          border-color: transparent;
+        }
+      `;
+    }
+
+    return `
+      ${outlinedStyles}
+
+      box-sizing: border-box;
+      border-radius: ${theme.borderRadiusMd};
+      padding: ${theme.btPadding};
+
+      &:hover {
+        & svg {
+          fill: ${theme.textWhite};
+        }
+
+        text-decoration: none;
+      }
+    `
+  }}
+`;
+
+export const TextButton = css<IButtonContainerProps>`
+  ${({ color, theme }) => (`
+    color: ${theme[color]};
+    background-color: transparent;
+    border: none;
+
+    &:hover {
+      color: ${color === 'primary' ? theme.primaryAccent : theme.secondaryAccent};
+      text-decoration: underline;
+      background-color: transparent;
+    }
+  `)}
+`;
+
+const ButtonType = {
+  contained: ContainedButton,
+  outlined: OutlinedButton,
+  default: TextButton
+};
+
+export const StyledButton = styled.button<IButtonContainerProps>(
+  (props) => css`
+    position: relative;
+    min-height: ${props.theme.btHeight};
+    display: flex;
+    align-items: center;
+    user-select: none;
+    font-size: 16px;
+    margin: 4px;
+    cursor: ${props.disabled ? 'default' : 'pointer'};
+
+    & svg {
+      display: block;
+    }
+
+    ${props.wide && 'width: 100%;'}
+    ${props.centered && 'justify-content: center;'}
+
+    ${ButtonType[props.variant ?? 'default']}
+  `
+);
 
 export const StartIconContainer = styled.div`
   margin-right: 10px;

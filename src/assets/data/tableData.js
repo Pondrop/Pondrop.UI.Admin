@@ -63,32 +63,40 @@ export const repaymentDetails = [
   },
 ];
 
-export const applications = [
+export const storeDetails = [
   {
-    id: 1,
-    applicationName: 'A000000000',
-    applicationStatus: 'Canceled',
-    currentRepaymentFrequency: 'Monthly',
-    currentRegularPayment: '$10',
-    currentRegularFees: '$0.1',
-    lastPaymentDate: '2022-05-10T06:47:47.239Z',
+    storeId: 1,
+    storeName: 'Coles',
+    storeType: 'Express',
+    address: '123 Alphabet Street',
+    status: 'Active'
   },
   {
-    id: 2,
-    applicationName: 'A000000001',
-    applicationStatus: 'Approved',
-    currentRepaymentFrequency: 'Monthly',
-    currentRegularPayment: '$20',
-    currentRegularFees: '$0.2',
-    lastPaymentDate: '2022-03-10T06:47:47.239Z',
+    storeId: 2,
+    storeName: 'Coles',
+    storeType: 'Express',
+    address: '234 Alphabet Street',
+    status: 'Active'
   },
   {
-    id: 3,
-    applicationName: 'A000000002',
-    applicationStatus: 'Approved',
-    currentRepaymentFrequency: 'Weekly',
-    currentRegularPayment: '$30',
-    currentRegularFees: '$0.3',
-    lastPaymentDate: '2022-02-10T06:47:47.239Z',
+    storeId: 3,
+    storeName: 'Coles',
+    storeType: 'Express',
+    address: '345 Alphabet Street',
+    status: 'Active'
   },
+  {
+    storeId: 4,
+    storeName: 'Coles',
+    storeType: 'Express',
+    address: '456 Alphabet Street',
+    status: 'Active'
+  },
+  {
+    storeId: 5,
+    storeName: 'Coles',
+    storeType: 'Express',
+    address: '567 Alphabet Street',
+    status: 'Active'
+  }
 ];

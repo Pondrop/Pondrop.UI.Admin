@@ -1,9 +1,9 @@
-import { ReactChild } from "react";
+import { ReactChild } from 'react';
 
 export type ITooltipProps = {
   label: string;
   children: ReactChild;
-  position?: "left" | "right" | "bottom";
+  position?: 'left' | 'right' | 'bottom';
   background?: string;
   width?: string;
   fontColor?: string;

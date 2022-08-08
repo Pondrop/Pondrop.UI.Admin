@@ -1,14 +1,13 @@
-import React from 'react';
 import { Story } from '@storybook/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
-import Header from '../components/Header/Header';
-import Button from '../components/Button/Button';
+import Header from '../components/Header';
+import Button from '../components/Button';
 import GlobalStyles from '../globalStyles';
 
 import { ReactComponent as Logo } from '../assets/logo.svg';
 import { ReactComponent as IconProfile } from '../assets/icons/icon-profile.svg';
-import Icon from '../components/Icon/Icon';
+import Icon from '../components/Icon';
 
 import { lightTheme } from './../theme';
 

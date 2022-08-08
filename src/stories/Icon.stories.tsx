@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import Icon from '../components/Icon/Icon';
+import Icon from '../components/Icon';
 import GlobalStyles from '../globalStyles';
 import { lightTheme } from '../theme';
 

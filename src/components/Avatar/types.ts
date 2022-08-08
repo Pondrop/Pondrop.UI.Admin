@@ -5,7 +5,7 @@ export type IAvatarProps = {
     initials?: string;
     name?: string;
     icon?: React.ReactNode;
-    variant?: "square" | "roundedCorners";
+    variant?: 'square' | 'roundedCorners';
     bgColor?: string;
     fontSize?: string;
     fontColor?: string;

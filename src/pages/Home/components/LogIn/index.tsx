@@ -1,8 +1,9 @@
 import { ChangeEvent, useState } from 'react';
 
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch } from 'store';
+import { ReactComponent as SearchIcon } from 'assets/icons/icon-search.svg';
 import { Button, FormInputText } from 'components';
-import { setUser } from 'features/user/userSlice';
+import { setUser } from 'store/user/slice';
 import { LoginDiv } from './styles';
 
 const Login = () => {
@@ -31,13 +32,18 @@ const Login = () => {
     <LoginDiv>
       <div>
         <div className="form">
-          <FormInputText name="email" label="E-mail" floatingLabel value={emailValue} onChange={handleEmailChange} />
+          <FormInputText
+            name="email"
+            placeholder="E-mail"
+            value={emailValue}
+            onChange={handleEmailChange}
+            icon={<SearchIcon />}
+          />
         </div>
         <div className="form">
           <FormInputText
             name="password"
-            label="Password"
-            floatingLabel
+            placeholder="Password"
             value={pwValue}
             onChange={handlePWChange}
             type="password"

@@ -1,21 +1,21 @@
 import Avatar from './Avatar';
-import Breadcrumb from './Breadcrumb/Breadcrumb';
-import Button from './Button/Button';
-import ButtonGroup from './ButtonGroup/ButtonGroup';
+import Breadcrumb from './Breadcrumb';
+import Button from './Button';
+import ButtonGroup from './ButtonGroup';
 import CallOut from './CallOut';
-import FormCell from './FormCell/FormCell';
-import FormInputText from './FormInputText/FormInputText';
-import FormMain from './FormMain/FormMain';
-import Header from './Header/Header';
-import Icon from './Icon/Icon';
-import Layout from './Layout/Layout';
-import Modal from './Modal/Modal';
-import PageTitle from './PageTitle/PageTitle';
+import FormCell from './FormCell';
+import FormInputText from './FormInputText';
+import FormMain from './FormMain';
+import Header from './Header';
+import Icon from './Icon';
+import Layout from './Layout';
+import Modal from './Modal';
+import PageTitle from './PageTitle';
 import SkeletonLoading from './SkeletonLoading';
 import Spinner from './Spinner';
-import Table from './Table/Table';
-import Toggle from './Toggle/Toggle';
-import Tooltip from './Tooltip/Tooltip';
+import Table from './Table';
+import Toggle from './Toggle';
+import Tooltip from './Tooltip';
 
 export {
   Avatar,

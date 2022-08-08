@@ -1,26 +1,27 @@
-import styled from "styled-components";
+import styled, { css } from 'styled-components';
 
-import { IAvatarContainerProps, IAvatarImageProps } from "./types";
+import { IAvatarContainerProps, IAvatarImageProps } from './types';
 
-export const AvatarContainer = styled.div<IAvatarContainerProps>`
-  background-color: ${({ bgColor, theme }) => bgColor ? bgColor : theme.primary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+export const borderRadius = {
+  square: '0%',
+  roundedCorners: '10%',
+  default: '50%',
+};
 
-  width: ${({ width }) => width ? width : '50px'};
-  height: ${({ height }) => height ? height : '50px'};
-  ${({ fontSize }) => fontSize && `font-size: ${fontSize};`}
-  ${({ fontColor }) => fontColor && `color: ${fontColor};`}
-  ${({ variant }) => {
-    let borderRadius;
-    if (variant === 'square') borderRadius = "0%";
-    else if (variant === 'roundedCorners') borderRadius = "10%";
-    else borderRadius = "50%";
+export const AvatarContainer = styled.div<IAvatarContainerProps>(
+  (props) => css`
+    background-color: ${props.bgColor ? props.bgColor : props.theme.primary};
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    return `border-radius: ${borderRadius};`;
-  }}
-`;
+    border-radius: ${borderRadius[props.variant ?? 'default']};
+    width: ${props.width || '50px'};
+    height: ${props.height || '50px'};
+    color: ${props.fontColor || props.theme.textWhite};
+    ${props.fontSize && `font-size: ${props.fontSize};`}
+  `,
+);
 
 export const AvatarGroupContainer = styled.div`
   & > img:not(:first-of-type) {
@@ -29,15 +30,10 @@ export const AvatarGroupContainer = styled.div`
   }
 `;
 
-export const AvatarImage = styled.img<IAvatarImageProps>`
-  width: ${({ width }) => width ? width : '50px'};
-  height: ${({ height }) => height ? height : '50px'};
-  ${({ variant }) => {
-    let borderRadius;
-    if (variant === 'square') borderRadius = "0%";
-    else if (variant === 'roundedCorners') borderRadius = "10%";
-    else borderRadius = "50%";
-
-    return `border-radius: ${borderRadius};`;
-  }}
-`;
+export const AvatarImage = styled.img<IAvatarImageProps>(
+  (props) => css`
+    width: ${props.width ? props.width : '50px'};
+    height: ${props.height ? props.height : '50px'};
+    border-radius: ${borderRadius[props.variant ?? 'default']};
+  `,
+);
