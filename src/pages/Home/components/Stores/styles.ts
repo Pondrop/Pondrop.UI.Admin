@@ -1,21 +1,43 @@
-import styled, { css } from 'styled-components';
+import styled from "@emotion/styled";
 
-export const StoresWrapper = styled.div(
-  (props) => css`
-    background-color: ${props.theme.bgWhite};
-    border: 1px solid #dfe3e6;
-    border-radius: 4px;
+import { TextField, Typography } from "@mui/material";
 
-    .content {
-      padding: 12px;
+export const StoresWrapper = styled.div`
+  width: calc(100vw - 440px);
+  padding: 16px 92px;
 
-      .form {
-        margin-bottom: 12px;
+  & span {
+    color: #72787e;
+  }
+`;
 
-        svg {
-          fill: ${({ theme }) => theme.bgDark };
-        }
-      }
-    }
-  `,
-);
+export const StyledTextField = styled(TextField)`
+  width: 321px;
+  
+  & input {
+    height: 24px;
+    padding: 16px 14px 14px;
+  }
+
+  & svg {
+    margin-left: 12px;
+  }
+`;
+
+export const StyledTitle = styled(Typography)`
+  font-weight: 600;
+`;
+
+export const RowAlignDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  padding: 10px 0;
+  margin-bottom: 26px;
+`;
+
+export const ColAlignDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

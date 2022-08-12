@@ -27,6 +27,7 @@ export const NavLinks = styled.div(
 
 export const HomeWrapper = styled.div(
   () => css`
-    padding: 12px 0;
+    display: flex;
+    flex-direction: row;
   `,
 );
