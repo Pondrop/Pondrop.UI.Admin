@@ -1,25 +1,17 @@
-import { ChangeEvent, FunctionComponent, KeyboardEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FunctionComponent, KeyboardEvent, useState } from 'react';
 
-import { useAppSelector, useAppDispatch } from 'store';
-import { ReactComponent as SearchIcon } from 'assets/icons/icon-search.svg';
-import { getStoresAsync, selectStores } from 'store/stores/slice';
-import { StoresWrapper } from './styles';
-import { FormInputText, SkeletonLoading, Table } from 'components';
+import { InputAdornment } from '@mui/material';
+import { Search } from '@mui/icons-material';
+
+import { useGetStoresQuery } from 'store/api/stores/api';
+import { ColAlignDiv, RowAlignDiv, StoresWrapper, StyledTextField, StyledTitle } from './styles';
+import Grid from './components/Grid';
 
 const Stores: FunctionComponent = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-  const { value: transactions, status } = useAppSelector(selectStores);
-
-  // Variables
-  const hasTransactions = transactions.length > 0;
+  const { refetch } = useGetStoresQuery();
 
   // States
   const [searchValue, setSearchValue] = useState<string>('');
-
-  // API dispatch
-  useEffect(() => {
-    dispatch(getStoresAsync(800));
-  }, []);
 
   // Handlers
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,28 +23,36 @@ const Stores: FunctionComponent = (): JSX.Element => {
       // Insert search event here
 
       // Temporary dispatch below
-      dispatch(getStoresAsync(800));
+      refetch();
     }
   };
 
   return (
     <StoresWrapper>
-      <div className="content">
-        <div className="form">
-          <FormInputText
-            name="search"
-            placeholder="Search"
-            value={searchValue}
-            onChange={handleSearch}
-            icon={<SearchIcon />}
-            onKeyDown={handleOnKeyDown}
-          />
-        </div>
-        {status === 'loading' && <SkeletonLoading />}
-        {hasTransactions && status === 'idle' && (
-          <Table tableData={transactions} typeOfData={['number', 'string', 'string', 'string', 'string']} sort={true} />
-        )}
-      </div>
+      <RowAlignDiv>
+        <ColAlignDiv>
+          <StyledTitle variant="h5" gutterBottom>
+            Stores
+          </StyledTitle>
+          <StyledTitle variant="caption">Last updated: 12th August, 2022 @ 10:01am</StyledTitle>
+        </ColAlignDiv>
+        <StyledTextField
+          id="search-field"
+          variant="standard"
+          placeholder="Search"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
+          value={searchValue}
+          onChange={handleSearch}
+          onKeyDown={handleOnKeyDown}
+        />
+      </RowAlignDiv>
+      <Grid />
     </StoresWrapper>
   );
 };

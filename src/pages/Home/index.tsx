@@ -1,11 +1,13 @@
 import React from 'react';
 
-import { HomeWrapper } from './styles';
+import SidePanel from './components/SidePanel';
 import Stores from './components/Stores';
+import { HomeWrapper } from './styles';
 
 const Home: React.FunctionComponent = (): JSX.Element => {
   return (
     <HomeWrapper>
+      <SidePanel />
       <Stores />
     </HomeWrapper>
   );

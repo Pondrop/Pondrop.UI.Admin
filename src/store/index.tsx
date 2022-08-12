@@ -1,14 +1,15 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import storesReducer from 'store/stores/slice';
+import { storeApi } from './api/stores/api';
 import userReducer from 'store/user/slice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 // global store
 export const store = configureStore({
   reducer: {
-    stores: storesReducer,
     user: userReducer,
+    [storeApi.reducerPath]: storeApi.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(storeApi.middleware),
 });
 
 // types

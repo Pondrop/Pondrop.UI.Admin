@@ -2,9 +2,8 @@ import { createGlobalStyle, DefaultTheme } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     body {
-        font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+        font-family: Roboto;
         margin: 0;
-        background: ${({ theme }) => theme.bgLight};
     }
     main {
         padding: 0px;
