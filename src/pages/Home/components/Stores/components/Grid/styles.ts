@@ -18,11 +18,23 @@ export const StyledDataGrid = styled(DataGrid)`
     justify-content: center;
   }
 
-  & .MuiTablePagination-selectLabel,.MuiInputBase-root,.MuiTablePagination-displayedRows {
+  & .MuiTablePagination-selectLabel,.MuiTablePagination-displayedRows {
     color: rgba(0, 0, 0, 0.5);
   }
 
+  & .MuiInputBase-root {
+    color: rgba(0, 0, 0, 0.5);
+    margin-left: 0;
+    margin-right: 25px;
+  }
+
   & .MuiTablePagination-actions {
+    margin-left: 23px;
+
+    & button {
+      padding: 8px 12px;
+    }
+
     & :not(.Mui-disabled) {
       svg {
         fill: rgb(0, 0, 0);
