@@ -7,7 +7,8 @@ const setFilter = (state: IFilterState, action: PayloadAction<IFilterItem>) => {
     ...state,
     filterItem: {
       columnField: action.payload.columnField,
-      value: action.payload.value
+      value: action.payload.value,
+      operatorValue: action.payload.operatorValue
     }
   };
 };

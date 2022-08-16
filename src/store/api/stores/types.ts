@@ -10,7 +10,8 @@ export interface IStores {
 
 export interface IFilterItem {
   columnField: string;
-  value: string[];
+  value: string | string[];
+  operatorValue: string;
 }
 
 export interface IFilterState {

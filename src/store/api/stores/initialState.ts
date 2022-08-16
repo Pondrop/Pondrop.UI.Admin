@@ -3,6 +3,7 @@ import { IFilterState } from "./types";
 export const initialState: IFilterState = {
   filterItem: {
     columnField: '',
-    value: []
+    value: [],
+    operatorValue: ''
   }
 };

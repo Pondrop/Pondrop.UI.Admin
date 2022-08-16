@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
+import { getGridStringOperators, GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
 
 import { ReactComponent as MenuIcon } from 'assets/icons/filter_list.svg';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -15,6 +15,8 @@ const Grid: FunctionComponent = (): JSX.Element => {
   const { filterItem } = useAppSelector(selectStore);
 
   const [storeData, setStoreData] = useState<GridRowsProp[]>([]);
+
+  console.log('ops ', getGridStringOperators());
 
   // query hook
   const { data, isFetching } = useGetStoresQuery();
@@ -33,6 +35,7 @@ const Grid: FunctionComponent = (): JSX.Element => {
       setFilter({
         columnField: model.items[0].columnField,
         value: model.items[0].value,
+        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
       }),
     );
   };
@@ -42,7 +45,7 @@ const Grid: FunctionComponent = (): JSX.Element => {
         {
           columnField: filterItem.columnField,
           value: filterItem.value,
-          operatorValue: 'isAnyOf',
+          operatorValue: filterItem.operatorValue,
         },
       ],
     };
