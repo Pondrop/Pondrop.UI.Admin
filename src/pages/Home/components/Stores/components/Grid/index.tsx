@@ -1,12 +1,22 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { GridRowsProp } from '@mui/x-data-grid';
+import { getGridStringOperators, GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
 
+import { ReactComponent as MenuIcon } from 'assets/icons/filter_list.svg';
+import { useAppDispatch, useAppSelector } from 'store';
 import { useGetStoresQuery } from 'store/api/stores/api';
+import { selectStore, setFilter } from 'store/api/stores/slice';
+
+import CustomMenu from '../GridMenu';
 import { gridColumns } from './constants';
 import { StyledDataGrid } from './styles';
 
 const Grid: FunctionComponent = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { filterItem } = useAppSelector(selectStore);
+
   const [storeData, setStoreData] = useState<GridRowsProp[]>([]);
+
+  console.log('ops ', getGridStringOperators());
 
   // query hook
   const { data, isFetching } = useGetStoresQuery();
@@ -14,6 +24,34 @@ const Grid: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setStoreData(data?.value as unknown as GridRowsProp[]);
   }, [data]);
+
+  // components
+  const renderMenuIcon = () => <MenuIcon />;
+
+  // helper function
+  const onFilterModelChange = (model: GridFilterModel) => {
+    if (!model.items[0]) return;
+    dispatch(
+      setFilter({
+        columnField: model.items[0].columnField,
+        value: model.items[0].value,
+        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
+      }),
+    );
+  };
+  const getFilterModel = () => {
+    const filterModelItem = {
+      items: [
+        {
+          columnField: filterItem.columnField,
+          value: filterItem.value,
+          operatorValue: filterItem.operatorValue,
+        },
+      ],
+    };
+
+    return filterModelItem;
+  };
 
   return (
     <StyledDataGrid
@@ -26,12 +64,18 @@ const Grid: FunctionComponent = (): JSX.Element => {
           pageSize: 10,
         },
       }}
+      components={{
+        ColumnMenuIcon: renderMenuIcon,
+        ColumnMenu: CustomMenu,
+      }}
       componentsProps={{
         pagination: { showFirstButton: true, showLastButton: true },
       }}
       loading={isFetching}
       getRowId={(row) => row.Id}
       getRowHeight={() => 'auto'}
+      filterModel={getFilterModel()}
+      onFilterModelChange={onFilterModelChange}
     />
   );
 };
