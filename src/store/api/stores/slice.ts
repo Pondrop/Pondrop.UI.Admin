@@ -11,6 +11,6 @@ export const storeSlice = createSlice({
 
 export const selectStore = (state: RootState) => state.store;
 
-export const { setFilter } = storeSlice.actions;
+export const { setFilter, setSearchValue } = storeSlice.actions;
 
 export default storeSlice.reducer;

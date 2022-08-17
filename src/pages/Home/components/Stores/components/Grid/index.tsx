@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { getGridStringOperators, GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
 
 import { ReactComponent as MenuIcon } from 'assets/icons/filter_list.svg';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -12,14 +12,12 @@ import { StyledDataGrid } from './styles';
 
 const Grid: FunctionComponent = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { filterItem } = useAppSelector(selectStore);
+  const { filterItem, searchValue } = useAppSelector(selectStore);
 
   const [storeData, setStoreData] = useState<GridRowsProp[]>([]);
 
-  console.log('ops ', getGridStringOperators());
-
   // query hook
-  const { data, isFetching } = useGetStoresQuery();
+  const { data, isFetching } = useGetStoresQuery(searchValue);
 
   useEffect(() => {
     setStoreData(data?.value as unknown as GridRowsProp[]);

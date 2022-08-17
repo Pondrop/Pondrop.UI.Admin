@@ -3,27 +3,25 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState } from 'react';
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
-import { useGetStoresQuery } from 'store/api/stores/api';
+import { useAppDispatch } from 'store';
+import { setSearchValue } from 'store/api/stores/slice';
 import { ColAlignDiv, RowAlignDiv, StoresWrapper, StyledTextField, StyledTitle } from './styles';
 import Grid from './components/Grid';
 
 const Stores: FunctionComponent = (): JSX.Element => {
-  const { refetch } = useGetStoresQuery();
+  const dispatch = useAppDispatch();
 
   // States
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValueString, setSearchValueString] = useState<string>('');
 
   // Handlers
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+    setSearchValueString(e.target.value);
   };
 
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      // Insert search event here
-
-      // Temporary dispatch below
-      refetch();
+      dispatch(setSearchValue(searchValueString));
     }
   };
 
@@ -47,7 +45,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
               </InputAdornment>
             ),
           }}
-          value={searchValue}
+          value={searchValueString}
           onChange={handleSearch}
           onKeyDown={handleOnKeyDown}
         />
