@@ -43,8 +43,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:watch": "jest --watch",
+    "test": "react-scripts test --coverage",
+    "test:watch": "jest --watchAll --coverage",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix"
@@ -74,8 +74,7 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "./fileTransformer.js"
     },
     "collectCoverageFrom": [
-      "src/**/*.spec.ts?(x)",
-      "!src/index.ts?(x)",
+      "<rootDir>/src/**",
       "!**/node_modules/**"
     ],
     "coverageReporters": [
