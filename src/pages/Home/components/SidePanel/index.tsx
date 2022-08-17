@@ -2,12 +2,15 @@ import { FunctionComponent } from 'react';
 import { Logout, Storefront } from '@mui/icons-material';
 
 import pondrop from 'assets/images/pondrop.png';
+import { useAppSelector } from 'store';
 import { useGetStoresQuery } from 'store/api/stores/api';
+import { selectStore } from 'store/api/stores/slice';
 
 import { StyledButton, PanelWrapper } from './styles';
 
 const SidePanel: FunctionComponent = (): JSX.Element => {
-  const { refetch } = useGetStoresQuery();
+  const { searchValue } = useAppSelector(selectStore);
+  const { refetch } = useGetStoresQuery(searchValue);
 
   const handleRefresh = () => {
     refetch();

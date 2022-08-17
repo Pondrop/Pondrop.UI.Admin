@@ -14,6 +14,7 @@ export interface IFilterItem {
   operatorValue: string;
 }
 
-export interface IFilterState {
+export interface IStoreState {
   filterItem: IFilterItem;
+  searchValue?: string;
 }

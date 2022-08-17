@@ -10,12 +10,12 @@ import { getAllUniqueValues } from './utils';
 
 const CustomMenu = (props: GridColumnMenuProps) => {
   const dispatch = useAppDispatch();
-  const { filterItem } = useAppSelector(selectStore);
+  const { filterItem, searchValue } = useAppSelector(selectStore);
 
   const { hideMenu, currentColumn, ...other } = props;
 
   // query hook
-  const { data } = useGetStoresQuery();
+  const { data } = useGetStoresQuery(searchValue);
 
   const handleStateChange = (value: string) => {
     if (!Array.isArray(filterItem.value)) return [];

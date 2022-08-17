@@ -12,10 +12,10 @@ export const storeApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getStores: builder.query<IStores, void>({
-      query: () => {
+    getStores: builder.query<IStores, string | undefined>({
+      query: (searchString?: string) => {
         return {
-          url: '/indexes/azuresql-index-vwstores/docs?api-version=2021-04-30-Preview&search=*',
+          url: `/indexes/azuresql-index-vwstores/docs?api-version=2021-04-30-Preview&search=${searchString}*`,
           method: 'GET',
         };
       },

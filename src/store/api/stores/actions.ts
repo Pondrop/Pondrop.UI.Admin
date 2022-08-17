@@ -1,8 +1,8 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { IFilterItem, IFilterState } from "./types";
+import { IFilterItem, IStoreState } from "./types";
 
-const setFilter = (state: IFilterState, action: PayloadAction<IFilterItem>) => {
+const setFilter = (state: IStoreState, action: PayloadAction<IFilterItem>) => {
   return {
     ...state,
     filterItem: {
@@ -13,4 +13,11 @@ const setFilter = (state: IFilterState, action: PayloadAction<IFilterItem>) => {
   };
 };
 
-export const actions = { setFilter };
+const setSearchValue = (state: IStoreState, action: PayloadAction<string>) => {
+  return {
+    ...state,
+    searchValue: action.payload
+  };
+};
+
+export const actions = { setFilter, setSearchValue };

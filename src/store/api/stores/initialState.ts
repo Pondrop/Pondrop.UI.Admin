@@ -1,9 +1,10 @@
-import { IFilterState } from "./types";
+import { IStoreState } from "./types";
 
-export const initialState: IFilterState = {
+export const initialState: IStoreState = {
   filterItem: {
     columnField: '',
     value: [],
     operatorValue: ''
-  }
+  },
+  searchValue: ''
 };
