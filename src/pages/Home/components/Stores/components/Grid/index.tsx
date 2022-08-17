@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
+import { FilterList } from '@mui/icons-material';
 
-import { ReactComponent as MenuIcon } from 'assets/icons/filter_list.svg';
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetStoresQuery } from 'store/api/stores/api';
 import { selectStore, setFilter } from 'store/api/stores/slice';
@@ -9,22 +9,25 @@ import { selectStore, setFilter } from 'store/api/stores/slice';
 import CustomMenu from '../GridMenu';
 import { gridColumns } from './constants';
 import { StyledDataGrid } from './styles';
+import { IGridProps } from './types';
 
-const Grid: FunctionComponent = (): JSX.Element => {
+const Grid: FunctionComponent<IGridProps> = ({ data }: IGridProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const { filterItem, searchValue } = useAppSelector(selectStore);
 
   const [storeData, setStoreData] = useState<GridRowsProp[]>([]);
 
   // query hook
-  const { data, isFetching } = useGetStoresQuery(searchValue);
+  const { isFetching } = useGetStoresQuery(searchValue);
 
   useEffect(() => {
-    setStoreData(data?.value as unknown as GridRowsProp[]);
+    setStoreData(data as unknown as GridRowsProp[]);
   }, [data]);
 
   // components
-  const renderMenuIcon = () => <MenuIcon />;
+  const renderMenuIcon = () => {
+    return <FilterList />;
+  };
 
   // helper function
   const onFilterModelChange = (model: GridFilterModel) => {
@@ -53,6 +56,7 @@ const Grid: FunctionComponent = (): JSX.Element => {
 
   return (
     <StyledDataGrid
+      data-testid="view-store-grid"
       rows={storeData ?? []}
       columns={gridColumns}
       autoHeight

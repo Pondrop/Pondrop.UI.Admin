@@ -3,13 +3,16 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState } from 'react';
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
-import { useAppDispatch } from 'store';
-import { setSearchValue } from 'store/api/stores/slice';
+import { useAppDispatch, useAppSelector } from 'store';
+import { useGetStoresQuery } from 'store/api/stores/api';
+import { selectStore, setSearchValue } from 'store/api/stores/slice';
 import { ColAlignDiv, RowAlignDiv, StoresWrapper, StyledTextField, StyledTitle } from './styles';
 import Grid from './components/Grid';
 
 const Stores: FunctionComponent = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const { searchValue } = useAppSelector(selectStore);
+  const { data } = useGetStoresQuery(searchValue);
 
   // States
   const [searchValueString, setSearchValueString] = useState<string>('');
@@ -50,7 +53,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
           onKeyDown={handleOnKeyDown}
         />
       </RowAlignDiv>
-      <Grid />
+      <Grid data={data?.value} />
     </StoresWrapper>
   );
 };
