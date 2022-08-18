@@ -1,21 +1,16 @@
 import { ChangeEvent, ReactNode } from 'react';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-import { GridColumnMenuProps } from '@mui/x-data-grid';
 
 import { useAppDispatch, useAppSelector } from 'store';
-import { useGetStoresQuery } from 'store/api/stores/api';
 import { selectStore, setFilter } from 'store/api/stores/slice';
 import { MenuWrapper } from './styles';
+import { ICustomMenuProps } from './types';
 import { getAllUniqueValues } from './utils';
 
-const CustomMenu = (props: GridColumnMenuProps) => {
+const CustomMenu = (props: ICustomMenuProps) => {
+  const { data, hideMenu, currentColumn, ...other } = props;
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue } = useAppSelector(selectStore);
-
-  const { hideMenu, currentColumn, ...other } = props;
-
-  // query hook
-  const { data } = useGetStoresQuery(searchValue);
+  const { filterItem } = useAppSelector(selectStore);
 
   const handleStateChange = (value: string) => {
     if (!Array.isArray(filterItem.value)) return [];
@@ -43,7 +38,7 @@ const CustomMenu = (props: GridColumnMenuProps) => {
     );
   };
 
-  const uniqueValues = getAllUniqueValues(currentColumn.field, data?.value);
+  const uniqueValues = getAllUniqueValues(currentColumn.field, data);
 
   const renderMenuItems = () => {
     const MenuItems: ReactNode[] = [];

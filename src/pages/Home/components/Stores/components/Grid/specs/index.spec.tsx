@@ -1,5 +1,4 @@
 import { render } from 'utils/testUtilities';
-
 import { gridMockData } from '__mocks__/Home/gridMockData';
 import Grid from '../../Grid';
 
