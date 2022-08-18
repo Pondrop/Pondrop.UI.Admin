@@ -19,8 +19,9 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
 
   return (
     <PanelWrapper>
-      <img src={pondrop} onClick={handleRefresh} />
+      <img data-testid="pondrop-logo" src={pondrop} onClick={handleRefresh} />
       <StyledButton
+        data-testid="store-btn"
         className="store-btn"
         variant="contained"
         size="large"
@@ -30,7 +31,12 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
       >
         Stores
       </StyledButton>
-      <StyledButton className="logout-btn" size="large" startIcon={<Logout className="start-icon" />}>
+      <StyledButton
+        data-testid="logout-btn"
+        className="logout-btn"
+        size="large"
+        startIcon={<Logout className="start-icon" />}
+      >
         Sign out
       </StyledButton>
     </PanelWrapper>
