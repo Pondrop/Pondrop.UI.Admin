@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Logout, Storefront } from '@mui/icons-material';
+import { ShoppingCartOutlined, Logout, Storefront } from '@mui/icons-material';
 
 import pondrop from 'assets/images/pondrop.png';
 import { useAppSelector } from 'store';
@@ -21,8 +21,8 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
     <PanelWrapper>
       <img data-testid="pondrop-logo" src={pondrop} onClick={handleRefresh} />
       <StyledButton
-        data-testid="store-btn"
-        className="store-btn"
+        data-testid="panel-store-btn"
+        className="panel-btn"
         variant="contained"
         size="large"
         startIcon={<Storefront className="start-icon" />}
@@ -32,10 +32,21 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         Stores
       </StyledButton>
       <StyledButton
-        data-testid="logout-btn"
-        className="logout-btn"
+        data-testid="panel-product-btn"
+        className="panel-btn"
+        variant="contained"
         size="large"
-        startIcon={<Logout className="start-icon" />}
+        startIcon={<ShoppingCartOutlined className="product-icon" />}
+        disableElevation
+        onClick={handleRefresh}
+      >
+        Products
+      </StyledButton>
+      <StyledButton
+        data-testid="signout-btn"
+        className="signout-btn"
+        size="large"
+        startIcon={<Logout className="signout-icon" />}
       >
         Sign out
       </StyledButton>
