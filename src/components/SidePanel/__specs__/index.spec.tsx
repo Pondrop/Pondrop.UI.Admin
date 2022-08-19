@@ -1,9 +1,16 @@
+import { BrowserRouter } from 'react-router-dom';
+
 import { render } from 'utils/testUtilities';
 
 import SidePanel from '..';
 
 describe('<SidePanel />', () => {
-  const renderSidePanel = () => render(<SidePanel />);
+  const renderSidePanel = () =>
+    render(
+      <BrowserRouter>
+        <SidePanel />
+      </BrowserRouter>,
+    );
 
   test('should display side panel', async () => {
     const { findByTestId } = renderSidePanel();
