@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 import { TextField, Typography } from "@mui/material";
 
-export const StoresWrapper = styled.div`
+export const ContentWrapper = styled.div`
   width: calc(100vw - 440px);
   padding: 16px 92px;
 

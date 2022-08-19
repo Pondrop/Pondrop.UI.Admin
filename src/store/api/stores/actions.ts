@@ -1,6 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { IFilterItem, IStoreState } from "./types";
+import { IFilterItem } from "../types";
+import { IStoreState } from "./types";
 
 const setFilter = (state: IStoreState, action: PayloadAction<IFilterItem>) => {
   return {

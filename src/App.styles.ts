@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const HomeWrapper = styled.div`
+export const DivWrapper = styled.div`
   display: flex;
   flex-direction: row;
 `;

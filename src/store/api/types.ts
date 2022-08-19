@@ -7,3 +7,9 @@ export interface IApiResponse {
   "@odata.context": string;
   "@odata.nextLink": string;
 }
+
+export interface IFilterItem {
+  columnField: string;
+  value: string | string[];
+  operatorValue: string;
+}

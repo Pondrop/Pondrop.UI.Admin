@@ -1,8 +1,4 @@
-export interface IFilterItem {
-  columnField: string;
-  value: string | string[];
-  operatorValue: string;
-}
+import { IFilterItem } from "../types";
 
 export interface IStoreState {
   filterItem: IFilterItem;

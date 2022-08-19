@@ -11,10 +11,13 @@ describe('<SidePanel />', () => {
     const pondropLogo = await findByTestId('pondrop-logo');
     expect(pondropLogo).toBeInTheDocument();
 
-    const storeBtn = await findByTestId('store-btn');
+    const storeBtn = await findByTestId('panel-store-btn');
     expect(storeBtn).toBeInTheDocument();
 
-    const logoutBtn = await findByTestId('logout-btn');
-    expect(logoutBtn).toBeInTheDocument();
+    const productsBtn = await findByTestId('panel-product-btn');
+    expect(productsBtn).toBeInTheDocument();
+
+    const signOutBtn = await findByTestId('signout-btn');
+    expect(signOutBtn).toBeInTheDocument();
   });
 });
