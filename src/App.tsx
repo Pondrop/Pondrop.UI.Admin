@@ -1,15 +1,20 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 
-import Home from './pages/Home';
+import { Products, Stores } from './pages';
+import SidePanel from 'components/SidePanel';
+import { DivWrapper } from 'App.styles';
 
 function App() {
   return (
     <BrowserRouter>
-      <div>
+      <DivWrapper>
+        <SidePanel />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="*" element={<Navigate to="/stores" />} />
+          <Route path="/stores" element={<Stores />} />
+          <Route path="/products" element={<Products />} />
         </Routes>
-      </div>
+      </DivWrapper>
     </BrowserRouter>
   );
 }

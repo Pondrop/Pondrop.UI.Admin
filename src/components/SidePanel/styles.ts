@@ -7,7 +7,7 @@ export const PanelWrapper = styled.div`
   border-right: 1px solid #dde3ea;
   padding: 16px;
 
-  .store-btn {
+  .panel-btn {
     background-color: rgba(194, 231, 255, 0.5);
     color: #001e2f;
     font-weight: 600;
@@ -17,7 +17,7 @@ export const PanelWrapper = styled.div`
     }
   }
 
-  .logout-btn {
+  .signout-btn {
     color: #ba1a1a;
 
     &:hover {
@@ -27,7 +27,6 @@ export const PanelWrapper = styled.div`
 
   & img {
     padding: 16px;
-    cursor: pointer;
   }
 `;
 

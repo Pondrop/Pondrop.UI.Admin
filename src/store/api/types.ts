@@ -1,9 +1,9 @@
-export interface IStoreDetails {
+export interface IValue {
   [key: string]: number | string | string[];
 }
 
-export interface IStores {
-  value: IStoreDetails[];
+export interface IApiResponse {
+  value: IValue[];
   "@odata.context": string;
   "@odata.nextLink": string;
 }
@@ -14,7 +14,8 @@ export interface IFilterItem {
   operatorValue: string;
 }
 
-export interface IStoreState {
+export interface IGridState {
   filterItem: IFilterItem;
   searchValue?: string;
 }
+

@@ -1,27 +1,24 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { GridColumnMenuProps, GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
+import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid';
 import { FilterList } from '@mui/icons-material';
 
-import { useAppDispatch, useAppSelector } from 'store';
-import { useGetStoresQuery } from 'store/api/stores/api';
-import { selectStore, setFilter } from 'store/api/stores/slice';
-
 import CustomMenu from '../GridMenu';
-import { gridColumns } from './constants';
 import { StyledDataGrid } from './styles';
 import { IGridProps } from './types';
 
-const Grid: FunctionComponent<IGridProps> = ({ data }: IGridProps): JSX.Element => {
-  const dispatch = useAppDispatch();
-  const { filterItem, searchValue } = useAppSelector(selectStore);
-
-  const [storeData, setStoreData] = useState<GridRowsProp[]>([]);
-
-  // query hook
-  const { isFetching } = useGetStoresQuery(searchValue);
+const Grid: FunctionComponent<IGridProps> = ({
+  data,
+  columns,
+  id,
+  isFetching,
+  onFilterModelChange,
+  filterItem,
+  handleOnFilterClick,
+}: IGridProps): JSX.Element => {
+  const [gridData, setGridData] = useState<GridRowsProp[]>([]);
 
   useEffect(() => {
-    setStoreData(data as unknown as GridRowsProp[]);
+    setGridData(data as unknown as GridRowsProp[]);
   }, [data]);
 
   // components
@@ -30,20 +27,10 @@ const Grid: FunctionComponent<IGridProps> = ({ data }: IGridProps): JSX.Element 
   };
 
   const renderCustomMenu = (props: GridColumnMenuProps) => {
-    return <CustomMenu data={storeData} {...props} />;
+    return <CustomMenu data={gridData} filterItem={filterItem} handleOnFilterClick={handleOnFilterClick} {...props} />;
   };
 
   // helper function
-  const onFilterModelChange = (model: GridFilterModel) => {
-    if (!model.items[0]) return;
-    dispatch(
-      setFilter({
-        columnField: model.items[0].columnField,
-        value: model.items[0].value,
-        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-      }),
-    );
-  };
   const getFilterModel = () => {
     const filterModelItem = {
       items: [
@@ -60,9 +47,9 @@ const Grid: FunctionComponent<IGridProps> = ({ data }: IGridProps): JSX.Element 
 
   return (
     <StyledDataGrid
-      data-testid="view-store-grid"
-      rows={storeData ?? []}
-      columns={gridColumns}
+      data-testid={id}
+      rows={gridData ?? []}
+      columns={columns}
       autoHeight
       rowsPerPageOptions={[10, 20, 40, 60, 80, 100]}
       initialState={{
