@@ -1,5 +1,5 @@
-import { IStoreDetails } from "store/api/stores/types"
+import { IValue } from "store/api/types";
 
 export interface IGridProps {
-  data?: IStoreDetails[];
+  data?: IValue[];
 }
