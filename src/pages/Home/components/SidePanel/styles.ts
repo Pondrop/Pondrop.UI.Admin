@@ -8,12 +8,12 @@ export const PanelWrapper = styled.div`
   padding: 16px;
 
   .store-btn {
-    background-color: #c4e7ff;
+    background-color: rgba(194, 231, 255, 0.5);
     color: #001e2f;
     font-weight: 600;
 
     &:hover {
-      background-color: rgb(194, 229, 251);
+      background-color: rgb(171, 200, 224, 0.54);
     }
   }
 

@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
+import { GridColumnMenuProps, GridFilterModel, GridRowsProp } from '@mui/x-data-grid';
 import { FilterList } from '@mui/icons-material';
 
 import { useAppDispatch, useAppSelector } from 'store';
@@ -27,6 +27,10 @@ const Grid: FunctionComponent<IGridProps> = ({ data }: IGridProps): JSX.Element 
   // components
   const renderMenuIcon = () => {
     return <FilterList />;
+  };
+
+  const renderCustomMenu = (props: GridColumnMenuProps) => {
+    return <CustomMenu data={storeData} {...props} />;
   };
 
   // helper function
@@ -68,7 +72,7 @@ const Grid: FunctionComponent<IGridProps> = ({ data }: IGridProps): JSX.Element 
       }}
       components={{
         ColumnMenuIcon: renderMenuIcon,
-        ColumnMenu: CustomMenu,
+        ColumnMenu: renderCustomMenu,
       }}
       componentsProps={{
         pagination: { showFirstButton: true, showLastButton: true },
