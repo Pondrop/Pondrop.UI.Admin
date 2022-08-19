@@ -10,7 +10,7 @@ export const storeApi = createApi({
     getStores: builder.query<IStores, string | undefined>({
       query: (searchString?: string) => {
         return {
-          url: `/indexes/azuresql-index-vwstores/docs?api-version=2021-04-30-Preview&search=${searchString}*`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*`,
           method: 'GET',
           headers: {
             "api-key": "t9qQq8k9bXhsR4VoCbJAIHYwkBrSTpE03KMKR3Kp6MAzSeAyv0pe",
