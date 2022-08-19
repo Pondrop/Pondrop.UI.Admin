@@ -1,3 +1,4 @@
+import Products from './Products';
 import Stores from './Stores';
 
-export { Stores };
+export { Products, Stores };

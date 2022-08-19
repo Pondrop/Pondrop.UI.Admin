@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 
 import { IFilterItem, IGridState } from "../types";
 
-const setStoresFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
+const setProductsFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
   return {
     ...state,
     filterItem: {
@@ -13,11 +13,11 @@ const setStoresFilter = (state: IGridState, action: PayloadAction<IFilterItem>) 
   };
 };
 
-const setStoresSearchValue = (state: IGridState, action: PayloadAction<string>) => {
+const setProductsSearchValue = (state: IGridState, action: PayloadAction<string>) => {
   return {
     ...state,
     searchValue: action.payload
   };
 };
 
-export const actions = { setStoresFilter, setStoresSearchValue };
+export const actions = { setProductsFilter, setProductsSearchValue };

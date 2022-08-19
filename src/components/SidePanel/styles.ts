@@ -27,7 +27,6 @@ export const PanelWrapper = styled.div`
 
   & img {
     padding: 16px;
-    cursor: pointer;
   }
 `;
 

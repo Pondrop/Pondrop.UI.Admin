@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse } from '../types';
 
 export const productsApi = createApi({
-  reducerPath: 'productApi',
+  reducerPath: 'productsApi',
   baseQuery: fetchBaseQuery({ 
     baseUrl: "https://pondropsearchstandard.search.windows.net",
   }),

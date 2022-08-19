@@ -9,8 +9,8 @@ export const storeSlice = createSlice({
   reducers: actions,
 });
 
-export const selectStore = (state: RootState) => state.store;
+export const selectStores = (state: RootState) => state.store;
 
-export const { setFilter, setSearchValue } = storeSlice.actions;
+export const { setStoresFilter, setStoresSearchValue } = storeSlice.actions;
 
 export default storeSlice.reducer;

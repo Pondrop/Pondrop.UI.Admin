@@ -13,3 +13,9 @@ export interface IFilterItem {
   value: string | string[];
   operatorValue: string;
 }
+
+export interface IGridState {
+  filterItem: IFilterItem;
+  searchValue?: string;
+}
+
