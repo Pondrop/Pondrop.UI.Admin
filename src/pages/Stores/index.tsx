@@ -2,7 +2,7 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } fr
 
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel } from '@mui/x-data-grid';
+import { GridColDef, GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -17,7 +17,7 @@ import {
   useGetStoresQuery,
 } from 'store/api/stores/api';
 import { initialState } from 'store/api/stores/initialState';
-import { selectStores, setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
+import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
 import { ColAlignDiv, RowAlignDiv, ContentWrapper, StyledTextField, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
@@ -30,9 +30,10 @@ const Stores: FunctionComponent = (): JSX.Element => {
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '' } = useAppSelector(selectStores);
+  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectStores);
   const { data, isFetching } = useGetStoresQuery({
     searchString: searchValue,
+    sortValue,
     filterItem,
     prevPageItems: pageSkip,
     pageSize,
@@ -86,6 +87,15 @@ const Stores: FunctionComponent = (): JSX.Element => {
         columnField: model.items[0].columnField,
         value: model.items[0].value,
         operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
+      }),
+    );
+  };
+
+  const handleSortModelChange = (model: GridSortModel) => {
+    dispatch(
+      setStoresSortValue({
+        field: model[0]?.field,
+        sort: model[0]?.sort,
       }),
     );
   };
@@ -152,6 +162,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
         menuData={menuData as IFacetValue}
+        onSortModelChange={handleSortModelChange}
       />
     </ContentWrapper>
   );

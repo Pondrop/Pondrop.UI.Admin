@@ -6,5 +6,9 @@ export const initialState: IGridState = {
     value: [],
     operatorValue: ''
   },
-  searchValue: ''
+  searchValue: '',
+  sortValue: {
+    field: '',
+    sort: null
+  }
 };

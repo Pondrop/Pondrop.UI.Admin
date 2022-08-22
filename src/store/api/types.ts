@@ -1,3 +1,5 @@
+import { GridSortDirection } from "@mui/x-data-grid";
+
 export interface IValue {
   [key: string]: number | string | string[];
 }
@@ -25,8 +27,14 @@ export interface IFilterItem {
   operatorValue: string;
 }
 
+export interface ISortItem {
+  field: string;
+  sort: GridSortDirection;
+}
+
 export interface IGridState {
   filterItem: IFilterItem;
   searchValue?: string;
+  sortValue: ISortItem;
 }
 

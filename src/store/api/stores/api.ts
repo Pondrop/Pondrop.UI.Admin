@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IApiResponse, IFilterItem } from '../types';
+import { IApiResponse, IFilterItem, ISortItem } from '../types';
 
 export const storeApi = createApi({
   reducerPath: 'storeApi',
@@ -13,11 +13,12 @@ export const storeApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getStores: builder.query<IApiResponse, { searchString: string, filterItem: IFilterItem, prevPageItems: number, pageSize: number }>({
+    getStores: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number }>({
       query: (arg) => {
-        const { searchString, filterItem, prevPageItems = 0, pageSize = 10 } = arg;
+        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10 } = arg;
         
         let filterQuery = '';
+        let sortQuery = '';
 
         if (Array.isArray(filterItem.value) && filterItem.value.length > 0) {
           filterItem.value.forEach((filter, index) => {
@@ -26,8 +27,10 @@ export const storeApi = createApi({
           });
         } else if (!Array.isArray(filterItem.value) && filterItem.value) filterQuery = filterQuery.concat(`${filterItem.columnField} eq ${filterItem.value}`);
 
+        if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
+
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*${filterQuery && `&$filter=${filterQuery}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*${filterQuery && `&$filter=${filterQuery}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
           method: 'GET',
         };
       },

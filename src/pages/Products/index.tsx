@@ -2,7 +2,7 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } fr
 
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel } from '@mui/x-data-grid';
+import { GridColDef, GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
 import { productColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -15,7 +15,12 @@ import {
   useGetProductsQuery,
 } from 'store/api/products/api';
 import { initialState } from 'store/api/products/initialState';
-import { selectProducts, setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
+import {
+  selectProducts,
+  setProductsFilter,
+  setProductsSearchValue,
+  setProductsSortValue,
+} from 'store/api/products/slice';
 import { ColAlignDiv, RowAlignDiv, ContentWrapper, StyledTextField, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
@@ -28,9 +33,10 @@ const Products: FunctionComponent = (): JSX.Element => {
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '' } = useAppSelector(selectProducts);
+  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectProducts);
   const { data, isFetching } = useGetProductsQuery({
     searchString: searchValue,
+    sortValue,
     filterItem,
     prevPageItems: pageSkip,
     pageSize,
@@ -80,6 +86,15 @@ const Products: FunctionComponent = (): JSX.Element => {
         columnField: model.items[0].columnField,
         value: model.items[0].value,
         operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
+      }),
+    );
+  };
+
+  const handleSortModelChange = (model: GridSortModel) => {
+    dispatch(
+      setProductsSortValue({
+        field: model[0]?.field,
+        sort: model[0]?.sort,
       }),
     );
   };
@@ -146,6 +161,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
         menuData={menuData as IFacetValue}
+        onSortModelChange={handleSortModelChange}
       />
     </ContentWrapper>
   );

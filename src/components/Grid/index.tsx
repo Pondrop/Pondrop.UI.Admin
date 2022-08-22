@@ -18,6 +18,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   onPageChange,
   onPageSizeChange,
   menuData,
+  onSortModelChange,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -91,6 +92,8 @@ const Grid: FunctionComponent<IGridProps> = ({
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       filterMode="server"
+      sortingMode="server"
+      onSortModelChange={onSortModelChange}
     />
   );
 };
