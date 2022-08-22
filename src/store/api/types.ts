@@ -4,8 +4,9 @@ export interface IValue {
 
 export interface IApiResponse {
   value: IValue[];
-  "@odata.context": string;
-  "@odata.nextLink": string;
+  "@odata.context"?: string;
+  "@odata.nextLink"?: string;
+  "@odata.count": number;
 }
 
 export interface IFilterItem {

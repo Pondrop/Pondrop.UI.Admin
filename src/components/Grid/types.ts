@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { GridColDef, GridFilterModel } from "@mui/x-data-grid";
+import { GridCallbackDetails, GridColDef, GridFilterModel } from "@mui/x-data-grid";
 
 import { IFilterItem, IValue } from "store/api/types";
 
@@ -8,7 +8,10 @@ export interface IGridProps {
   columns: GridColDef[];
   id: string;
   isFetching: boolean;
-  onFilterModelChange: (model: GridFilterModel) => void;
+  onFilterModelChange: (model: GridFilterModel, details: GridCallbackDetails) => void;
   filterItem: IFilterItem;
   handleOnFilterClick?: (event: ChangeEvent<HTMLInputElement>, currentColumn: GridColDef) => void;
+  rowCount: number;
+  onPageChange: (page: number, details: GridCallbackDetails) => void;
+  onPageSizeChange: (pageSize: number, details: GridCallbackDetails) => void;
 }

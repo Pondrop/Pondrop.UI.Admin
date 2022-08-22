@@ -14,12 +14,20 @@ const Grid: FunctionComponent<IGridProps> = ({
   onFilterModelChange,
   filterItem,
   handleOnFilterClick,
+  rowCount,
+  onPageChange,
+  onPageSizeChange,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
+  const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
 
   useEffect(() => {
     setGridData(data as unknown as GridRowsProp[]);
   }, [data]);
+
+  useEffect(() => {
+    setGridRowCount(rowCount);
+  }, [rowCount]);
 
   // components
   const renderMenuIcon = () => {
@@ -69,6 +77,10 @@ const Grid: FunctionComponent<IGridProps> = ({
       getRowHeight={() => 'auto'}
       filterModel={getFilterModel()}
       onFilterModelChange={onFilterModelChange}
+      paginationMode="server"
+      rowCount={gridRowCount}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
     />
   );
 };

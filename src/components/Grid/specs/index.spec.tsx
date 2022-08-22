@@ -7,6 +7,8 @@ import { storeColumns } from '../constants';
 
 describe('<Grid />', () => {
   const mockOnFilterModelChange = jest.fn();
+  const mockOnPageChange = jest.fn();
+  const mockOnPageSizeChange = jest.fn();
   const renderGrid = () =>
     render(
       <Grid
@@ -16,6 +18,9 @@ describe('<Grid />', () => {
         isFetching={false}
         onFilterModelChange={mockOnFilterModelChange}
         filterItem={initialState.filterItem}
+        rowCount={3}
+        onPageChange={mockOnPageChange}
+        onPageSizeChange={mockOnPageSizeChange}
       />,
     );
 
