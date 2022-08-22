@@ -1,6 +1,6 @@
 import { GridRowsProp } from '@mui/x-data-grid';
 import { render } from 'utils/testUtilities';
-import { gridMockData } from '__mocks__/Home/gridMockData';
+import { gridMockData, menuMockData } from '__mocks__/Home/gridMockData';
 import { initialState } from 'store/api/stores/initialState';
 import { storeColumns } from '../../Grid/constants';
 import GridMenu from '../../GridMenu';
@@ -16,6 +16,7 @@ describe('<GridMenu />', () => {
         currentColumn={storeColumns[0]}
         open={true}
         id="test-grid-menu"
+        menuData={menuMockData}
       />,
     );
 

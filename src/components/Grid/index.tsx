@@ -17,6 +17,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   rowCount,
   onPageChange,
   onPageSizeChange,
+  menuData,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -35,7 +36,15 @@ const Grid: FunctionComponent<IGridProps> = ({
   };
 
   const renderCustomMenu = (props: GridColumnMenuProps) => {
-    return <CustomMenu data={gridData} filterItem={filterItem} handleOnFilterClick={handleOnFilterClick} {...props} />;
+    return (
+      <CustomMenu
+        data={gridData}
+        filterItem={filterItem}
+        handleOnFilterClick={handleOnFilterClick}
+        menuData={menuData}
+        {...props}
+      />
+    );
   };
 
   // helper function
@@ -81,6 +90,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       rowCount={gridRowCount}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
+      filterMode="server"
     />
   );
 };

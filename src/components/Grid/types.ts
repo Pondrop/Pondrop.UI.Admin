@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 import { GridCallbackDetails, GridColDef, GridFilterModel } from "@mui/x-data-grid";
 
-import { IFilterItem, IValue } from "store/api/types";
+import { IFacetValue, IFilterItem, IValue } from "store/api/types";
 
 export interface IGridProps {
   data?: IValue[];
@@ -14,4 +14,5 @@ export interface IGridProps {
   rowCount: number;
   onPageChange: (page: number, details: GridCallbackDetails) => void;
   onPageSizeChange: (pageSize: number, details: GridCallbackDetails) => void;
+  menuData: IFacetValue;
 }

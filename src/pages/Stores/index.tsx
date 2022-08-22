@@ -6,8 +6,16 @@ import { GridColDef, GridFilterModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFilterItem } from 'store/api/types';
-import { useGetStoresQuery } from 'store/api/stores/api';
+import { IFacetValue, IFilterItem } from 'store/api/types';
+import {
+  useGetAllCitiesQuery,
+  useGetAllNamesQuery,
+  useGetAllPostCodesQuery,
+  useGetAllProvidersQuery,
+  useGetAllStatesQuery,
+  useGetAllStreetsQuery,
+  useGetStoresQuery,
+} from 'store/api/stores/api';
 import { initialState } from 'store/api/stores/initialState';
 import { selectStores, setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 import { ColAlignDiv, RowAlignDiv, ContentWrapper, StyledTextField, StyledTitle } from '../styles';
@@ -23,7 +31,27 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const { filterItem, searchValue = '' } = useAppSelector(selectStores);
-  const { data, isFetching } = useGetStoresQuery({ searchString: searchValue, prevPageItems: pageSkip, pageSize });
+  const { data, isFetching } = useGetStoresQuery({
+    searchString: searchValue,
+    filterItem,
+    prevPageItems: pageSkip,
+    pageSize,
+  });
+  const { data: providerData } = useGetAllProvidersQuery();
+  const { data: nameData } = useGetAllNamesQuery();
+  const { data: streetData } = useGetAllStreetsQuery();
+  const { data: cityData } = useGetAllCitiesQuery();
+  const { data: stateData } = useGetAllStatesQuery();
+  const { data: postcodeData } = useGetAllPostCodesQuery();
+
+  const menuData = {
+    Provider: providerData?.['@search.facets']?.Provider,
+    Name: nameData?.['@search.facets']?.Name,
+    Street: streetData?.['@search.facets']?.Street,
+    City: cityData?.['@search.facets']?.City,
+    State: stateData?.['@search.facets']?.State,
+    Zip_Code: postcodeData?.['@search.facets']?.Zip_Code,
+  };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
@@ -123,6 +151,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         rowCount={rowCount}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
+        menuData={menuData as IFacetValue}
       />
     </ContentWrapper>
   );

@@ -6,13 +6,13 @@ import { ICustomMenuProps } from './types';
 import { getAllUniqueValues } from './utils';
 
 const CustomMenu = (props: ICustomMenuProps) => {
-  const { data, filterItem, handleOnFilterClick, hideMenu, currentColumn, ...other } = props;
+  const { filterItem, handleOnFilterClick, hideMenu, menuData, currentColumn, ...other } = props;
 
   const handleOnGridFilterClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (typeof handleOnFilterClick === 'function') handleOnFilterClick(event, currentColumn);
   };
 
-  const uniqueValues = getAllUniqueValues(currentColumn.field, data);
+  const uniqueValues = getAllUniqueValues(menuData[currentColumn.field]);
 
   const renderMenuItems = () => {
     const MenuItems: ReactNode[] = [];

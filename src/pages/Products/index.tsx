@@ -6,8 +6,14 @@ import { GridColDef, GridFilterModel } from '@mui/x-data-grid';
 
 import { productColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFilterItem } from 'store/api/types';
-import { useGetProductsQuery } from 'store/api/products/api';
+import { IFacetValue, IFilterItem } from 'store/api/types';
+import {
+  useGetAllCategoriesQuery,
+  useGetAllCompanyNamesQuery,
+  useGetAllGTINsQuery,
+  useGetAllProductsQuery,
+  useGetProductsQuery,
+} from 'store/api/products/api';
 import { initialState } from 'store/api/products/initialState';
 import { selectProducts, setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
 import { ColAlignDiv, RowAlignDiv, ContentWrapper, StyledTextField, StyledTitle } from '../styles';
@@ -23,7 +29,23 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const { filterItem, searchValue = '' } = useAppSelector(selectProducts);
-  const { data, isFetching } = useGetProductsQuery({ searchString: searchValue, prevPageItems: pageSkip, pageSize });
+  const { data, isFetching } = useGetProductsQuery({
+    searchString: searchValue,
+    filterItem,
+    prevPageItems: pageSkip,
+    pageSize,
+  });
+  const { data: gtinData } = useGetAllGTINsQuery();
+  const { data: companyNameData } = useGetAllCompanyNamesQuery();
+  const { data: productsData } = useGetAllProductsQuery();
+  const { data: categoriesData } = useGetAllCategoriesQuery();
+
+  const menuData = {
+    GTIN: gtinData?.['@search.facets']?.GTIN,
+    Company_Name: companyNameData?.['@search.facets']?.Company_Name,
+    Products: productsData?.['@search.facets']?.Products,
+    PossibleCategories: categoriesData?.['@search.facets']?.PossibleCategories,
+  };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
@@ -123,6 +145,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         rowCount={rowCount}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
+        menuData={menuData as IFacetValue}
       />
     </ContentWrapper>
   );

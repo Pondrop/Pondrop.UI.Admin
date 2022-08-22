@@ -1,6 +1,6 @@
 import { render } from 'utils/testUtilities';
 
-import { gridMockData } from '__mocks__/Home/gridMockData';
+import { gridMockData, menuMockData } from '__mocks__/Home/gridMockData';
 import { initialState } from 'store/api/stores/initialState';
 import Grid from '../../Grid';
 import { storeColumns } from '../constants';
@@ -21,6 +21,7 @@ describe('<Grid />', () => {
         rowCount={3}
         onPageChange={mockOnPageChange}
         onPageSizeChange={mockOnPageSizeChange}
+        menuData={menuMockData}
       />,
     );
 
