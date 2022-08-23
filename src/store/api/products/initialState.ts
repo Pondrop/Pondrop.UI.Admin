@@ -8,7 +8,7 @@ export const initialState: IGridState = {
   },
   searchValue: '',
   sortValue: {
-    field: '',
-    sort: null
+    field: 'PossibleCategories',
+    sort: 'asc'
   }
 };

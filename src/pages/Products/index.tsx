@@ -2,7 +2,7 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } fr
 
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel, GridSortModel } from '@mui/x-data-grid';
+import { GridColDef, GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import { productColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -54,6 +54,10 @@ const Products: FunctionComponent = (): JSX.Element => {
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
+
+  const initialSort = {
+    sorting: { sortModel: [{ field: 'PossibleCategories', sort: 'asc' as GridSortDirection }] },
+  };
 
   // Use Effects
   useEffect(() => {
@@ -162,6 +166,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         onPageSizeChange={onPageSizeChange}
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
+        initialState={initialSort}
       />
     </ContentWrapper>
   );

@@ -19,6 +19,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   onPageSizeChange,
   menuData,
   onSortModelChange,
+  initialState,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -74,6 +75,7 @@ const Grid: FunctionComponent<IGridProps> = ({
         pagination: {
           pageSize: 10,
         },
+        ...initialState,
       }}
       components={{
         ColumnMenuIcon: renderMenuIcon,
