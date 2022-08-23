@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
-import { GridColDef, GridFilterModel } from "@mui/x-data-grid";
+import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridSortModel } from "@mui/x-data-grid";
 
-import { IFilterItem, IValue } from "store/api/types";
+import { IFacetValue, IFilterItem, IValue } from "store/api/types";
 
 export interface IGridProps {
   data?: IValue[];
@@ -11,4 +11,10 @@ export interface IGridProps {
   onFilterModelChange: (model: GridFilterModel) => void;
   filterItem: IFilterItem;
   handleOnFilterClick?: (event: ChangeEvent<HTMLInputElement>, currentColumn: GridColDef) => void;
+  rowCount: number;
+  onPageChange: (page: number, details: GridCallbackDetails) => void;
+  onPageSizeChange: (pageSize: number, details: GridCallbackDetails) => void;
+  menuData: IFacetValue;
+  onSortModelChange: (model: GridSortModel) => void;
+  initialState?: GridInitialState;
 }

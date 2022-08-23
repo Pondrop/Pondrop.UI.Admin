@@ -14,12 +14,23 @@ const Grid: FunctionComponent<IGridProps> = ({
   onFilterModelChange,
   filterItem,
   handleOnFilterClick,
+  rowCount,
+  onPageChange,
+  onPageSizeChange,
+  menuData,
+  onSortModelChange,
+  initialState,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
+  const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
 
   useEffect(() => {
     setGridData(data as unknown as GridRowsProp[]);
   }, [data]);
+
+  useEffect(() => {
+    setGridRowCount(rowCount);
+  }, [rowCount]);
 
   // components
   const renderMenuIcon = () => {
@@ -27,7 +38,15 @@ const Grid: FunctionComponent<IGridProps> = ({
   };
 
   const renderCustomMenu = (props: GridColumnMenuProps) => {
-    return <CustomMenu data={gridData} filterItem={filterItem} handleOnFilterClick={handleOnFilterClick} {...props} />;
+    return (
+      <CustomMenu
+        data={gridData}
+        filterItem={filterItem}
+        handleOnFilterClick={handleOnFilterClick}
+        menuData={menuData}
+        {...props}
+      />
+    );
   };
 
   // helper function
@@ -51,11 +70,9 @@ const Grid: FunctionComponent<IGridProps> = ({
       rows={gridData ?? []}
       columns={columns}
       autoHeight
-      rowsPerPageOptions={[10, 20, 40, 60, 80, 100]}
+      rowsPerPageOptions={[10, 20, 30, 40]}
       initialState={{
-        pagination: {
-          pageSize: 10,
-        },
+        ...initialState,
       }}
       components={{
         ColumnMenuIcon: renderMenuIcon,
@@ -69,6 +86,13 @@ const Grid: FunctionComponent<IGridProps> = ({
       getRowHeight={() => 'auto'}
       filterModel={getFilterModel()}
       onFilterModelChange={onFilterModelChange}
+      paginationMode="server"
+      rowCount={gridRowCount}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
+      filterMode="server"
+      sortingMode="server"
+      onSortModelChange={onSortModelChange}
     />
   );
 };

@@ -10,8 +10,8 @@ export const storeColumns: GridColDef[] = [
 ];
 
 export const productColumns: GridColDef[] = [
-  { field: 'GTIN', headerName: 'GTIN', filterOperators: getGridStringOperators(),width: 150 },
-  { field: 'Company_Name', headerName: 'Company Name', filterOperators: getGridStringOperators(), width: 300 },
-  { field: 'Product', headerName: 'Product', filterOperators: getGridStringOperators(), width: 300 },
-  { field: 'PossibleCategories', headerName: 'Categories', filterOperators: getGridStringOperators(), flex: 1 },
+  { field: 'GTIN', headerName: 'GTIN', filterOperators: getGridStringOperators(), width: 150 },
+  { field: 'Company_Name', headerName: 'Company Name', filterOperators: getGridStringOperators(), flex: 1 },
+  { field: 'Product', headerName: 'Product', filterOperators: getGridStringOperators(), flex: 1 },
+  { field: 'PossibleCategories', headerName: 'Categories', filterOperators: getGridStringOperators(), flex: 2 },
 ];

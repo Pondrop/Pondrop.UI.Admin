@@ -2,26 +2,63 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } fr
 
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel } from '@mui/x-data-grid';
+import { GridColDef, GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFilterItem } from 'store/api/types';
-import { useGetStoresQuery } from 'store/api/stores/api';
+import { IFacetValue, IFilterItem } from 'store/api/types';
+import {
+  useGetAllCitiesQuery,
+  useGetAllNamesQuery,
+  useGetAllPostCodesQuery,
+  useGetAllProvidersQuery,
+  useGetAllStatesQuery,
+  useGetAllStreetsQuery,
+  useGetStoresQuery,
+} from 'store/api/stores/api';
 import { initialState } from 'store/api/stores/initialState';
-import { selectStores, setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
+import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
 import { ColAlignDiv, RowAlignDiv, ContentWrapper, StyledTextField, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Stores: FunctionComponent = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-  const { filterItem, searchValue } = useAppSelector(selectStores);
-  const { data, isFetching } = useGetStoresQuery(searchValue);
-
   // States
   const [searchValueString, setSearchValueString] = useState<string>('');
   const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem>(initialState.filterItem);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSkip, setPageSkip] = useState<number>(0);
+
+  const dispatch = useAppDispatch();
+  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectStores);
+  const { data, isFetching } = useGetStoresQuery({
+    searchString: searchValue,
+    sortValue,
+    filterItem,
+    prevPageItems: pageSkip,
+    pageSize,
+  });
+  const { data: providerData } = useGetAllProvidersQuery();
+  const { data: nameData } = useGetAllNamesQuery();
+  const { data: streetData } = useGetAllStreetsQuery();
+  const { data: cityData } = useGetAllCitiesQuery();
+  const { data: stateData } = useGetAllStatesQuery();
+  const { data: postcodeData } = useGetAllPostCodesQuery();
+
+  const menuData = {
+    Provider: providerData?.['@search.facets']?.Provider,
+    Name: nameData?.['@search.facets']?.Name,
+    Street: streetData?.['@search.facets']?.Street,
+    City: cityData?.['@search.facets']?.City,
+    State: stateData?.['@search.facets']?.State,
+    Zip_Code: postcodeData?.['@search.facets']?.Zip_Code,
+  };
+
+  const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
+
+  const initialGridState = {
+    pagination: { pageSize: 10 },
+  };
 
   // Use Effects
   useEffect(() => {
@@ -31,6 +68,10 @@ const Stores: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setSearchValueString(searchValue ?? '');
   }, [searchValue]);
+
+  useEffect(() => {
+    setRowCount(data?.['@odata.count'] ?? 0);
+  }, [data]);
 
   // Handlers
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +93,23 @@ const Stores: FunctionComponent = (): JSX.Element => {
         operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
       }),
     );
+  };
+
+  const handleSortModelChange = (model: GridSortModel) => {
+    dispatch(
+      setStoresSortValue({
+        field: model[0]?.field,
+        sort: model[0]?.sort,
+      }),
+    );
+  };
+
+  const onPageChange = (page: number) => {
+    setPageSkip(page * pageSize);
+  };
+
+  const onPageSizeChange = (pageSize: number) => {
+    setPageSize(pageSize);
   };
 
   const handleOnFilterClick = (event: ChangeEvent<HTMLInputElement>, currentColumn: GridColDef) => {
@@ -104,6 +162,12 @@ const Stores: FunctionComponent = (): JSX.Element => {
         onFilterModelChange={onFilterModelChange}
         filterItem={storeFilterItem}
         handleOnFilterClick={handleOnFilterClick}
+        rowCount={rowCount}
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
+        menuData={menuData as IFacetValue}
+        onSortModelChange={handleSortModelChange}
+        initialState={initialGridState}
       />
     </ContentWrapper>
   );

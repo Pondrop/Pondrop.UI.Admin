@@ -1,11 +1,9 @@
-import { GridRowsProp } from '@mui/x-data-grid';
+import { IFacetDetails, IFilterItem } from 'store/api/types';
 
-import { IFilterItem } from 'store/api/types';
-
-export const getAllUniqueValues = (field: string, data?: GridRowsProp[]) => {
-  if (data?.length === 0) return [];
+export const getAllUniqueValues = (data: IFacetDetails[]) => {
   const completeValues: string[] = [];
-  data?.forEach((value) => completeValues.push(String(value[field as keyof GridRowsProp])));
+
+  data.forEach((val) => completeValues.push(val.value));
 
   return [...new Set(completeValues)];
 };

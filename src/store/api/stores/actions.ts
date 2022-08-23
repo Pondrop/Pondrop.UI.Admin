@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { IFilterItem, IGridState } from "../types";
+import { IFilterItem, IGridState, ISortItem } from "../types";
 
 const setStoresFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
   return {
@@ -20,4 +20,14 @@ const setStoresSearchValue = (state: IGridState, action: PayloadAction<string>) 
   };
 };
 
-export const actions = { setStoresFilter, setStoresSearchValue };
+const setStoresSortValue = (state: IGridState, action: PayloadAction<ISortItem>) => {
+  return {
+    ...state,
+    sortValue: {
+      field: action.payload.field,
+      sort: action.payload.sort,
+    }
+  };
+};
+
+export const actions = { setStoresFilter, setStoresSearchValue, setStoresSortValue };
