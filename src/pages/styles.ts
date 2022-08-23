@@ -4,10 +4,25 @@ import { TextField, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   width: calc(100vw - 440px);
-  padding: 16px 92px;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  position: absolute;
+  right: 0;
+  padding: 16px 92px 48px;
 
   & span {
     color: #72787e;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    height: 7px;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
   }
 `;
 

@@ -40,7 +40,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
 
   return (
     <PanelWrapper>
-      <img data-testid="pondrop-logo" src={pondrop} />
+      <img data-testid="pondrop-logo" src={pondrop} title="Pondrop" />
       <StyledButton
         data-testid="panel-store-btn"
         className="panel-btn"

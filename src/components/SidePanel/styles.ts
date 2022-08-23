@@ -6,6 +6,7 @@ export const PanelWrapper = styled.div`
   height: calc(100vh - 32px);
   border-right: 1px solid #dde3ea;
   padding: 16px;
+  position: fixed;
 
   .panel-btn {
     background-color: rgba(194, 231, 255, 0.5);
