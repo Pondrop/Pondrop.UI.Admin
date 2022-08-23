@@ -56,6 +56,10 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
+  const initialGridState = {
+    pagination: { pageSize: 10 },
+  };
+
   // Use Effects
   useEffect(() => {
     setStoreFilterItem(filterItem);
@@ -163,6 +167,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         onPageSizeChange={onPageSizeChange}
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
+        initialState={initialGridState}
       />
     </ContentWrapper>
   );

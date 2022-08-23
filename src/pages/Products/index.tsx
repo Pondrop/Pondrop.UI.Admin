@@ -29,7 +29,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   // States
   const [searchValueString, setSearchValueString] = useState<string>('');
   const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(initialState.filterItem);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
@@ -55,7 +55,8 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
-  const initialSort = {
+  const initialGridState = {
+    pagination: { pageSize },
     sorting: { sortModel: [{ field: 'PossibleCategories', sort: 'asc' as GridSortDirection }] },
   };
 
@@ -166,7 +167,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         onPageSizeChange={onPageSizeChange}
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
-        initialState={initialSort}
+        initialState={initialGridState}
       />
     </ContentWrapper>
   );

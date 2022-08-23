@@ -70,11 +70,8 @@ const Grid: FunctionComponent<IGridProps> = ({
       rows={gridData ?? []}
       columns={columns}
       autoHeight
-      rowsPerPageOptions={[10, 20, 40, 60, 80, 100]}
+      rowsPerPageOptions={[10, 20, 30, 40]}
       initialState={{
-        pagination: {
-          pageSize: 10,
-        },
         ...initialState,
       }}
       components={{
