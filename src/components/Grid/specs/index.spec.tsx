@@ -11,6 +11,10 @@ describe('<Grid />', () => {
   const mockOnPageSizeChange = jest.fn();
   const mockOnSortModelChange = jest.fn();
 
+  const initialGridState = {
+    pagination: { pageSize: 10 },
+  };
+
   const renderGrid = () =>
     render(
       <Grid
@@ -25,6 +29,7 @@ describe('<Grid />', () => {
         onPageSizeChange={mockOnPageSizeChange}
         menuData={menuMockData}
         onSortModelChange={mockOnSortModelChange}
+        initialState={initialGridState}
       />,
     );
 

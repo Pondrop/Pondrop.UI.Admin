@@ -28,9 +28,9 @@ describe('<GridMenu />', () => {
   });
 
   test('should display correct list', async () => {
-    const { container } = renderGridMenu();
-    const menuList = container.getElementsByClassName('MuiFormControlLabel-root');
+    const { getByRole } = renderGridMenu();
+    const menuList = getByRole('menu');
 
-    expect(menuList).toHaveLength(1);
+    expect(menuList).toHaveAttribute('items', '1');
   });
 });
