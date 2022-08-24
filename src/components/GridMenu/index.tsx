@@ -20,7 +20,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
     const isChecked = Array.isArray(filterItem.value) ? filterItem.value.includes(uniqueValues[index]) : false;
 
     return (
-      <RowDiv key={idValue} style={style}>
+      <RowDiv key={idValue} style={style} data-testid={`${currentColumn.field}-${idValue}`}>
         <StyledCheckbox onChange={handleOnGridFilterClick} value={idValue} checked={isChecked} />
         <LabelDiv>{uniqueValues[index]}</LabelDiv>
       </RowDiv>
