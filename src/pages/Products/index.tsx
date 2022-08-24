@@ -49,7 +49,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   const menuData = {
     GTIN: gtinData?.['@search.facets']?.GTIN,
     Company_Name: companyNameData?.['@search.facets']?.Company_Name,
-    Products: productsData?.['@search.facets']?.Products,
+    Product: productsData?.['@search.facets']?.Product,
     PossibleCategories: categoriesData?.['@search.facets']?.PossibleCategories,
   };
 

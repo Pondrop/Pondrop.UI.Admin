@@ -1,7 +1,8 @@
-import { ChangeEvent, ReactNode } from 'react';
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import { ChangeEvent } from 'react';
+import { ListChildComponentProps } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
-import { MenuWrapper } from './styles';
+import { LabelDiv, MenuWrapper, RowDiv, StyledCheckbox, StyledList } from './styles';
 import { ICustomMenuProps } from './types';
 import { getAllUniqueValues } from './utils';
 
@@ -14,25 +15,38 @@ const CustomMenu = (props: ICustomMenuProps) => {
 
   const uniqueValues = getAllUniqueValues(menuData[currentColumn.field]);
 
-  const renderMenuItems = () => {
-    const MenuItems: ReactNode[] = [];
-    uniqueValues.forEach((value) => {
-      const idValue = value.replace(/\s+/g, '-');
-      const isChecked = Array.isArray(filterItem.value) ? filterItem.value.includes(value) : false;
-      MenuItems.push(
-        <FormControlLabel
-          key={idValue}
-          control={<Checkbox onChange={handleOnGridFilterClick} value={idValue} checked={isChecked} />}
-          label={value}
-        />,
-      );
-    });
+  const MenuItems = ({ index, style }: Pick<ListChildComponentProps, 'index' | 'style'>) => {
+    const idValue = String(uniqueValues[index]).replace(/\s+/g, '-');
+    const isChecked = Array.isArray(filterItem.value) ? filterItem.value.includes(uniqueValues[index]) : false;
 
-    return <FormGroup>{MenuItems}</FormGroup>;
+    return (
+      <RowDiv key={idValue} style={style}>
+        <StyledCheckbox onChange={handleOnGridFilterClick} value={idValue} checked={isChecked} />
+        <LabelDiv>{uniqueValues[index]}</LabelDiv>
+      </RowDiv>
+    );
+  };
+
+  const renderMenuItems = () => {
+    return (
+      <AutoSizer>
+        {({ height, width }) => (
+          <StyledList
+            className={`${currentColumn.field}-List`}
+            height={height}
+            itemCount={uniqueValues.length}
+            itemSize={42}
+            width={width}
+          >
+            {MenuItems}
+          </StyledList>
+        )}
+      </AutoSizer>
+    );
   };
 
   return (
-    <MenuWrapper hideMenu={hideMenu} currentColumn={currentColumn} {...other}>
+    <MenuWrapper items={uniqueValues.length} hideMenu={hideMenu} currentColumn={currentColumn} {...other}>
       {renderMenuItems()}
     </MenuWrapper>
   );
