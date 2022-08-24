@@ -16,7 +16,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
   const uniqueValues = getAllUniqueValues(menuData[currentColumn.field]);
 
   const MenuItems = ({ index, style }: Pick<ListChildComponentProps, 'index' | 'style'>) => {
-    const idValue = uniqueValues[index].replace(/\s+/g, '-');
+    const idValue = String(uniqueValues[index]).replace(/\s+/g, '-');
     const isChecked = Array.isArray(filterItem.value) ? filterItem.value.includes(uniqueValues[index]) : false;
 
     return (
