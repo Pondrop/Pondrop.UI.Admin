@@ -14,7 +14,7 @@ export const PanelWrapper = styled.div`
     font-weight: 600;
 
     &:hover {
-      background-color: rgb(171, 200, 224, 0.54);
+      background-color: rgba(171, 200, 224, 0.54);
     }
   }
 

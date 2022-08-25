@@ -1,5 +1,5 @@
-import { ChangeEvent } from "react";
-import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridSortModel } from "@mui/x-data-grid";
+import { ChangeEvent, MouseEvent } from "react";
+import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridRowParams, GridSortModel, MuiEvent } from "@mui/x-data-grid";
 
 import { IFacetValue, IFilterItem, IValue } from "store/api/types";
 
@@ -17,4 +17,5 @@ export interface IGridProps {
   menuData: IFacetValue;
   onSortModelChange: (model: GridSortModel) => void;
   initialState?: GridInitialState;
+  onRowClick?: (params: GridRowParams, event: MuiEvent<MouseEvent>, details: GridCallbackDetails) => void;
 }
