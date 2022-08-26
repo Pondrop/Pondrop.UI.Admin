@@ -20,6 +20,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   menuData,
   onSortModelChange,
   initialState,
+  onRowClick,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -93,6 +94,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       filterMode="server"
       sortingMode="server"
       onSortModelChange={onSortModelChange}
+      onRowClick={onRowClick}
     />
   );
 };

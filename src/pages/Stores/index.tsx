@@ -1,8 +1,8 @@
 import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel, GridSortModel } from '@mui/x-data-grid';
+import { GridColDef, GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -23,6 +23,8 @@ import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Stores: FunctionComponent = (): JSX.Element => {
+  const navigate = useNavigate();
+
   // States
   const [searchValueString, setSearchValueString] = useState<string>('');
   const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem>(initialState.filterItem);
@@ -129,6 +131,10 @@ const Stores: FunctionComponent = (): JSX.Element => {
     );
   };
 
+  const handleOnRowClick = (params: GridRowParams) => {
+    navigate(`${params.id}`, { replace: false });
+  };
+
   return (
     <ContentWrapper>
       <RowAlignDiv>
@@ -168,6 +174,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
+        onRowClick={handleOnRowClick}
       />
     </ContentWrapper>
   );

@@ -60,4 +60,8 @@ export const StyledDataGrid = styled(DataGrid)`
     overflow: hidden;
     word-break: none;
   }
+
+  & .MuiDataGrid-cell:focus {
+    outline: none;
+  }
 `;

@@ -35,6 +35,15 @@ export const storeApi = createApi({
         };
       },
     }),
+    getStoreInfo: builder.query<IApiResponse, { storeId: string }>({
+      query: (arg) => {
+        const { storeId } = arg;
+        return {
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${storeId}'`}`,
+          method: 'GET',
+        };
+      },
+    }),
     getAllProviders: builder.query<IApiResponse, void>({
       query: () => {
         return {
@@ -86,4 +95,4 @@ export const storeApi = createApi({
   }),
 });
 
-export const { useGetStoresQuery, useGetAllProvidersQuery, useGetAllNamesQuery, useGetAllStreetsQuery, useGetAllCitiesQuery, useGetAllStatesQuery, useGetAllPostCodesQuery } = storeApi;
+export const { useGetStoreInfoQuery, useGetStoresQuery, useGetAllProvidersQuery, useGetAllNamesQuery, useGetAllStreetsQuery, useGetAllCitiesQuery, useGetAllStatesQuery, useGetAllPostCodesQuery } = storeApi;
