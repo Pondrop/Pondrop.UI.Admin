@@ -34,7 +34,7 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
   const renderContent = () => (
     <div>
       <StyledBreadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/stores">
+        <Link underline="hover" color="inherit" href="/stores" data-testid="stores-link">
           Stores
         </Link>
         <StyledTypography color="text.primary">{data?.value[0]?.['Name']}</StyledTypography>
