@@ -45,4 +45,18 @@ describe('<App />', () => {
     const productsTitle = getByTestId('products-header');
     expect(productsTitle).toBeInTheDocument();
   });
+
+  test('should show Store Details page', async () => {
+    const changeJSDOMURL = (url: string) => {
+      const newURL = new URL(url);
+      const href = `${window.origin}${newURL.pathname}${newURL.search}${newURL.hash}`;
+      history.replaceState(history.state, '', href);
+    };
+
+    changeJSDOMURL('http://localhost:3000/stores/76de546d-ed74-40ad-80d4-226b784ad001');
+    const { findByTestId } = renderApp();
+
+    const storeHeader = await findByTestId('stores-link');
+    expect(storeHeader).toBeInTheDocument();
+  });
 });
