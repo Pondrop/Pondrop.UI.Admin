@@ -1,8 +1,8 @@
 import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridColDef, GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import { productColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -21,11 +21,13 @@ import {
   setProductsSearchValue,
   setProductsSortValue,
 } from 'store/api/products/slice';
-import { ColAlignDiv, RowAlignDiv, ContentWrapper, StyledTextField, StyledTitle } from '../styles';
+import { ColAlignDiv, MainContent, RowAlignDiv, StyledTextField, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Products: FunctionComponent = (): JSX.Element => {
+  const navigate = useNavigate();
+
   // States
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [searchValueString, setSearchValueString] = useState<string>('');
@@ -60,6 +62,8 @@ const Products: FunctionComponent = (): JSX.Element => {
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
+
+  console.log('search ', searchValueString, searchValue);
 
   const initialGridState = {
     pagination: { pageSize },
@@ -140,8 +144,12 @@ const Products: FunctionComponent = (): JSX.Element => {
     );
   };
 
+  const handleOnRowClick = (params: GridRowParams) => {
+    navigate(`${params.id}`, { replace: false });
+  };
+
   return (
-    <ContentWrapper>
+    <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
           <StyledTitle variant="h5" gutterBottom data-testid="products-header">
@@ -179,8 +187,9 @@ const Products: FunctionComponent = (): JSX.Element => {
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
+        onRowClick={handleOnRowClick}
       />
-    </ContentWrapper>
+    </MainContent>
   );
 };
 

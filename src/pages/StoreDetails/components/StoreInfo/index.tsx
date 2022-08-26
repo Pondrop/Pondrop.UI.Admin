@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { IValue } from 'store/api/types';
+import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
+import { ITabPanelProps } from 'pages/types';
 import { storeTitles } from './constants';
-import { RowAlignDetails, RowAlignWrapper, StyledCard, StyledCardTitle, StyledTabContent } from './styles';
-import { ITabPanelProps } from './types';
 
 const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [storeInfo, setStoreInfo] = useState<IValue>({});
@@ -14,10 +14,10 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
 
   const renderStoreDetails = () => {
     return storeTitles.map((row, index) => (
-      <RowAlignDetails key={`${storeInfo.Id}-details-${index}`}>
+      <SpaceBetweenDiv key={`${storeInfo.Id}-details-${index}`}>
         <span className="row-label">{row.label}</span>
         <span className="row-value">{storeInfo?.[row.field]}</span>
-      </RowAlignDetails>
+      </SpaceBetweenDiv>
     ));
   };
 
@@ -28,16 +28,16 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
       const labelValue = row.split(':- ')[0];
       const hoursValue = row.split(':- ')[1];
       return (
-        <RowAlignDetails key={`${storeInfo.Id}-hours-${index}`}>
+        <SpaceBetweenDiv key={`${storeInfo.Id}-hours-${index}`}>
           <span className="row-label capitalize">{labelValue}</span>
           <span className="row-value">{hoursValue}</span>
-        </RowAlignDetails>
+        </SpaceBetweenDiv>
       );
     });
   };
 
   return (
-    <StyledTabContent role="tabpanel" hidden={value !== index} id="detail-0" aria-labelledby="tab-0">
+    <StyledTabContent role="tabpanel" hidden={value !== index} id="store-detail-0" aria-labelledby="tab-0">
       <RowAlignWrapper>
         <StyledCard width={502}>
           <StyledCardTitle variant="h6" gutterBottom>
