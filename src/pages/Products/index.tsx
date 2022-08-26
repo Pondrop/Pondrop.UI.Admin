@@ -6,7 +6,7 @@ import { GridColDef, GridFilterModel, GridSortDirection, GridSortModel } from '@
 
 import { productColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem } from 'store/api/types';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import {
   useGetAllCategoriesQuery,
   useGetAllCompanyNamesQuery,
@@ -27,6 +27,7 @@ import { handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Products: FunctionComponent = (): JSX.Element => {
   // States
+  const [gridData, setGridData] = useState<IValue[]>([]);
   const [searchValueString, setSearchValueString] = useState<string>('');
   const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(initialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
@@ -34,13 +35,18 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const { filterItem, searchValue = '', sortValue } = useAppSelector(selectProducts);
-  const { data, isFetching } = useGetProductsQuery({
-    searchString: searchValue,
-    sortValue,
-    filterItem,
-    prevPageItems: pageSkip,
-    pageSize,
-  });
+  const { data, isFetching } = useGetProductsQuery(
+    {
+      searchString: searchValue,
+      sortValue,
+      filterItem,
+      prevPageItems: pageSkip,
+      pageSize,
+    },
+    {
+      skip: searchValue === '',
+    },
+  );
   const { data: gtinData } = useGetAllGTINsQuery();
   const { data: companyNameData } = useGetAllCompanyNamesQuery();
   const { data: productsData } = useGetAllProductsQuery();
@@ -67,10 +73,15 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   useEffect(() => {
     setSearchValueString(searchValue ?? '');
+    if (searchValue === '') {
+      setGridData([]);
+      setRowCount(0);
+    }
   }, [searchValue]);
 
   useEffect(() => {
     setRowCount(data?.['@odata.count'] ?? 0);
+    setGridData(data?.value ?? []);
   }, [data]);
 
   // Handlers
@@ -155,7 +166,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         />
       </RowAlignDiv>
       <Grid
-        data={data?.value}
+        data={gridData}
         columns={productColumns}
         id="view-products-grid"
         isFetching={isFetching}
