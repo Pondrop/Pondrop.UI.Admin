@@ -18,7 +18,7 @@ import {
 } from 'store/api/stores/api';
 import { initialState } from 'store/api/stores/initialState';
 import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
-import { ColAlignDiv, RowAlignDiv, ContentWrapper, StyledTextField, StyledTitle } from '../styles';
+import { ColAlignDiv, MainContent, RowAlignDiv, StyledTextField, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 
@@ -136,7 +136,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
   };
 
   return (
-    <ContentWrapper>
+    <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
           <StyledTitle variant="h5" gutterBottom data-testid="stores-header">
@@ -176,7 +176,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         initialState={initialGridState}
         onRowClick={handleOnRowClick}
       />
-    </ContentWrapper>
+    </MainContent>
   );
 };
 

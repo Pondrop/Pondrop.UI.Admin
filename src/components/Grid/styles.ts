@@ -64,4 +64,8 @@ export const StyledDataGrid = styled(DataGrid)`
   & .MuiDataGrid-cell:focus {
     outline: none;
   }
+
+  & .MuiDataGrid-row {
+    cursor: pointer;
+  }
 `;

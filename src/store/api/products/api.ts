@@ -35,6 +35,15 @@ export const productsApi = createApi({
         };
       },
     }),
+    getProductInfo: builder.query<IApiResponse, { productId: string }>({
+      query: (arg) => {
+        const { productId } = arg;
+        return {
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${productId}'`}`,
+          method: 'GET',
+        };
+      },
+    }),
     getAllGTINs: builder.query<IApiResponse, void>({
       query: () => {
         return {
@@ -70,4 +79,4 @@ export const productsApi = createApi({
   }),
 });
 
-export const { useGetProductsQuery, useGetAllGTINsQuery, useGetAllCompanyNamesQuery, useGetAllProductsQuery, useGetAllCategoriesQuery } = productsApi;
+export const { useGetProductInfoQuery, useGetProductsQuery, useGetAllGTINsQuery, useGetAllCompanyNamesQuery, useGetAllProductsQuery, useGetAllCategoriesQuery } = productsApi;
