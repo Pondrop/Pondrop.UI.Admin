@@ -132,7 +132,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
   };
 
   const handleOnRowClick = (params: GridRowParams) => {
-    navigate(`${params.id}`, { replace: false });
+    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
   };
 
   return (

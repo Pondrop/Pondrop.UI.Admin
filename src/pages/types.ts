@@ -8,3 +8,7 @@ export interface ITabPanelProps {
   value: number;
   data?: IValue;
 }
+
+export interface IState {
+  rowData?: IValue;
+}
