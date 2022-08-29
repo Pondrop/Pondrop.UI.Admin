@@ -46,7 +46,7 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
   const renderContent = () => (
     <div>
       <StyledBreadcrumbs aria-label="breadcrumb">
-        <StyledTypography className="link" onClick={handlePrevious}>
+        <StyledTypography className="link" onClick={handlePrevious} data-testid="stores-link">
           Products
         </StyledTypography>
         <StyledTypography color="text.primary">{rowData?.['Name']}</StyledTypography>
