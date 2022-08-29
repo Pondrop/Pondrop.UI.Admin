@@ -1,9 +1,10 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
 import { useGetStoreInfoQuery } from 'store/api/stores/api';
 import StoreInfoPanel from './components/StoreInfo';
+import { IState } from 'pages/types';
 
 import {
   CircularLoaderWrapper,
@@ -20,9 +21,15 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   // React router dom values
+  const location = useLocation();
   const navigate = useNavigate();
   const { store_id } = useParams();
-  const { data, isFetching } = useGetStoreInfoQuery({ storeId: store_id ?? '' });
+
+  const { data, isFetching } = useGetStoreInfoQuery({ storeId: store_id ?? '' }, { skip: !!location.state });
+
+  const state = location?.state as IState;
+  const rowData = state?.rowData ?? data?.value[0];
+  const isLoading = state?.rowData ? false : isFetching;
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
@@ -42,22 +49,22 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
         <StyledTypography className="link" onClick={handlePrevious}>
           Products
         </StyledTypography>
-        <StyledTypography color="text.primary">{data?.value[0]?.['Name']}</StyledTypography>
+        <StyledTypography color="text.primary">{rowData?.['Name']}</StyledTypography>
       </StyledBreadcrumbs>
       <StyledTitle variant="h5" gutterBottom>
-        {data?.value[0]?.['Name']}
+        {rowData?.['Name']}
       </StyledTitle>
       <StyledSubtitle variant="subtitle1" gutterBottom>
-        {`${data?.value[0]?.['Street']}, ${data?.value[0]?.['City']} ${data?.value[0]?.['State']} ${data?.value[0]?.['Zip_Code']}`}
+        {`${rowData?.['Street']}, ${rowData?.['City']} ${rowData?.['State']} ${rowData?.['Zip_Code']}`}
       </StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Store information" id="tab-0" aria-controls="store-detail-0" disableRipple />
       </StyledTabs>
-      <StoreInfoPanel value={currentTab} index={0} data={data?.value[0]} />
+      <StoreInfoPanel value={currentTab} index={0} data={rowData} />
     </div>
   );
 
-  return <ContentDetails>{isFetching ? renderLoader() : renderContent()}</ContentDetails>;
+  return <ContentDetails>{isLoading ? renderLoader() : renderContent()}</ContentDetails>;
 };
 
 export default StoreDetails;

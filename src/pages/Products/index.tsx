@@ -63,8 +63,6 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
-  console.log('search ', searchValueString, searchValue);
-
   const initialGridState = {
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'PossibleCategories', sort: 'asc' as GridSortDirection }] },
@@ -145,7 +143,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   };
 
   const handleOnRowClick = (params: GridRowParams) => {
-    navigate(`${params.id}`, { replace: false });
+    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
   };
 
   return (

@@ -180,6 +180,7 @@ export const StyledCard = styled.div<{ width: number }>`
 
   .row-label {
     font-weight: 600;
+    min-width: 100px;
   }
 
   .capitalize {
@@ -188,6 +189,10 @@ export const StyledCard = styled.div<{ width: number }>`
 
   .row-value {
     font-weight: 400;
+    max-width: ${({ width }) => `${width - 170}px`};
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
