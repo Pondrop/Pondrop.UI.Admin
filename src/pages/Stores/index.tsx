@@ -116,12 +116,11 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   const handleOnFilterClick = (value: string, currentColumn: string) => {
     if (!value) return;
-    const labelValue = String(value).replaceAll('-', ' ');
 
     const combinedValue =
       storeFilterItem.columnField === currentColumn && Array.isArray(storeFilterItem.value)
-        ? handleFilterStateChange(labelValue, storeFilterItem)
-        : [labelValue];
+        ? handleFilterStateChange(value, storeFilterItem)
+        : [value];
 
     dispatch(
       setStoresFilter({

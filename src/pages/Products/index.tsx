@@ -127,12 +127,11 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const handleOnFilterClick = (value: string, currentColumn: string) => {
     if (!value) return;
-    const labelValue = String(value).replaceAll('-', ' ');
 
     const combinedValue =
       productsFilterItem.columnField === currentColumn && Array.isArray(productsFilterItem.value)
-        ? handleFilterStateChange(labelValue, productsFilterItem)
-        : [labelValue];
+        ? handleFilterStateChange(value, productsFilterItem)
+        : [value];
 
     dispatch(
       setProductsFilter({

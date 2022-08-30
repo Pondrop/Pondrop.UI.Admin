@@ -23,7 +23,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
         key={idValue}
         style={style}
         data-testid={`${currentColumn.field}-${idValue}`}
-        onClick={handleOnGridFilterClick(idValue)}
+        onClick={handleOnGridFilterClick(uniqueValues[index])}
       >
         <StyledCheckbox value={idValue} checked={isChecked} />
         <LabelDiv>{uniqueValues[index]}</LabelDiv>
