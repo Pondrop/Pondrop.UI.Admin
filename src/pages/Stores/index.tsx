@@ -2,7 +2,7 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } fr
 import { useNavigate } from 'react-router-dom';
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -114,17 +114,17 @@ const Stores: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (event: ChangeEvent<HTMLInputElement>, currentColumn: GridColDef) => {
-    if (!event?.target?.labels) return;
+  const handleOnFilterClick = (value: string, currentColumn: string) => {
+    if (!value) return;
 
     const combinedValue =
-      storeFilterItem.columnField === currentColumn.field && Array.isArray(storeFilterItem.value)
-        ? handleFilterStateChange(event?.target?.labels[0].outerText, storeFilterItem)
-        : [event?.target?.labels[0].outerText];
+      storeFilterItem.columnField === currentColumn && Array.isArray(storeFilterItem.value)
+        ? handleFilterStateChange(value, storeFilterItem)
+        : [value];
 
     dispatch(
       setStoresFilter({
-        columnField: currentColumn.field,
+        columnField: currentColumn,
         value: combinedValue,
         operatorValue: 'isAnyOf',
       }),
@@ -139,10 +139,12 @@ const Stores: FunctionComponent = (): JSX.Element => {
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle variant="h5" gutterBottom data-testid="stores-header">
+          <StyledTitle variant="h5" gutterBottom data-testid="stores-header" isdetails={false}>
             Stores
           </StyledTitle>
-          <StyledTitle variant="caption">Last updated: 12th August, 2022 @ 10:01am</StyledTitle>
+          <StyledTitle variant="caption" isdetails={false}>
+            Last updated: 12th August, 2022 @ 10:01am
+          </StyledTitle>
         </ColAlignDiv>
         <StyledTextField
           id="search-field"
