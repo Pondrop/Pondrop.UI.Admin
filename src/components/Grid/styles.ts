@@ -50,13 +50,10 @@ export const StyledDataGrid = styled(DataGrid)`
 
   & .MuiDataGrid-cell {
     padding: 10px;
-    max-height: 61px !important;
   }
 
   & .MuiDataGrid-cellContent {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
     overflow: hidden;
     word-break: none;
   }
