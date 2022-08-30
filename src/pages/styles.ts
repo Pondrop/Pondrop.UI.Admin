@@ -27,6 +27,10 @@ export const MainContent = styled(ContentWrapper)`
   width: calc(100vw - 440px);
   max-height: calc(100vh - 64px);
   padding: 16px 92px 48px;
+
+  .main-header {
+    padding: 0;
+  }
 `;
 
 export const ContentDetails = styled(ContentWrapper)`
@@ -55,9 +59,9 @@ export const StyledTypography = styled(Typography)`
   color: rgba(0, 0, 0, 0.87);
 `;
 
-export const StyledTitle = styled(Typography)<{ isdetails?: boolean }>`
+export const StyledTitle = styled(Typography)`
   font-weight: 600;
-  padding: ${({ isdetails = true }) => isdetails ? '0 32px' : '0'};
+  padding: 0 32px;
   color: #001E2F;
 `;
 

@@ -139,10 +139,10 @@ const Stores: FunctionComponent = (): JSX.Element => {
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle variant="h5" gutterBottom data-testid="stores-header" isdetails={false}>
+          <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="stores-header">
             Stores
           </StyledTitle>
-          <StyledTitle variant="caption" isdetails={false}>
+          <StyledTitle className="main-header" variant="caption">
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
