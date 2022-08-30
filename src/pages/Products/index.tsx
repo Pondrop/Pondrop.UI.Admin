@@ -150,10 +150,12 @@ const Products: FunctionComponent = (): JSX.Element => {
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle variant="h5" gutterBottom data-testid="products-header">
+          <StyledTitle variant="h5" gutterBottom data-testid="products-header" isDetails={false}>
             Products
           </StyledTitle>
-          <StyledTitle variant="caption">Last updated: 12th August, 2022 @ 10:01am</StyledTitle>
+          <StyledTitle variant="caption" isDetails={false}>
+            Last updated: 12th August, 2022 @ 10:01am
+          </StyledTitle>
         </ColAlignDiv>
         <StyledTextField
           id="search-field"

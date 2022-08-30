@@ -140,10 +140,12 @@ const Stores: FunctionComponent = (): JSX.Element => {
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle variant="h5" gutterBottom data-testid="stores-header">
+          <StyledTitle variant="h5" gutterBottom data-testid="stores-header" isDetails={false}>
             Stores
           </StyledTitle>
-          <StyledTitle variant="caption">Last updated: 12th August, 2022 @ 10:01am</StyledTitle>
+          <StyledTitle variant="caption" isDetails={false}>
+            Last updated: 12th August, 2022 @ 10:01am
+          </StyledTitle>
         </ColAlignDiv>
         <StyledTextField
           id="search-field"

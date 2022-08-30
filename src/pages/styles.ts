@@ -55,9 +55,9 @@ export const StyledTypography = styled(Typography)`
   color: rgba(0, 0, 0, 0.87);
 `;
 
-export const StyledTitle = styled(Typography)`
+export const StyledTitle = styled(Typography)<{ isDetails?: boolean }>`
   font-weight: 600;
-  padding: 0 32px;
+  padding: ${({ isDetails = true }) => isDetails ? '0 32px' : '0'};
   color: #001E2F;
 `;
 
