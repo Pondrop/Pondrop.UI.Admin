@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 export const StyledDataGrid = styled(DataGrid)`
@@ -50,15 +51,12 @@ export const StyledDataGrid = styled(DataGrid)`
 
   & .MuiDataGrid-cell {
     padding: 10px;
-    max-height: 61px !important;
   }
 
   & .MuiDataGrid-cellContent {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
     overflow: hidden;
-    word-break: none;
+    white-space: nowrap;
   }
 
   & .MuiDataGrid-cell:focus {
@@ -68,4 +66,11 @@ export const StyledDataGrid = styled(DataGrid)`
   & .MuiDataGrid-row {
     cursor: pointer;
   }
+`;
+
+export const StyledCellContent = styled(Typography)`
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;

@@ -84,7 +84,6 @@ const Grid: FunctionComponent<IGridProps> = ({
       }}
       loading={isFetching}
       getRowId={(row) => row.Id}
-      getRowHeight={() => 'auto'}
       filterModel={getFilterModel()}
       onFilterModelChange={onFilterModelChange}
       paginationMode="server"

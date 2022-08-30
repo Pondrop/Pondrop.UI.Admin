@@ -17,7 +17,12 @@ export const store = configureStore({
     [productsApi.reducerPath]: productsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(storeApi.middleware).concat(productsApi.middleware),
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    })
+      .concat(storeApi.middleware)
+      .concat(productsApi.middleware),
 });
 
 // types

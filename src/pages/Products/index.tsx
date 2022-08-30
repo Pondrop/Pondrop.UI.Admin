@@ -150,10 +150,10 @@ const Products: FunctionComponent = (): JSX.Element => {
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle variant="h5" gutterBottom data-testid="products-header" isdetails={false}>
+          <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="products-header">
             Products
           </StyledTitle>
-          <StyledTitle variant="caption" isdetails={false}>
+          <StyledTitle className="main-header" variant="caption">
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
