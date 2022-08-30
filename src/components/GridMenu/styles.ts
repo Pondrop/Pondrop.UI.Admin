@@ -17,6 +17,7 @@ export const RowDiv = styled.div`
   display: flex;
   flex-direction: row;
   width: 200px;
+  cursor: pointer;
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);

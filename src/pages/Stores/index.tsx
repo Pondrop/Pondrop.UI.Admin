@@ -2,7 +2,7 @@ import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } fr
 import { useNavigate } from 'react-router-dom';
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { GridColDef, GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -114,18 +114,18 @@ const Stores: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (event: ChangeEvent<HTMLInputElement>, currentColumn: GridColDef) => {
-    if (!event?.target?.labels) return;
-    const labelValue = String(event.target.value).replace('-', ' ');
+  const handleOnFilterClick = (value: string, currentColumn: string) => {
+    if (!value) return;
+    const labelValue = String(value).replaceAll('-', ' ');
 
     const combinedValue =
-      storeFilterItem.columnField === currentColumn.field && Array.isArray(storeFilterItem.value)
+      storeFilterItem.columnField === currentColumn && Array.isArray(storeFilterItem.value)
         ? handleFilterStateChange(labelValue, storeFilterItem)
         : [labelValue];
 
     dispatch(
       setStoresFilter({
-        columnField: currentColumn.field,
+        columnField: currentColumn,
         value: combinedValue,
         operatorValue: 'isAnyOf',
       }),
@@ -140,10 +140,10 @@ const Stores: FunctionComponent = (): JSX.Element => {
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle variant="h5" gutterBottom data-testid="stores-header" isDetails={false}>
+          <StyledTitle variant="h5" gutterBottom data-testid="stores-header" isdetails={false}>
             Stores
           </StyledTitle>
-          <StyledTitle variant="caption" isDetails={false}>
+          <StyledTitle variant="caption" isdetails={false}>
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
