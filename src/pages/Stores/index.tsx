@@ -116,11 +116,12 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   const handleOnFilterClick = (event: ChangeEvent<HTMLInputElement>, currentColumn: GridColDef) => {
     if (!event?.target?.labels) return;
+    const labelValue = String(event.target.value).replace('-', ' ');
 
     const combinedValue =
       storeFilterItem.columnField === currentColumn.field && Array.isArray(storeFilterItem.value)
-        ? handleFilterStateChange(event?.target?.labels[0].outerText, storeFilterItem)
-        : [event?.target?.labels[0].outerText];
+        ? handleFilterStateChange(labelValue, storeFilterItem)
+        : [labelValue];
 
     dispatch(
       setStoresFilter({
