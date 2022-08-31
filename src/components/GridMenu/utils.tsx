@@ -3,7 +3,9 @@ import { IFacetDetails, IFilterItem } from 'store/api/types';
 export const getAllUniqueValues = (data: IFacetDetails[]) => {
   const completeValues: string[] = [];
 
-  data?.forEach((val) => completeValues.push(val.value));
+  data?.forEach((val) => {
+    if (val.value) completeValues.push(val.value);
+  });
 
   return [...new Set(completeValues)];
 };

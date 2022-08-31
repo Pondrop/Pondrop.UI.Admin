@@ -7,15 +7,7 @@ import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid'
 import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem } from 'store/api/types';
-import {
-  useGetAllCitiesQuery,
-  useGetAllNamesQuery,
-  useGetAllPostCodesQuery,
-  useGetAllProvidersQuery,
-  useGetAllStatesQuery,
-  useGetAllStreetsQuery,
-  useGetStoresQuery,
-} from 'store/api/stores/api';
+import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
 import { initialState } from 'store/api/stores/initialState';
 import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTextField, StyledTitle } from '../styles';
@@ -40,20 +32,20 @@ const Stores: FunctionComponent = (): JSX.Element => {
     prevPageItems: pageSkip,
     pageSize,
   });
-  const { data: providerData } = useGetAllProvidersQuery();
-  const { data: nameData } = useGetAllNamesQuery();
-  const { data: streetData } = useGetAllStreetsQuery();
-  const { data: cityData } = useGetAllCitiesQuery();
-  const { data: stateData } = useGetAllStatesQuery();
-  const { data: postcodeData } = useGetAllPostCodesQuery();
+
+  const gridData = data?.value ?? [];
+  const { data: filterOptionsData } = useGetAllStoreFilterQuery(
+    { searchString: searchValue },
+    { skip: !gridData.length },
+  );
 
   const menuData = {
-    Provider: providerData?.['@search.facets']?.Provider,
-    Name: nameData?.['@search.facets']?.Name,
-    Street: streetData?.['@search.facets']?.Street,
-    City: cityData?.['@search.facets']?.City,
-    State: stateData?.['@search.facets']?.State,
-    Zip_Code: postcodeData?.['@search.facets']?.Zip_Code,
+    Provider: filterOptionsData?.['@search.facets']?.Provider,
+    Name: filterOptionsData?.['@search.facets']?.Name,
+    Street: filterOptionsData?.['@search.facets']?.Street,
+    City: filterOptionsData?.['@search.facets']?.City,
+    State: filterOptionsData?.['@search.facets']?.State,
+    Zip_Code: filterOptionsData?.['@search.facets']?.Zip_Code,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);

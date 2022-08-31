@@ -7,13 +7,7 @@ import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from
 import { productColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
-import {
-  useGetAllCategoriesQuery,
-  useGetAllCompanyNamesQuery,
-  useGetAllGTINsQuery,
-  useGetAllProductsQuery,
-  useGetProductsQuery,
-} from 'store/api/products/api';
+import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { initialState } from 'store/api/products/initialState';
 import {
   selectProducts,
@@ -49,16 +43,16 @@ const Products: FunctionComponent = (): JSX.Element => {
       skip: searchValue === '',
     },
   );
-  const { data: gtinData } = useGetAllGTINsQuery();
-  const { data: companyNameData } = useGetAllCompanyNamesQuery();
-  const { data: productsData } = useGetAllProductsQuery();
-  const { data: categoriesData } = useGetAllCategoriesQuery();
+  const { data: filterOptionsData } = useGetAllProductFilterQuery(
+    { searchString: searchValue },
+    { skip: !gridData.length },
+  );
 
   const menuData = {
-    GTIN: gtinData?.['@search.facets']?.GTIN,
-    Company_Name: companyNameData?.['@search.facets']?.Company_Name,
-    Product: productsData?.['@search.facets']?.Product,
-    PossibleCategories: categoriesData?.['@search.facets']?.PossibleCategories,
+    GTIN: filterOptionsData?.['@search.facets']?.GTIN,
+    Company_Name: filterOptionsData?.['@search.facets']?.Company_Name,
+    Product: filterOptionsData?.['@search.facets']?.Product,
+    PossibleCategories: filterOptionsData?.['@search.facets']?.PossibleCategories,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);

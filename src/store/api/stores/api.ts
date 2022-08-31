@@ -44,55 +44,16 @@ export const storeApi = createApi({
         };
       },
     }),
-    getAllProviders: builder.query<IApiResponse, void>({
-      query: () => {
+    getAllStoreFilter: builder.query<IApiResponse, { searchString: string }>({
+      query: (arg) => {
+        const { searchString } = arg;
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Provider,count:0`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*&$count=true&facet=Provider,count:0,sort:value&facet=Name,count:0,sort:value&facet=Street,count:0,sort:value&facet=City,count:0,sort:value&facet=State,count:0,sort:value&facet=Zip_Code,count:0,sort:value`,
           method: 'GET',
         };
       },
-    }),
-    getAllNames: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Name,count:0`,
-          method: 'GET',
-        };
-      },
-    }),
-    getAllStreets: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Street,count:0`,
-          method: 'GET',
-        };
-      },
-    }),
-    getAllCities: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=City,count:0`,
-          method: 'GET',
-        };
-      },
-    }),
-    getAllStates: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=State,count:0`,
-          method: 'GET',
-        };
-      },
-    }),
-    getAllPostCodes: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Zip_Code,count:0`,
-          method: 'GET',
-        };
-      },
-    }),
+    })
   }),
 });
 
-export const { useGetStoreInfoQuery, useGetStoresQuery, useGetAllProvidersQuery, useGetAllNamesQuery, useGetAllStreetsQuery, useGetAllCitiesQuery, useGetAllStatesQuery, useGetAllPostCodesQuery } = storeApi;
+export const { useGetAllStoreFilterQuery, useGetStoreInfoQuery, useGetStoresQuery } = storeApi;
