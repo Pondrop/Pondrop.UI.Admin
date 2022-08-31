@@ -48,7 +48,7 @@ export const productsApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*&$count=true&facet=GTIN,count:0,sort:value&facet=Company_Name,count:0,sort:value&facet=Product,count:0,sort:value&facet=PossibleCategories,count:0,sort:value`,
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&search=${searchString}*&$count=true&facet=GTIN,count:0,sort:value&facet=Company_Name,count:0,sort:value&facet=Product,count:0,sort:value&facet=PossibleCategories,count:0,sort:value`,
           method: 'GET',
         };
       },
