@@ -49,10 +49,10 @@ const Products: FunctionComponent = (): JSX.Element => {
       skip: searchValue === '',
     },
   );
-  const { data: gtinData } = useGetAllGTINsQuery();
-  const { data: companyNameData } = useGetAllCompanyNamesQuery();
-  const { data: productsData } = useGetAllProductsQuery();
-  const { data: categoriesData } = useGetAllCategoriesQuery();
+  const { data: gtinData } = useGetAllGTINsQuery(undefined, { skip: !gridData.length });
+  const { data: companyNameData } = useGetAllCompanyNamesQuery(undefined, { skip: !gridData.length });
+  const { data: productsData } = useGetAllProductsQuery(undefined, { skip: !gridData.length });
+  const { data: categoriesData } = useGetAllCategoriesQuery(undefined, { skip: !gridData.length });
 
   const menuData = {
     GTIN: gtinData?.['@search.facets']?.GTIN,

@@ -47,7 +47,7 @@ export const productsApi = createApi({
     getAllGTINs: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=GTIN,count:0`,
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=GTIN,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -55,7 +55,7 @@ export const productsApi = createApi({
     getAllCompanyNames: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=Company_Name,count:0`,
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=Company_Name,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -63,7 +63,7 @@ export const productsApi = createApi({
     getAllProducts: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=Product,count:0`,
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=Product,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -71,7 +71,7 @@ export const productsApi = createApi({
     getAllCategories: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=PossibleCategories,count:0`,
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=PossibleCategories,count:0,sort:value`,
           method: 'GET',
         };
       },

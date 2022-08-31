@@ -47,7 +47,7 @@ export const storeApi = createApi({
     getAllProviders: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Provider,count:0`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Provider,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -55,7 +55,7 @@ export const storeApi = createApi({
     getAllNames: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Name,count:0`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Name,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -63,7 +63,7 @@ export const storeApi = createApi({
     getAllStreets: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Street,count:0`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Street,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -71,7 +71,7 @@ export const storeApi = createApi({
     getAllCities: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=City,count:0`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=City,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -79,7 +79,7 @@ export const storeApi = createApi({
     getAllStates: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=State,count:0`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=State,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -87,7 +87,7 @@ export const storeApi = createApi({
     getAllPostCodes: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Zip_Code,count:0`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&$count=true&facet=Zip_Code,count:0,sort:value`,
           method: 'GET',
         };
       },

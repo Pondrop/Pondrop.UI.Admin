@@ -40,12 +40,14 @@ const Stores: FunctionComponent = (): JSX.Element => {
     prevPageItems: pageSkip,
     pageSize,
   });
-  const { data: providerData } = useGetAllProvidersQuery();
-  const { data: nameData } = useGetAllNamesQuery();
-  const { data: streetData } = useGetAllStreetsQuery();
-  const { data: cityData } = useGetAllCitiesQuery();
-  const { data: stateData } = useGetAllStatesQuery();
-  const { data: postcodeData } = useGetAllPostCodesQuery();
+
+  const gridData = data?.value ?? [];
+  const { data: providerData } = useGetAllProvidersQuery(undefined, { skip: !gridData.length });
+  const { data: nameData } = useGetAllNamesQuery(undefined, { skip: !gridData.length });
+  const { data: streetData } = useGetAllStreetsQuery(undefined, { skip: !gridData.length });
+  const { data: cityData } = useGetAllCitiesQuery(undefined, { skip: !gridData.length });
+  const { data: stateData } = useGetAllStatesQuery(undefined, { skip: !gridData.length });
+  const { data: postcodeData } = useGetAllPostCodesQuery(undefined, { skip: !gridData.length });
 
   const menuData = {
     Provider: providerData?.['@search.facets']?.Provider,
