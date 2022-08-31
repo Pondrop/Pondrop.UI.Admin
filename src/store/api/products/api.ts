@@ -44,34 +44,11 @@ export const productsApi = createApi({
         };
       },
     }),
-    getAllGTINs: builder.query<IApiResponse, void>({
-      query: () => {
+    getAllProductFilter: builder.query<IApiResponse, { searchString: string }>({
+      query: (arg) => {
+        const { searchString } = arg;
         return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=GTIN,count:0,sort:value`,
-          method: 'GET',
-        };
-      },
-    }),
-    getAllCompanyNames: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=Company_Name,count:0,sort:value`,
-          method: 'GET',
-        };
-      },
-    }),
-    getAllProducts: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=Product,count:0,sort:value`,
-          method: 'GET',
-        };
-      },
-    }),
-    getAllCategories: builder.query<IApiResponse, void>({
-      query: () => {
-        return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&$count=true&facet=PossibleCategories,count:0,sort:value`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*&$count=true&facet=GTIN,count:0,sort:value&facet=Company_Name,count:0,sort:value&facet=Product,count:0,sort:value&facet=PossibleCategories,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -79,4 +56,4 @@ export const productsApi = createApi({
   }),
 });
 
-export const { useGetProductInfoQuery, useGetProductsQuery, useGetAllGTINsQuery, useGetAllCompanyNamesQuery, useGetAllProductsQuery, useGetAllCategoriesQuery } = productsApi;
+export const { useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery } = productsApi;
