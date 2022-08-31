@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Breadcrumbs, Tab, Tabs, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -37,19 +37,6 @@ export const ContentDetails = styled(ContentWrapper)`
   width: calc(100vw - 255px);
   max-height: calc(100vh - 36px);
   padding-top: 36px;
-`;
-
-export const StyledTextField = styled(TextField)`
-  width: 321px;
-  
-  & input {
-    height: 24px;
-    padding: 16px 14px 14px;
-  }
-
-  & svg {
-    margin-left: 12px;
-  }
 `;
 
 export const StyledTypography = styled(Typography)`
