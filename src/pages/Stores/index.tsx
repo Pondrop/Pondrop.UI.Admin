@@ -1,7 +1,5 @@
-import { ChangeEvent, FunctionComponent, KeyboardEvent, useState, useEffect } from 'react';
+import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { InputAdornment } from '@mui/material';
-import { Search } from '@mui/icons-material';
 import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
@@ -10,15 +8,15 @@ import { IFacetValue, IFilterItem } from 'store/api/types';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
 import { initialState } from 'store/api/stores/initialState';
 import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
-import { ColAlignDiv, MainContent, RowAlignDiv, StyledTextField, StyledTitle } from '../styles';
+import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
 
 const Stores: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [searchValueString, setSearchValueString] = useState<string>('');
   const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem>(initialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
@@ -60,22 +58,12 @@ const Stores: FunctionComponent = (): JSX.Element => {
   }, [filterItem]);
 
   useEffect(() => {
-    setSearchValueString(searchValue ?? '');
-  }, [searchValue]);
-
-  useEffect(() => {
     setRowCount(data?.['@odata.count'] ?? 0);
   }, [data]);
 
   // Handlers
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchValueString(e.target.value);
-  };
-
-  const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      dispatch(setStoresSearchValue(searchValueString));
-    }
+  const handleSearchDispatch = (searchValue: string) => {
+    dispatch(setStoresSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
@@ -138,21 +126,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
-        <StyledTextField
-          id="search-field"
-          variant="standard"
-          placeholder="Search"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            ),
-          }}
-          value={searchValueString}
-          onChange={handleSearch}
-          onKeyDown={handleOnKeyDown}
-        />
+        <SearchField id="store-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
       </RowAlignDiv>
       <Grid
         data={data?.value}
