@@ -41,7 +41,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   const menuData = {
     Category: filterOptionsData?.['@search.facets']?.Category,
-    Descrption: filterOptionsData?.['@search.facets']?.Descrption,
+    Description: filterOptionsData?.['@search.facets']?.Description,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);

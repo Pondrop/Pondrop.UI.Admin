@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 
-import { Products, ProductDetails, Stores, StoreDetails } from './pages';
+import { Categories, Products, ProductDetails, Stores, StoreDetails } from './pages';
 import SidePanel from 'components/SidePanel';
 import { DivWrapper } from 'App.styles';
 
@@ -13,6 +13,7 @@ function App() {
           <Route path="*" element={<Navigate to="/stores" />} />
           <Route path="/stores" element={<Stores />} />
           <Route path="/stores/:store_id" element={<StoreDetails />} />
+          <Route path="/categories" element={<Categories />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:product_id" element={<ProductDetails />} />
         </Routes>
