@@ -35,7 +35,16 @@ export const categoriesApi = createApi({
         };
       },
     }),
+    getAllCategoriesFilter: builder.query<IApiResponse, { searchString: string }>({
+      query: (arg) => {
+        const { searchString } = arg;
+        return {
+          url: `/indexes/azuresql-index-category/docs?api-version=2021-04-30-Preview&search=${searchString}*&$count=true&facet=Category,count:0,sort:value&facet=Description,count:0,sort:value`,
+          method: 'GET',
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetCategoriesQuery } = categoriesApi;
+export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } = categoriesApi;
