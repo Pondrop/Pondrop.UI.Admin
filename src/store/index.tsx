@@ -1,8 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
+import { categoriesApi } from './api/categories/api';
 import { storeApi } from './api/stores/api';
 import { productsApi } from './api/products/api';
+import categoriesReducer from './api/categories/slice';
 import productsReducer from './api/products/slice';
 import storeReducer from './api/stores/slice';
 import userReducer from './user/slice';
@@ -10,9 +12,11 @@ import userReducer from './user/slice';
 // global store
 export const store = configureStore({
   reducer: {
+    categories: categoriesReducer,
     store: storeReducer,
-    user: userReducer,
     products: productsReducer,
+    user: userReducer,
+    [categoriesApi.reducerPath]: categoriesApi.reducer,
     [storeApi.reducerPath]: storeApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
   },
@@ -22,7 +26,8 @@ export const store = configureStore({
       serializableCheck: false,
     })
       .concat(storeApi.middleware)
-      .concat(productsApi.middleware),
+      .concat(productsApi.middleware)
+      .concat(categoriesApi.middleware),
 });
 
 // types

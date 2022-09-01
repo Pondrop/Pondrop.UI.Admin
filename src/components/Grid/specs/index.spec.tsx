@@ -1,7 +1,7 @@
 import { render } from 'utils/testUtilities';
 
 import { gridMockData, menuMockData } from '__mocks__/gridMockData';
-import { initialState } from 'store/api/stores/initialState';
+import { initialState } from 'store/api/constants';
 import Grid from '../../Grid';
 import { storeColumns } from '../constants';
 

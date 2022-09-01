@@ -6,7 +6,7 @@ import { storeColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
-import { initialState } from 'store/api/stores/initialState';
+import { initialState } from 'store/api/constants';
 import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
