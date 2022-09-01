@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "store";
 import { actions } from "./actions";
-import { initialState } from "./initialState";
+import { productInitialState } from "./initialState";
 
 export const productsSlice = createSlice({
   name: 'products',
-  initialState: initialState,
+  initialState: productInitialState,
   reducers: actions,
 });
 

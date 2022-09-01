@@ -6,7 +6,7 @@ import { productColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
-import { initialState } from 'store/api/products/initialState';
+import { productInitialState } from 'store/api/products/initialState';
 import {
   selectProducts,
   setProductsFilter,
@@ -23,7 +23,7 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   // States
   const [gridData, setGridData] = useState<IValue[]>([]);
-  const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(initialState.filterItem);
+  const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(productInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 

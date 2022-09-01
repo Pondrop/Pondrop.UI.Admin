@@ -1,4 +1,4 @@
-import { IGridState } from "../types";
+import { IGridState } from "./types";
 
 export const initialState: IGridState = {
   filterItem: {

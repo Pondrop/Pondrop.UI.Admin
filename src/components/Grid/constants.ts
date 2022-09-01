@@ -16,3 +16,8 @@ export const productColumns: GridColDef[] = [
   { field: 'Product', headerName: 'Product', filterOperators: getGridStringOperators(), flex: 1, renderCell: handleRenderCell },
   { field: 'PossibleCategories', headerName: 'Categories', filterOperators: getGridStringOperators(), flex: 1.5, renderCell: handleRenderCell },
 ];
+
+export const categoriesColumns: GridColDef[] = [
+  { field: 'Category', headerName: 'Category', filterOperators: getGridStringOperators(), flex: 1, renderCell: handleRenderCell },
+  { field: 'Description', headerName: 'Category Description', filterOperators: getGridStringOperators(), flex: 2, renderCell: handleRenderCell },
+];

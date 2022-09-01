@@ -1,29 +1,31 @@
 import { FunctionComponent, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
-import { storeColumns } from 'components/Grid/constants';
+import { categoriesColumns } from 'components/Grid/constants';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem } from 'store/api/types';
-import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
+import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
 import { initialState } from 'store/api/constants';
-import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
+import {
+  selectCategories,
+  setCategoriesFilter,
+  setCategoriesSearchValue,
+  setCategoriesSortValue,
+} from 'store/api/categories/slice';
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
-const Stores: FunctionComponent = (): JSX.Element => {
-  const navigate = useNavigate();
-
+const Categories: FunctionComponent = (): JSX.Element => {
   // States
-  const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem>(initialState.filterItem);
+  const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(initialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectStores);
-  const { data, isFetching } = useGetStoresQuery({
+  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectCategories);
+  const { data, isFetching } = useGetCategoriesQuery({
     searchString: searchValue,
     sortValue,
     filterItem,
@@ -32,18 +34,14 @@ const Stores: FunctionComponent = (): JSX.Element => {
   });
 
   const gridData = data?.value ?? [];
-  const { data: filterOptionsData } = useGetAllStoreFilterQuery(
+  const { data: filterOptionsData } = useGetAllCategoriesFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
   );
 
   const menuData = {
-    Provider: filterOptionsData?.['@search.facets']?.Provider,
-    Name: filterOptionsData?.['@search.facets']?.Name,
-    Street: filterOptionsData?.['@search.facets']?.Street,
-    City: filterOptionsData?.['@search.facets']?.City,
-    State: filterOptionsData?.['@search.facets']?.State,
-    Zip_Code: filterOptionsData?.['@search.facets']?.Zip_Code,
+    Category: filterOptionsData?.['@search.facets']?.Category,
+    Description: filterOptionsData?.['@search.facets']?.Description,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
@@ -54,7 +52,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setStoreFilterItem(filterItem);
+    setCategoryFilterItem(filterItem);
   }, [filterItem]);
 
   useEffect(() => {
@@ -63,13 +61,13 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    dispatch(setStoresSearchValue(searchValue));
+    dispatch(setCategoriesSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
     dispatch(
-      setStoresFilter({
+      setCategoriesFilter({
         columnField: model.items[0].columnField,
         value: model.items[0].value,
         operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
@@ -79,7 +77,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   const handleSortModelChange = (model: GridSortModel) => {
     dispatch(
-      setStoresSortValue({
+      setCategoriesSortValue({
         field: model[0]?.field,
         sort: model[0]?.sort,
       }),
@@ -98,12 +96,12 @@ const Stores: FunctionComponent = (): JSX.Element => {
     if (!value) return;
 
     const combinedValue =
-      storeFilterItem.columnField === currentColumn && Array.isArray(storeFilterItem.value)
-        ? handleFilterStateChange(value, storeFilterItem)
+      categoryFilterItem.columnField === currentColumn && Array.isArray(categoryFilterItem.value)
+        ? handleFilterStateChange(value, categoryFilterItem)
         : [value];
 
     dispatch(
-      setStoresFilter({
+      setCategoriesFilter({
         columnField: currentColumn,
         value: combinedValue,
         operatorValue: 'isAnyOf',
@@ -111,30 +109,26 @@ const Stores: FunctionComponent = (): JSX.Element => {
     );
   };
 
-  const handleOnRowClick = (params: GridRowParams) => {
-    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
-  };
-
   return (
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
           <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="stores-header">
-            Stores
+            Categories
           </StyledTitle>
           <StyledTitle className="main-header" variant="caption">
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
-        <SearchField id="store-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+        <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
       </RowAlignDiv>
       <Grid
         data={data?.value}
-        columns={storeColumns}
-        id="view-stores-grid"
+        columns={categoriesColumns}
+        id="view-categories-grid"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
-        filterItem={storeFilterItem}
+        filterItem={categoryFilterItem}
         handleOnFilterClick={handleOnFilterClick}
         rowCount={rowCount}
         onPageChange={onPageChange}
@@ -142,10 +136,9 @@ const Stores: FunctionComponent = (): JSX.Element => {
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
-        onRowClick={handleOnRowClick}
       />
     </MainContent>
   );
 };
 
-export default Stores;
+export default Categories;

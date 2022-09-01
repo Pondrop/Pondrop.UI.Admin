@@ -1,9 +1,10 @@
 import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCartOutlined, Logout, Storefront } from '@mui/icons-material';
+import { DescriptionOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
 
 import pondrop from 'assets/images/pondrop.png';
 import { useAppDispatch } from 'store';
+import { setCategoriesFilter, setCategoriesSearchValue } from 'store/api/categories/slice';
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
 import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 
@@ -13,6 +14,18 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
+
+  const handleCategoriesRedirect = () => {
+    navigate('../categories', { replace: true });
+    dispatch(
+      setCategoriesFilter({
+        columnField: '',
+        value: [],
+        operatorValue: 'isAnyOf',
+      }),
+    );
+    dispatch(setCategoriesSearchValue(''));
+  };
 
   const handleProductsRedirect = () => {
     navigate('../products', { replace: true });
@@ -46,11 +59,22 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         className="panel-btn"
         variant="contained"
         size="large"
-        startIcon={<Storefront className="start-icon" />}
+        startIcon={<Storefront className="store-icon" />}
         disableElevation
         onClick={handleStoresRedirect}
       >
         Stores
+      </StyledButton>
+      <StyledButton
+        data-testid="panel-category-btn"
+        className="panel-btn"
+        variant="contained"
+        size="large"
+        startIcon={<DescriptionOutlined className="category-icon" />}
+        disableElevation
+        onClick={handleCategoriesRedirect}
+      >
+        Categories
       </StyledButton>
       <StyledButton
         data-testid="panel-product-btn"

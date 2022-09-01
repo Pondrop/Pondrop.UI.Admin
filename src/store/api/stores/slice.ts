@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "store";
 import { actions } from "./actions";
-import { initialState } from "./initialState";
+import { initialState } from "../constants";
 
 export const storeSlice = createSlice({
   name: 'store',
