@@ -1,21 +1,21 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
+import Grid from 'components/Grid';
 import { categoriesColumns } from 'components/Grid/constants';
+import { handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem } from 'store/api/types';
-import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
 import { initialState } from 'store/api/constants';
+import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
 import {
   selectCategories,
   setCategoriesFilter,
   setCategoriesSearchValue,
   setCategoriesSortValue,
 } from 'store/api/categories/slice';
-import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
-import Grid from 'components/Grid';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
-import SearchField from 'components/SearchField';
+import { IFacetValue, IFilterItem } from 'store/api/types';
+import { ColAlignDiv, MainContent, RowAlignDiv, StyledFab, StyledTitle } from '../styles';
 
 const Categories: FunctionComponent = (): JSX.Element => {
   // States
@@ -137,6 +137,9 @@ const Categories: FunctionComponent = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
       />
+      <StyledFab color="primary" variant="extended" aria-label="add">
+        + Add Category
+      </StyledFab>
     </MainContent>
   );
 };

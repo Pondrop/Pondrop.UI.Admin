@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Tab, Tabs, Typography } from "@mui/material";
+import { Breadcrumbs, Fab, Tab, Tabs, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -192,4 +192,10 @@ export const StyledCardTitle = styled(Typography)`
   font-size: 18px;
   font-weight: 400;
   margin-bottom: 16px;
+`;
+
+export const StyledFab = styled(Fab)`
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
 `;
