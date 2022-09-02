@@ -1,4 +1,5 @@
 import { FunctionComponent, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
 import Grid from 'components/Grid';
@@ -15,9 +16,19 @@ import {
   setCategoriesSortValue,
 } from 'store/api/categories/slice';
 import { IFacetValue, IFilterItem } from 'store/api/types';
-import { ColAlignDiv, MainContent, RowAlignDiv, StyledFab, StyledTitle } from '../styles';
+import {
+  CategoryBtnWrapper,
+  ColAlignDiv,
+  MainContent,
+  RowAlignDiv,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledTitle,
+} from '../styles';
 
 const Categories: FunctionComponent = (): JSX.Element => {
+  const navigate = useNavigate();
+
   // States
   const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(initialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -109,6 +120,10 @@ const Categories: FunctionComponent = (): JSX.Element => {
     );
   };
 
+  const handleAddCategory = () => {
+    navigate('create', { replace: false });
+  };
+
   return (
     <MainContent>
       <RowAlignDiv>
@@ -120,7 +135,21 @@ const Categories: FunctionComponent = (): JSX.Element => {
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
-        <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+        <RowAlignWrapper>
+          <CategoryBtnWrapper rightmargin={20}>
+            <StyledCategoryBtn
+              data-testid="add-category-btn"
+              className="add-category-btn"
+              variant="contained"
+              disableElevation
+              onClick={handleAddCategory}
+              height={48}
+            >
+              + Add Category
+            </StyledCategoryBtn>
+          </CategoryBtnWrapper>
+          <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+        </RowAlignWrapper>
       </RowAlignDiv>
       <Grid
         data={data?.value}
@@ -137,9 +166,6 @@ const Categories: FunctionComponent = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
       />
-      <StyledFab color="primary" variant="extended" aria-label="add">
-        + Add Category
-      </StyledFab>
     </MainContent>
   );
 };

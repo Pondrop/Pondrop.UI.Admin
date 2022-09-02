@@ -39,14 +39,14 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="store-detail-0" aria-labelledby="tab-0">
       <RowAlignWrapper>
-        <StyledCard width={502}>
+        <StyledCard width={502} height={260}>
           <StyledCardTitle variant="h6" gutterBottom>
             Details
           </StyledCardTitle>
           {renderStoreDetails()}
           <RowAlignWrapper></RowAlignWrapper>
         </StyledCard>
-        <StyledCard width={341}>
+        <StyledCard width={341} height={260}>
           <StyledCardTitle variant="h6" gutterBottom>
             Opening Hours
           </StyledCardTitle>
