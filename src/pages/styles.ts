@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Tab, Tabs, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -31,6 +31,10 @@ export const MainContent = styled(ContentWrapper)`
   .main-header {
     padding: 0;
   }
+
+  .MuiAlert-root {
+    border: 1px solid #bef7be;
+  }
 `;
 
 export const ContentDetails = styled(ContentWrapper)`
@@ -52,11 +56,11 @@ export const StyledTitle = styled(Typography)`
   color: #001E2F;
 `;
 
-export const StyledSubtitle = styled(Typography)`
+export const StyledSubtitle = styled(Typography)<{ ismodify?: number }>`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  padding: 0 32px 40px;
+  padding: 0 32px ${({ ismodify = 0 }) => ismodify ? '64px' : '40px'};
   color: #001F2A;
 `;
 
@@ -66,8 +70,9 @@ export const RowAlignWrapper = styled.div`
 `;
 
 // previously RowAlignDetails
-export const SpaceBetweenDiv = styled(RowAlignWrapper)`
+export const SpaceBetweenDiv = styled(RowAlignWrapper)<{ withmargin?: boolean }>`
   justify-content: space-between;
+  ${({ withmargin = true }) => withmargin && 'margin: 4px 0;'}
 `;
 
 export const RowAlignDiv = styled(SpaceBetweenDiv)`
@@ -103,6 +108,8 @@ export const StyledBreadcrumbs = styled(Breadcrumbs)`
 `;
 
 export const StyledTabs = styled(Tabs)`
+  position: relative;
+  z-index: 1;
   .MuiTabs-flexContainer {
     margin-left: 32px;
   }
@@ -148,17 +155,16 @@ export const StyledTabContent = styled.div`
   background-color: #fafcff;
   height: calc(100vh - 265px);
   width: calc(100% - 1px);
-  z-index: -1;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   top: -2px;
   left: 1px;
 `;
 
-export const StyledCard = styled.div<{ width: number }>`
+export const StyledCard = styled.div<{ width: number, height: number }>`
   margin: 16px 0 0 32px;
   padding: 16px;
   width: ${({ width }) => `${width - 32}px`};
-  height: 232px;
+  height: ${({ height }) => height}px;
   background-color: #ffffff;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
@@ -185,6 +191,10 @@ export const StyledCard = styled.div<{ width: number }>`
     overflow-x: hidden;
     text-overflow: ellipsis;
   }
+
+  .create-components {
+    width: 300px;
+  }
 `;
 
 export const StyledCardTitle = styled(Typography)`
@@ -192,4 +202,42 @@ export const StyledCardTitle = styled(Typography)`
   font-size: 18px;
   font-weight: 400;
   margin-bottom: 16px;
+`;
+
+export const StyledCategoryBtn = styled(Button)<{ height: number }>`
+  height: ${({ height }) => height}px;
+  padding: 6px 32px;
+  text-transform: none;
+`;
+
+export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`
+  align-self: center;
+  margin-right: ${({ rightmargin }) => rightmargin}px;
+`;
+
+export const StyledTextInput = styled(TextField)`
+  height: 14px;
+
+  & legend {
+    display: none;
+  }
+
+  & fieldset {
+    top: 0;
+  }
+
+  & input {
+    line-height: 14px;
+    font-size: 14px;
+    padding: 4px 14px;
+  }
+
+  & textarea {
+    line-height: 14px;
+    font-size: 14px;
+  }
+
+  .Mui-focused {
+    border-width: 10px;
+  }
 `;

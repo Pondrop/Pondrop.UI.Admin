@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse, IFilterItem, ISortItem } from '../types';
+import { ICategory, ICreateCategoryRequest } from './types';
 
 export const categoriesApi = createApi({
   reducerPath: 'categoriesApi',
@@ -47,4 +48,28 @@ export const categoriesApi = createApi({
   }),
 });
 
+export const categoriesMicroService = createApi({
+  reducerPath: 'categoriesMicroService',
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: "https://product-service.ashyocean-bde16918.australiaeast.azurecontainerapps.io",
+    prepareHeaders: (headers) => {
+      headers.set('Content-Type', 'application/json');
+
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    createCategory: builder.mutation<ICategory, ICreateCategoryRequest>({
+      query: (arg) => {
+        return {
+          url: `/Category/create`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
+  }),
+});
+
 export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } = categoriesApi;
+export const { useCreateCategoryMutation} = categoriesMicroService;

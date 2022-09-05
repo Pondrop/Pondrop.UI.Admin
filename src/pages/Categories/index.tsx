@@ -1,23 +1,39 @@
 import { FunctionComponent, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Alert, Snackbar } from '@mui/material';
 import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
+import Grid from 'components/Grid';
 import { categoriesColumns } from 'components/Grid/constants';
+import { handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem } from 'store/api/types';
-import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
 import { initialState } from 'store/api/constants';
+import {
+  useCreateCategoryMutation,
+  useGetAllCategoriesFilterQuery,
+  useGetCategoriesQuery,
+} from 'store/api/categories/api';
 import {
   selectCategories,
   setCategoriesFilter,
   setCategoriesSearchValue,
   setCategoriesSortValue,
 } from 'store/api/categories/slice';
-import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
-import Grid from 'components/Grid';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
-import SearchField from 'components/SearchField';
+import { IFacetValue, IFilterItem } from 'store/api/types';
+import {
+  CategoryBtnWrapper,
+  ColAlignDiv,
+  MainContent,
+  RowAlignDiv,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledTitle,
+} from '../styles';
 
 const Categories: FunctionComponent = (): JSX.Element => {
+  const navigate = useNavigate();
+
   // States
   const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(initialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -38,6 +54,11 @@ const Categories: FunctionComponent = (): JSX.Element => {
     { searchString: searchValue },
     { skip: !gridData.length },
   );
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [, { isSuccess, reset }] = useCreateCategoryMutation({
+    fixedCacheKey: 'shared-snackbar-state',
+  });
 
   const menuData = {
     Category: filterOptionsData?.['@search.facets']?.Category,
@@ -109,6 +130,20 @@ const Categories: FunctionComponent = (): JSX.Element => {
     );
   };
 
+  const handleAddCategory = () => {
+    navigate('create', { replace: false });
+  };
+
+  const handleSnackbarClose = () => {
+    setIsOpen(false);
+    reset();
+  };
+
+  // useEffects
+  useEffect(() => {
+    setIsOpen(isSuccess);
+  }, [isSuccess]);
+
   return (
     <MainContent>
       <RowAlignDiv>
@@ -120,7 +155,21 @@ const Categories: FunctionComponent = (): JSX.Element => {
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
-        <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+        <RowAlignWrapper>
+          <CategoryBtnWrapper rightmargin={20}>
+            <StyledCategoryBtn
+              data-testid="add-category-btn"
+              className="add-category-btn"
+              variant="contained"
+              disableElevation
+              onClick={handleAddCategory}
+              height={48}
+            >
+              + Add Category
+            </StyledCategoryBtn>
+          </CategoryBtnWrapper>
+          <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+        </RowAlignWrapper>
       </RowAlignDiv>
       <Grid
         data={data?.value}
@@ -137,6 +186,11 @@ const Categories: FunctionComponent = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
       />
+      <Snackbar open={isOpen} onClose={handleSnackbarClose} autoHideDuration={2000}>
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Successfully created a category!
+        </Alert>
+      </Snackbar>
     </MainContent>
   );
 };
