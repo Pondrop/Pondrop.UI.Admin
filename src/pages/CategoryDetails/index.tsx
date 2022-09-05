@@ -1,6 +1,8 @@
-import { FunctionComponent, SyntheticEvent, useState } from 'react';
+import { FunctionComponent, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 
+import { useCreateCategoryMutation } from 'store/api/categories/api';
+import { ICreateCategoryRequest } from 'store/api/categories/types';
 import CategoryInfoPanel from './components/CategoryInfoPanel';
 
 import {
@@ -18,11 +20,21 @@ import {
 
 const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
+  const createCategoryRef = useRef<ICreateCategoryRequest>({
+    categoryName: '',
+    description: '',
+  });
+
+  // Microservice endpoints
+  const [createCategory, { isSuccess }] = useCreateCategoryMutation({
+    fixedCacheKey: 'shared-snackbar-state',
+  });
 
   // React router dom values
   const navigate = useNavigate();
   const isCreate = useMatch('/categories/create');
 
+  // Handlers
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
   };
@@ -30,8 +42,13 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const handlePrevious = () => navigate(-1);
 
   const handleAddCategory = () => {
-    // Insert code here
+    createCategory(createCategoryRef.current);
   };
+
+  // useEffects
+  useEffect(() => {
+    if (isSuccess) navigate('../categories', { replace: true });
+  }, [isSuccess]);
 
   const renderAddCategoryBtn = () => (
     <CategoryBtnWrapper rightmargin={32}>
@@ -76,7 +93,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Category information" id="tab-0" aria-controls="category-detail-0" disableRipple />
       </StyledTabs>
-      <CategoryInfoPanel value={currentTab} index={0} data={{}} isCreate={!!isCreate} />
+      <CategoryInfoPanel value={currentTab} index={0} data={{}} isCreate={!!isCreate} requestRef={createCategoryRef} />
     </div>
   );
 

@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-import { categoriesApi } from './api/categories/api';
+import { categoriesApi, categoriesMicroService } from './api/categories/api';
 import { storeApi } from './api/stores/api';
 import { productsApi } from './api/products/api';
 import categoriesReducer from './api/categories/slice';
@@ -17,6 +17,7 @@ export const store = configureStore({
     products: productsReducer,
     user: userReducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
+    [categoriesMicroService.reducerPath]: categoriesMicroService.reducer,
     [storeApi.reducerPath]: storeApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
   },
@@ -27,7 +28,8 @@ export const store = configureStore({
     })
       .concat(storeApi.middleware)
       .concat(productsApi.middleware)
-      .concat(categoriesApi.middleware),
+      .concat(categoriesApi.middleware)
+      .concat(categoriesMicroService.middleware),
 });
 
 // types

@@ -1,5 +1,6 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Alert, Snackbar } from '@mui/material';
 import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
 import Grid from 'components/Grid';
@@ -8,7 +9,11 @@ import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
 import { initialState } from 'store/api/constants';
-import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
+import {
+  useCreateCategoryMutation,
+  useGetAllCategoriesFilterQuery,
+  useGetCategoriesQuery,
+} from 'store/api/categories/api';
 import {
   selectCategories,
   setCategoriesFilter,
@@ -49,6 +54,11 @@ const Categories: FunctionComponent = (): JSX.Element => {
     { searchString: searchValue },
     { skip: !gridData.length },
   );
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [, { isSuccess, reset }] = useCreateCategoryMutation({
+    fixedCacheKey: 'shared-snackbar-state',
+  });
 
   const menuData = {
     Category: filterOptionsData?.['@search.facets']?.Category,
@@ -124,6 +134,16 @@ const Categories: FunctionComponent = (): JSX.Element => {
     navigate('create', { replace: false });
   };
 
+  const handleSnackbarClose = () => {
+    setIsOpen(false);
+    reset();
+  };
+
+  // useEffects
+  useEffect(() => {
+    setIsOpen(isSuccess);
+  }, [isSuccess]);
+
   return (
     <MainContent>
       <RowAlignDiv>
@@ -166,6 +186,11 @@ const Categories: FunctionComponent = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
       />
+      <Snackbar open={isOpen} onClose={handleSnackbarClose} autoHideDuration={2000}>
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Successfully created a category!
+        </Alert>
+      </Snackbar>
     </MainContent>
   );
 };

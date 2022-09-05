@@ -31,6 +31,10 @@ export const MainContent = styled(ContentWrapper)`
   .main-header {
     padding: 0;
   }
+
+  .MuiAlert-root {
+    border: 1px solid #bef7be;
+  }
 `;
 
 export const ContentDetails = styled(ContentWrapper)`

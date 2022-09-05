@@ -7,20 +7,30 @@ import {
   StyledTabContent,
   StyledTextInput,
 } from 'pages/styles';
-import { ITabPanelProps } from 'pages/types';
+import { ICategoryTabProps } from 'pages/types';
 import { categoryTitles } from './constants';
 
-const ProductInfoPanel = ({ value, index, data, isCreate }: ITabPanelProps): JSX.Element => {
+const ProductInfoPanel = ({ value, index, data, isCreate, requestRef }: ICategoryTabProps): JSX.Element => {
   const [category, setCategory] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
   // Handlers
   const handleCategoryOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCategory(e.target.value);
+    if (requestRef)
+      requestRef.current = {
+        ...requestRef.current,
+        categoryName: e.target.value,
+      };
   };
 
   const handleDescriptionOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
+    if (requestRef)
+      requestRef.current = {
+        ...requestRef.current,
+        description: e.target.value,
+      };
   };
 
   const renderCreateCategory = () => {
