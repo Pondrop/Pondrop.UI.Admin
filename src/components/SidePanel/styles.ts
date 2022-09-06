@@ -9,7 +9,6 @@ export const PanelWrapper = styled.div`
   position: fixed;
 
   .panel-btn {
-    background-color: rgba(194, 231, 255, 0.5);
     color: #001e2f;
     font-weight: 600;
 
@@ -31,13 +30,14 @@ export const PanelWrapper = styled.div`
   }
 `;
 
-export const StyledButton = styled(Button)`
+export const StyledButton = styled(Button)<{ isActive?: boolean }>`
   width: 100%;
   height: 48px;
   justify-content: start;
   padding: 12px;
-  margin: 16px 0;
+  margin: 8px 0;
   text-transform: none;
+  background-color: ${({ isActive = false }) => isActive ? 'rgba(194, 231, 255, 0.5)' : 'transparent'};
 
   & span {
     margin: 0px;
