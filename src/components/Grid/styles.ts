@@ -2,10 +2,13 @@ import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-export const StyledDataGrid = styled(DataGrid)`
+export const StyledDataGrid = styled(DataGrid)<{ withBorder: boolean }>`
   padding: 16px 16px 0;
-  border-radius: 12px;
-  border: 1px solid #dde3ea;
+  
+  ${({ withBorder }) => withBorder ? `
+    border-radius: 12px;
+    border: 1px solid #dde3ea;
+  ` : 'border: none;'}
 
   & .MuiDataGrid-columnSeparator {
     display: none;

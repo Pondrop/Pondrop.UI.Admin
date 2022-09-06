@@ -16,7 +16,7 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
     return storeTitles.map((row, index) => (
       <SpaceBetweenDiv key={`${storeInfo.Id}-details-${index}`}>
         <span className="row-label">{row.label}</span>
-        <span className="row-value">{storeInfo?.[row.field]}</span>
+        <span className="row-value singleline">{storeInfo?.[row.field]}</span>
       </SpaceBetweenDiv>
     ));
   };
@@ -30,7 +30,7 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
       return (
         <SpaceBetweenDiv key={`${storeInfo.Id}-hours-${index}`}>
           <span className="row-label capitalize">{labelValue}</span>
-          <span className="row-value">{hoursValue}</span>
+          <span className="row-value singleline">{hoursValue}</span>
         </SpaceBetweenDiv>
       );
     });
@@ -39,14 +39,14 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="store-detail-0" aria-labelledby="tab-0">
       <RowAlignWrapper>
-        <StyledCard width={502} height={260}>
+        <StyledCard width="470px" height="260px">
           <StyledCardTitle variant="h6" gutterBottom>
             Details
           </StyledCardTitle>
           {renderStoreDetails()}
           <RowAlignWrapper></RowAlignWrapper>
         </StyledCard>
-        <StyledCard width={341} height={260}>
+        <StyledCard width="309px" height="260px">
           <StyledCardTitle variant="h6" gutterBottom>
             Opening Hours
           </StyledCardTitle>

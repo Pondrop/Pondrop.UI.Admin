@@ -73,6 +73,10 @@ export const RowAlignWrapper = styled.div`
 export const SpaceBetweenDiv = styled(RowAlignWrapper)<{ withmargin?: boolean }>`
   justify-content: space-between;
   ${({ withmargin = true }) => withmargin && 'margin: 4px 0;'}
+
+  .update-category-btn {
+    align-self: flex-start;
+  }
 `;
 
 export const RowAlignDiv = styled(SpaceBetweenDiv)`
@@ -153,18 +157,31 @@ export const CircularLoaderWrapper = styled.div`
 export const StyledTabContent = styled.div`
   position: relative;
   background-color: #fafcff;
-  height: calc(100vh - 265px);
+  height: calc(100vh - 289px);
   width: calc(100% - 1px);
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   top: -2px;
   left: 1px;
+  overflow-y: scroll;
+  padding-bottom: 24px;
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    height: 7px;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 `;
 
-export const StyledCard = styled.div<{ width: number, height: number }>`
+export const StyledCard = styled.div<{ width: string, height: string }>`
   margin: 16px 0 0 32px;
   padding: 16px;
-  width: ${({ width }) => `${width - 32}px`};
-  height: ${({ height }) => height}px;
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
   background-color: #ffffff;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
@@ -186,14 +203,33 @@ export const StyledCard = styled.div<{ width: number, height: number }>`
 
   .row-value {
     font-weight: 400;
-    max-width: ${({ width }) => `${width - 170}px`};
+    max-width: ${({ width }) => `calc(${width} - 170px)`};
+  }
+
+  .singleline {
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;
   }
 
+  .multiline {
+    max-width: 300px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    text-align: right;
+    line-height: 16px;
+    max-height: 64px;
+    text-overflow: ellipsis;
+  }
+
   .create-components {
     width: 300px;
+  }
+
+  .grid-card {
+    padding-bottom:
   }
 `;
 
