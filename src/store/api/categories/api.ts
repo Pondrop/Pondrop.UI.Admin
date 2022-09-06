@@ -36,6 +36,15 @@ export const categoriesApi = createApi({
         };
       },
     }),
+    getCategoryInfo: builder.query<IApiResponse, { categoryId: string }>({
+      query: (arg) => {
+        const { categoryId } = arg;
+        return {
+          url: `/indexes/azuresql-index-category/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${categoryId}'`}`,
+          method: 'GET',
+        };
+      },
+    }),
     getAllCategoriesFilter: builder.query<IApiResponse, { searchString: string }>({
       query: (arg) => {
         const { searchString } = arg;
@@ -71,5 +80,5 @@ export const categoriesMicroService = createApi({
   }),
 });
 
-export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } = categoriesApi;
+export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery } = categoriesApi;
 export const { useCreateCategoryMutation} = categoriesMicroService;

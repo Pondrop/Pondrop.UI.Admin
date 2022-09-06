@@ -21,3 +21,10 @@ export const categoriesColumns: GridColDef[] = [
   { field: 'Category', headerName: 'Category', filterOperators: getGridStringOperators(), flex: 1, renderCell: handleRenderCell },
   { field: 'Description', headerName: 'Category Description', filterOperators: getGridStringOperators(), flex: 2, renderCell: handleRenderCell },
 ];
+
+export const linkedProductsColumns: GridColDef[] = [
+  { field: 'Product', headerName: 'Product', filterOperators: getGridStringOperators(), flex: 1, renderCell: handleRenderCell },
+  { field: 'GTIN', headerName: 'GTIN', filterOperators: getGridStringOperators(), width: 150, renderCell: handleRenderCell },
+  { field: 'PossibleCategories', headerName: 'Categories', filterOperators: getGridStringOperators(), flex: 1.5, renderCell: handleRenderCell },
+  { field: 'Brand', headerName: 'Brand Name', filterOperators: getGridStringOperators(), flex: 1, renderCell: handleRenderCell },
+];

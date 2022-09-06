@@ -2,9 +2,9 @@ import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
+import { IState } from 'pages/types';
 import { useGetStoreInfoQuery } from 'store/api/stores/api';
 import StoreInfoPanel from './components/StoreInfo';
-import { IState } from 'pages/types';
 
 import {
   CircularLoaderWrapper,

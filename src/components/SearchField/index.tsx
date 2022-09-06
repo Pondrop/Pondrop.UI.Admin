@@ -5,7 +5,7 @@ import { Search } from '@mui/icons-material';
 import { StyledTextField } from './styles';
 import { ISearchFieldProps } from './types';
 
-const SearchField = ({ onEnterPress, value, id }: ISearchFieldProps): JSX.Element => {
+const SearchField = ({ onEnterPress, value, id, isfullsize = true }: ISearchFieldProps): JSX.Element => {
   const [searchValueString, setSearchValueString] = useState<string>(value);
 
   useEffect(() => {
@@ -37,6 +37,7 @@ const SearchField = ({ onEnterPress, value, id }: ISearchFieldProps): JSX.Elemen
       value={searchValueString}
       onChange={handleSearch}
       onKeyDown={handleOnKeyDown}
+      isfullsize={isfullsize}
     />
   );
 };

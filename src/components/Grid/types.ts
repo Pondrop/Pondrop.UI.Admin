@@ -18,4 +18,5 @@ export interface IGridProps {
   onSortModelChange: (model: GridSortModel) => void;
   initialState?: GridInitialState;
   onRowClick?: (params: GridRowParams, event: MuiEvent<MouseEvent>, details: GridCallbackDetails) => void;
+  withBorder?: boolean;
 }

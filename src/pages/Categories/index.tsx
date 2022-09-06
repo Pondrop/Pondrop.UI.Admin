@@ -1,7 +1,7 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Snackbar } from '@mui/material';
-import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
 import Grid from 'components/Grid';
 import { categoriesColumns } from 'components/Grid/constants';
@@ -139,6 +139,10 @@ const Categories: FunctionComponent = (): JSX.Element => {
     reset();
   };
 
+  const handleOnRowClick = (params: GridRowParams) => {
+    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
+  };
+
   // useEffects
   useEffect(() => {
     setIsOpen(isSuccess);
@@ -185,6 +189,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
+        onRowClick={handleOnRowClick}
       />
       <Snackbar open={isOpen} onClose={handleSnackbarClose} autoHideDuration={2000}>
         <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>

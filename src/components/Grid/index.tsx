@@ -21,6 +21,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   onSortModelChange,
   initialState,
   onRowClick,
+  withBorder = true,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -95,6 +96,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       onSortModelChange={onSortModelChange}
       onRowClick={onRowClick}
       disableColumnMenu={!!!gridData?.length}
+      withBorder={withBorder}
     />
   );
 };

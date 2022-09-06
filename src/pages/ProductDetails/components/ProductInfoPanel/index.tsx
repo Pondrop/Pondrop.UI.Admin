@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { IValue } from 'store/api/types';
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
 import { ITabPanelProps } from 'pages/types';
+import { IValue } from 'store/api/types';
 import { activityValues, productTitles } from './constants';
 
 const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
@@ -16,7 +16,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
     return productTitles.map((row, index) => (
       <SpaceBetweenDiv key={`${productInfo.Id}-details-${index}`}>
         <span className="row-label">{row.label}</span>
-        <span className="row-value">{productInfo?.[row.field]}</span>
+        <span className="row-value singleline">{productInfo?.[row.field]}</span>
       </SpaceBetweenDiv>
     ));
   };
@@ -25,7 +25,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
     return activityValues.map((activity, index) => (
       <SpaceBetweenDiv key={`${productInfo.Id}-activity-${index}`}>
         <span className="row-label">{activity.label}</span>
-        <span className="row-value">{activity.value}</span>
+        <span className="row-value singleline">{activity.value}</span>
       </SpaceBetweenDiv>
     ));
   };
@@ -33,19 +33,17 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="product-detail-0" aria-labelledby="tab-0">
       <RowAlignWrapper>
-        <StyledCard width={502} height={260}>
+        <StyledCard width="470px" height="260px">
           <StyledCardTitle variant="h6" gutterBottom>
             Details
           </StyledCardTitle>
           {renderStoreDetails()}
-          <RowAlignWrapper></RowAlignWrapper>
         </StyledCard>
-        <StyledCard width={341} height={260}>
+        <StyledCard width="309px" height="260px">
           <StyledCardTitle variant="h6" gutterBottom>
             Activity
           </StyledCardTitle>
           {renderActivity()}
-          <RowAlignWrapper></RowAlignWrapper>
         </StyledCard>
       </RowAlignWrapper>
     </StyledTabContent>
