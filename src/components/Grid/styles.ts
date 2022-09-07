@@ -2,7 +2,9 @@ import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-export const StyledDataGrid = styled(DataGrid)<{ withBorder: boolean, hasClickEvent: boolean }>`
+export const StyledDataGrid = styled(DataGrid, {
+  shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent'].includes(prop)
+})<{ withBorder: boolean, hasClickEvent: boolean }>`
   padding: 16px 16px 0;
   
   ${({ withBorder }) => withBorder ? `

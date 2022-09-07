@@ -3,7 +3,9 @@ import { Checkbox } from "@mui/material";
 import { GridColumnMenuContainer } from "@mui/x-data-grid";
 import { FixedSizeList } from "react-window";
 
-export const MenuWrapper = styled(GridColumnMenuContainer)<{ items: number }>`
+export const MenuWrapper = styled(GridColumnMenuContainer, {
+  shouldForwardProp: (prop) => prop !== 'items'
+})<{ items: number }>`
   border: 1px solid rgba(114, 120, 126, 0.5);
   border-radius: 12px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);

@@ -56,7 +56,9 @@ export const StyledTitle = styled(Typography)`
   color: #001E2F;
 `;
 
-export const StyledSubtitle = styled(Typography)<{ ismodify?: number }>`
+export const StyledSubtitle = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'ismodify'
+})<{ ismodify?: number }>`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
@@ -240,7 +242,9 @@ export const StyledCardTitle = styled(Typography)`
   margin-bottom: 16px;
 `;
 
-export const StyledCategoryBtn = styled(Button)<{ height: number }>`
+export const StyledCategoryBtn = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'height'
+})<{ height: number }>`
   height: ${({ height }) => height}px;
   padding: 6px 32px;
   text-transform: none;

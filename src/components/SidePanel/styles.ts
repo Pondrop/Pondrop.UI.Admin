@@ -30,7 +30,9 @@ export const PanelWrapper = styled.div`
   }
 `;
 
-export const StyledButton = styled(Button)<{ isActive?: boolean }>`
+export const StyledButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'isActive'
+})<{ isActive?: boolean }>`
   width: 100%;
   height: 48px;
   justify-content: start;
