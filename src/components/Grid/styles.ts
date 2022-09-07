@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-export const StyledDataGrid = styled(DataGrid)<{ withBorder: boolean }>`
+export const StyledDataGrid = styled(DataGrid)<{ withBorder: boolean, hasClickEvent: boolean }>`
   padding: 16px 16px 0;
   
   ${({ withBorder }) => withBorder ? `
@@ -66,9 +66,11 @@ export const StyledDataGrid = styled(DataGrid)<{ withBorder: boolean }>`
     outline: none;
   }
 
-  & .MuiDataGrid-row {
-    cursor: pointer;
-  }
+  ${({ hasClickEvent }) => hasClickEvent && `
+    & .MuiDataGrid-row {
+      cursor: pointer;
+    }
+  `}
 `;
 
 export const StyledCellContent = styled(Typography)`

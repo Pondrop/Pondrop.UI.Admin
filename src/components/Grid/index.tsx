@@ -97,6 +97,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       onRowClick={onRowClick}
       disableColumnMenu={!!!gridData?.length}
       withBorder={withBorder}
+      hasClickEvent={!!onRowClick}
     />
   );
 };
