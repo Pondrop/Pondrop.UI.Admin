@@ -73,10 +73,6 @@ export const RowAlignWrapper = styled.div`
 export const SpaceBetweenDiv = styled(RowAlignWrapper)<{ withmargin?: boolean }>`
   justify-content: space-between;
   ${({ withmargin = true }) => withmargin && 'margin: 4px 0;'}
-
-  .update-category-btn {
-    align-self: flex-start;
-  }
 `;
 
 export const RowAlignDiv = styled(SpaceBetweenDiv)`
@@ -230,6 +226,10 @@ export const StyledCard = styled.div<{ width: string, height: string }>`
 
   .grid-card {
     padding-bottom:
+  }
+
+  .req-icon {
+    color: red;
   }
 `;
 

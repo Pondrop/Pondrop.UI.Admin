@@ -45,7 +45,10 @@ const ProductInfoPanel = ({ value, index, data, isCreate, requestRef }: ICategor
     return (
       <div>
         <SpaceBetweenDiv key={`create-category-${categoryTitles[0].field}`}>
-          <span className="row-label">{categoryTitles[0].label}</span>
+          <div>
+            <span className="row-label">{categoryTitles[0].label}</span>
+            <span className="req-icon"> *</span>
+          </div>
           <StyledTextInput
             id={`${categoryTitles[0].field}-input`}
             margin="none"

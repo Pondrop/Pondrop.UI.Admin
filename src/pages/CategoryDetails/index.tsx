@@ -97,7 +97,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   );
 
   const renderUpdateCategoryBtn = () => (
-    <CategoryBtnWrapper rightmargin={32}>
+    <CategoryBtnWrapper rightmargin={32} style={{ alignSelf: 'flex-start' }}>
       <StyledCategoryBtn
         data-testid="update-category-btn"
         className="update-category-btn"
