@@ -1,12 +1,12 @@
-import { FunctionComponent, SyntheticEvent, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, SyntheticEvent, useEffect, useState } from 'react';
 import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
 import { IState } from 'pages/types';
+import { useAppDispatch, useAppSelector } from 'store';
 import { useGetCategoryInfoQuery, useCreateCategoryMutation } from 'store/api/categories/api';
-import { ICreateCategoryRequest } from 'store/api/categories/types';
+import { selectCategories, setCategoryFields } from 'store/api/categories/slice';
 import CategoryInfoPanel from './components/CategoryInfoPanel';
-
 import {
   CategoryBtnWrapper,
   CircularLoaderWrapper,
@@ -23,11 +23,10 @@ import {
 } from '../styles';
 
 const CategoryDetails: FunctionComponent = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { categoryField } = useAppSelector(selectCategories);
+
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const createCategoryRef = useRef<ICreateCategoryRequest>({
-    categoryName: '',
-    description: '',
-  });
 
   // Microservice endpoints
   const [createCategory, { isSuccess }] = useCreateCategoryMutation({
@@ -63,13 +62,22 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const handlePrevious = () => navigate(-1);
 
   const handleAddCategory = () => {
-    createCategory(createCategoryRef.current);
+    createCategory(categoryField);
   };
 
   // useEffects
   useEffect(() => {
     if (isSuccess) navigate('../categories', { replace: true });
   }, [isSuccess]);
+
+  useEffect(() => {
+    dispatch(
+      setCategoryFields({
+        categoryName: '',
+        description: '',
+      }),
+    );
+  }, []);
 
   const renderAddCategoryBtn = () => (
     <CategoryBtnWrapper rightmargin={32}>
@@ -90,6 +98,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
         disableElevation
         onClick={handleAddCategory}
         height={40}
+        disabled={!categoryField.categoryName}
       >
         + Create Category
       </StyledCategoryBtn>
@@ -97,7 +106,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   );
 
   const renderUpdateCategoryBtn = () => (
-    <CategoryBtnWrapper rightmargin={32}>
+    <CategoryBtnWrapper rightmargin={32} style={{ alignSelf: 'flex-start' }}>
       <StyledCategoryBtn
         data-testid="update-category-btn"
         className="update-category-btn"
@@ -154,13 +163,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Category information" id="tab-0" aria-controls="category-detail-0" disableRipple />
       </StyledTabs>
-      <CategoryInfoPanel
-        value={currentTab}
-        index={0}
-        data={rowData}
-        isCreate={!!isCreate}
-        requestRef={createCategoryRef}
-      />
+      <CategoryInfoPanel value={currentTab} index={0} data={rowData} isCreate={!!isCreate} />
     </div>
   );
 

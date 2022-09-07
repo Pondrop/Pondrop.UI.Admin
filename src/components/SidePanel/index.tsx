@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DescriptionOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
 
@@ -11,11 +11,13 @@ import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 import { StyledButton, PanelWrapper } from './styles';
 
 const SidePanel: FunctionComponent = (): JSX.Element => {
+  const [currentTab, setCurrentTab] = useState<string>('stores');
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
   const handleCategoriesRedirect = () => {
+    setCurrentTab('categories');
     navigate('../categories', { replace: true });
     dispatch(
       setCategoriesFilter({
@@ -28,6 +30,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   };
 
   const handleProductsRedirect = () => {
+    setCurrentTab('products');
     navigate('../products', { replace: true });
     dispatch(
       setProductsFilter({
@@ -40,6 +43,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   };
 
   const handleStoresRedirect = () => {
+    setCurrentTab('stores');
     navigate('../stores', { replace: true });
     dispatch(
       setStoresFilter({
@@ -62,6 +66,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         startIcon={<Storefront className="store-icon" />}
         disableElevation
         onClick={handleStoresRedirect}
+        isActive={currentTab === 'stores'}
       >
         Stores
       </StyledButton>
@@ -73,6 +78,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         startIcon={<DescriptionOutlined className="category-icon" />}
         disableElevation
         onClick={handleCategoriesRedirect}
+        isActive={currentTab === 'categories'}
       >
         Categories
       </StyledButton>
@@ -84,6 +90,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         startIcon={<ShoppingCartOutlined className="product-icon" />}
         disableElevation
         onClick={handleProductsRedirect}
+        isActive={currentTab === 'products'}
       >
         Products
       </StyledButton>

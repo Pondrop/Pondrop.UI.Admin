@@ -56,7 +56,9 @@ export const StyledTitle = styled(Typography)`
   color: #001E2F;
 `;
 
-export const StyledSubtitle = styled(Typography)<{ ismodify?: number }>`
+export const StyledSubtitle = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'ismodify'
+})<{ ismodify?: number }>`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
@@ -73,10 +75,6 @@ export const RowAlignWrapper = styled.div`
 export const SpaceBetweenDiv = styled(RowAlignWrapper)<{ withmargin?: boolean }>`
   justify-content: space-between;
   ${({ withmargin = true }) => withmargin && 'margin: 4px 0;'}
-
-  .update-category-btn {
-    align-self: flex-start;
-  }
 `;
 
 export const RowAlignDiv = styled(SpaceBetweenDiv)`
@@ -231,6 +229,10 @@ export const StyledCard = styled.div<{ width: string, height: string }>`
   .grid-card {
     padding-bottom:
   }
+
+  .req-icon {
+    color: red;
+  }
 `;
 
 export const StyledCardTitle = styled(Typography)`
@@ -240,7 +242,9 @@ export const StyledCardTitle = styled(Typography)`
   margin-bottom: 16px;
 `;
 
-export const StyledCategoryBtn = styled(Button)<{ height: number }>`
+export const StyledCategoryBtn = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'height'
+})<{ height: number }>`
   height: ${({ height }) => height}px;
   padding: 6px 32px;
   text-transform: none;

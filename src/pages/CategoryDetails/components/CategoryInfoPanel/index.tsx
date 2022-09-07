@@ -9,13 +9,16 @@ import {
   StyledTextInput,
 } from 'pages/styles';
 import { ICategoryTabProps } from 'pages/types';
+import { useAppDispatch, useAppSelector } from 'store';
+import { selectCategories, setCategoryFields } from 'store/api/categories/slice';
 import { IValue } from 'store/api/types';
 import { activityValues, categoryTitles } from './constants';
 import LinkedProducts from '../LinkedProducts';
 
-const ProductInfoPanel = ({ value, index, data, isCreate, requestRef }: ICategoryTabProps): JSX.Element => {
-  const [category, setCategory] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+const ProductInfoPanel = ({ value, index, data, isCreate }: ICategoryTabProps): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { categoryField } = useAppSelector(selectCategories);
+
   const [categoryInfo, setCategoryInfo] = useState<IValue>({});
 
   useEffect(() => {
@@ -24,34 +27,37 @@ const ProductInfoPanel = ({ value, index, data, isCreate, requestRef }: ICategor
 
   // Handlers
   const handleCategoryOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategory(e.target.value);
-    if (requestRef)
-      requestRef.current = {
-        ...requestRef.current,
+    dispatch(
+      setCategoryFields({
+        ...categoryField,
         categoryName: e.target.value,
-      };
+      }),
+    );
   };
 
   const handleDescriptionOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value);
-    if (requestRef)
-      requestRef.current = {
-        ...requestRef.current,
+    dispatch(
+      setCategoryFields({
+        ...categoryField,
         description: e.target.value,
-      };
+      }),
+    );
   };
 
   const renderCreateCategory = () => {
     return (
       <div>
         <SpaceBetweenDiv key={`create-category-${categoryTitles[0].field}`}>
-          <span className="row-label">{categoryTitles[0].label}</span>
+          <div>
+            <span className="row-label">{categoryTitles[0].label}</span>
+            <span className="req-icon"> *</span>
+          </div>
           <StyledTextInput
             id={`${categoryTitles[0].field}-input`}
             margin="none"
             variant="outlined"
             size="small"
-            value={category}
+            value={categoryField.categoryName}
             onChange={handleCategoryOnChange}
             className="create-components"
           />
@@ -63,7 +69,7 @@ const ProductInfoPanel = ({ value, index, data, isCreate, requestRef }: ICategor
             margin="none"
             variant="outlined"
             size="small"
-            value={description}
+            value={categoryField.description}
             onChange={handleDescriptionOnChange}
             multiline
             rows={4}
