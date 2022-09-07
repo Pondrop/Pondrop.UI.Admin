@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "store";
 import { actions } from "./actions";
-import { initialState } from "../constants";
+import { categoryInitialState } from "./initialState";
 
 export const categoriesSlice = createSlice({
   name: 'categories',
-  initialState: initialState,
+  initialState: categoryInitialState,
   reducers: actions,
 });
 
 export const selectCategories = (state: RootState) => state.categories;
 
-export const { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSortValue } = categoriesSlice.actions;
+export const { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSortValue, setCategoryFields } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;

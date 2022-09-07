@@ -1,6 +1,5 @@
-import { MutableRefObject, ReactNode } from "react";
+import { ReactNode } from "react";
 
-import { ICreateCategoryRequest } from "store/api/categories/types";
 import { IValue } from "store/api/types";
 
 export interface ITabPanelProps {
@@ -13,7 +12,6 @@ export interface ITabPanelProps {
 
 export interface ICategoryTabProps extends ITabPanelProps {
   isCreate: boolean;
-  requestRef: MutableRefObject<ICreateCategoryRequest>;
 }
 
 export interface IState {
