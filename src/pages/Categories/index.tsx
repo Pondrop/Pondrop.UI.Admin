@@ -193,7 +193,12 @@ const Categories: FunctionComponent = (): JSX.Element => {
         onRowClick={handleOnRowClick}
         isMenuLoading={isFilterOptionsFetching}
       />
-      <Snackbar open={isOpen} onClose={handleSnackbarClose} autoHideDuration={2000}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+      >
         <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
           Successfully created a category!
         </Alert>
