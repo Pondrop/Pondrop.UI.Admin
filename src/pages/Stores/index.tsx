@@ -32,7 +32,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
   });
 
   const gridData = data?.value ?? [];
-  const { data: filterOptionsData } = useGetAllStoreFilterQuery(
+  const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllStoreFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
   );
@@ -143,6 +143,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
         onRowClick={handleOnRowClick}
+        isMenuLoading={isFilterOptionsFetching}
       />
     </MainContent>
   );

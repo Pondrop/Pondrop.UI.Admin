@@ -50,7 +50,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
   });
 
   const gridData = data?.value ?? [];
-  const { data: filterOptionsData } = useGetAllCategoriesFilterQuery(
+  const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllCategoriesFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
   );
@@ -190,6 +190,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
         onRowClick={handleOnRowClick}
+        isMenuLoading={isFilterOptionsFetching}
       />
       <Snackbar open={isOpen} onClose={handleSnackbarClose} autoHideDuration={2000}>
         <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>

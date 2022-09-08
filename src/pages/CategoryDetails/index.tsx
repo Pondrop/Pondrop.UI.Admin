@@ -53,12 +53,6 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
     setCurrentTab(newValue);
   };
 
-  const renderLoader = () => (
-    <CircularLoaderWrapper>
-      <CircularProgress size={100} thickness={3} />
-    </CircularLoaderWrapper>
-  );
-
   const handlePrevious = () => navigate(-1);
 
   const handleAddCategory = () => {
@@ -78,6 +72,12 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
       }),
     );
   }, []);
+
+  const renderLoader = () => (
+    <CircularLoaderWrapper height="calc(100vh - 36px)">
+      <CircularProgress size={100} thickness={3} />
+    </CircularLoaderWrapper>
+  );
 
   const renderAddCategoryBtn = () => (
     <CategoryBtnWrapper rightmargin={32}>

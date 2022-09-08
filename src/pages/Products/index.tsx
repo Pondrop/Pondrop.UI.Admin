@@ -41,7 +41,7 @@ const Products: FunctionComponent = (): JSX.Element => {
       skip: searchValue === '',
     },
   );
-  const { data: filterOptionsData } = useGetAllProductFilterQuery(
+  const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
   );
@@ -159,6 +159,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
         onRowClick={handleOnRowClick}
+        isMenuLoading={isFilterOptionsFetching}
       />
     </MainContent>
   );

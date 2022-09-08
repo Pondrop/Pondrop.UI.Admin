@@ -19,4 +19,5 @@ export interface IGridProps {
   initialState?: GridInitialState;
   onRowClick?: (params: GridRowParams, event: MuiEvent<MouseEvent>, details: GridCallbackDetails) => void;
   withBorder?: boolean;
+  isMenuLoading?: boolean;
 }

@@ -1,12 +1,14 @@
 import { ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import { CircularProgress } from '@mui/material';
 
+import { CircularLoaderWrapper } from 'pages/styles';
 import { LabelDiv, MenuWrapper, RowDiv, StyledCheckbox, StyledList } from './styles';
 import { ICustomMenuProps } from './types';
 import { getAllUniqueValues } from './utils';
 
 const CustomMenu = (props: ICustomMenuProps) => {
-  const { filterItem, handleOnFilterClick, hideMenu, menuData, currentColumn, ...other } = props;
+  const { filterItem, handleOnFilterClick, hideMenu, menuData, currentColumn, isMenuLoading = true, ...other } = props;
 
   const handleOnGridFilterClick = (value: string) => () => {
     if (typeof handleOnFilterClick === 'function') handleOnFilterClick(value, currentColumn.field);
@@ -31,6 +33,12 @@ const CustomMenu = (props: ICustomMenuProps) => {
     );
   };
 
+  const renderLoader = () => (
+    <CircularLoaderWrapper height="270px">
+      <CircularProgress size={50} thickness={3} />
+    </CircularLoaderWrapper>
+  );
+
   const renderMenuItems = () => {
     return (
       <AutoSizer>
@@ -50,8 +58,14 @@ const CustomMenu = (props: ICustomMenuProps) => {
   };
 
   return (
-    <MenuWrapper items={uniqueValues.length} hideMenu={hideMenu} currentColumn={currentColumn} {...other}>
-      {renderMenuItems()}
+    <MenuWrapper
+      items={uniqueValues.length}
+      hideMenu={hideMenu}
+      currentColumn={currentColumn}
+      isLoading={isMenuLoading}
+      {...other}
+    >
+      {isMenuLoading ? renderLoader() : renderMenuItems()}
     </MenuWrapper>
   );
 };
