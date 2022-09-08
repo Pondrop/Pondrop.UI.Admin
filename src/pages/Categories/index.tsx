@@ -1,14 +1,14 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Snackbar } from '@mui/material';
-import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import Grid from 'components/Grid';
 import { categoriesColumns } from 'components/Grid/constants';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
-import { initialState } from 'store/api/constants';
+import { categoryInitialState } from 'store/api/categories/initialState';
 import {
   useCreateCategoryMutation,
   useGetAllCategoriesFilterQuery,
@@ -35,7 +35,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(initialState.filterItem);
+  const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(categoryInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
@@ -68,7 +68,8 @@ const Categories: FunctionComponent = (): JSX.Element => {
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
-    pagination: { pageSize: 10 },
+    pagination: { pageSize },
+    sorting: { sortModel: [{ field: 'Category', sort: 'asc' as GridSortDirection }] },
   };
 
   // Use Effects
