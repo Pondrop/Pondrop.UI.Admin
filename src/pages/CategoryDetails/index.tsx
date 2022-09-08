@@ -29,7 +29,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   // Microservice endpoints
-  const [createCategory, { isSuccess }] = useCreateCategoryMutation({
+  const [createCategory, { isLoading: isCreateLoading, isSuccess }] = useCreateCategoryMutation({
     fixedCacheKey: 'shared-snackbar-state',
   });
 
@@ -58,20 +58,6 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const handleAddCategory = () => {
     createCategory(categoryField);
   };
-
-  // useEffects
-  useEffect(() => {
-    if (isSuccess) navigate('../categories', { replace: true });
-  }, [isSuccess]);
-
-  useEffect(() => {
-    dispatch(
-      setCategoryFields({
-        categoryName: '',
-        description: '',
-      }),
-    );
-  }, []);
 
   const renderLoader = () => (
     <CircularLoaderWrapper height="calc(100vh - 36px)">
@@ -141,9 +127,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
               <StyledTitle variant="h5" gutterBottom>
                 {rowData?.['Category']}
               </StyledTitle>
-              <StyledSubtitle variant="subtitle1" gutterBottom>
-                Product Last Updated: 12th August, 2022 @ 10:01am
-              </StyledSubtitle>
+              <StyledSubtitle variant="subtitle1" gutterBottom ismodify={1}></StyledSubtitle>
             </ColAlignDiv>
             {renderUpdateCategoryBtn()}
           </SpaceBetweenDiv>
@@ -167,7 +151,21 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
     </div>
   );
 
-  return <ContentDetails>{isLoading ? renderLoader() : renderContent()}</ContentDetails>;
+  // useEffects
+  useEffect(() => {
+    if (isSuccess) navigate('../categories', { replace: true });
+  }, [isSuccess]);
+
+  useEffect(() => {
+    dispatch(
+      setCategoryFields({
+        categoryName: '',
+        description: '',
+      }),
+    );
+  }, []);
+
+  return <ContentDetails>{isLoading || isCreateLoading ? renderLoader() : renderContent()}</ContentDetails>;
 };
 
 export default CategoryDetails;

@@ -12,18 +12,18 @@ export const categoryTitles = [
 export const activityValues = [
   {
     label: 'Date created',
-    value: '26/08/2022'
+    value: '-'
   },
   {
     label: 'Date last updated',
-    value: '26/08/2022'
+    value: '-'
   },
   {
     label: 'Status',
-    value: 'Active'
+    value: '-'
   },
   {
     label: 'Status last updated',
-    value: '26/08/2022'
+    value: '-'
   },
 ];
