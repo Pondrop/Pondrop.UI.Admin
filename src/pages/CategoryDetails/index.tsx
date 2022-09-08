@@ -141,9 +141,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
               <StyledTitle variant="h5" gutterBottom>
                 {rowData?.['Category']}
               </StyledTitle>
-              <StyledSubtitle variant="subtitle1" gutterBottom>
-                Product Last Updated: 12th August, 2022 @ 10:01am
-              </StyledSubtitle>
+              <StyledSubtitle variant="subtitle1" gutterBottom ismodify={1}></StyledSubtitle>
             </ColAlignDiv>
             {renderUpdateCategoryBtn()}
           </SpaceBetweenDiv>
