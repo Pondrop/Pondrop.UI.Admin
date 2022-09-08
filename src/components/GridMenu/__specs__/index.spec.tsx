@@ -17,6 +17,7 @@ describe('<GridMenu />', () => {
         open={true}
         id="test-grid-menu"
         menuData={menuMockData}
+        isMenuLoading={false}
       />,
     );
 

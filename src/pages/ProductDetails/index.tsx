@@ -37,7 +37,7 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
   };
 
   const renderLoader = () => (
-    <CircularLoaderWrapper>
+    <CircularLoaderWrapper height="calc(100vh - 36px)">
       <CircularProgress size={100} thickness={3} />
     </CircularLoaderWrapper>
   );

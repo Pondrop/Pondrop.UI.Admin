@@ -7,4 +7,5 @@ export interface ICustomMenuProps extends GridColumnMenuProps {
   filterItem: IFilterItem;
   handleOnFilterClick?: (value: string, currentColumn: string) => void;
   menuData: IFacetValue;
+  isMenuLoading?: boolean;
 }

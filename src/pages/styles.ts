@@ -141,8 +141,8 @@ export const StyledTab = styled(Tab)`
   }
 `;
 
-export const CircularLoaderWrapper = styled.div`
-  height: calc(100vh - 36px);
+export const CircularLoaderWrapper = styled.div<{ height: string }>`
+  height: ${({ height }) => height};
   display: flex;
   align-items: center;
   justify-content: center;

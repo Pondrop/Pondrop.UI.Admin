@@ -4,13 +4,13 @@ import { GridColumnMenuContainer } from "@mui/x-data-grid";
 import { FixedSizeList } from "react-window";
 
 export const MenuWrapper = styled(GridColumnMenuContainer, {
-  shouldForwardProp: (prop) => prop !== 'items'
-})<{ items: number }>`
+  shouldForwardProp: (prop) => !['items', 'isLoading'].includes(prop)
+})<{ items: number, isLoading: boolean }>`
   border: 1px solid rgba(114, 120, 126, 0.5);
   border-radius: 12px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   width: 247px;
-  height: ${({ items = 0 }) => items * 42}px;
+  height: ${({ items = 0, isLoading }) => isLoading ? 290 : items * 42}px;
   max-height: 290px;
   padding: 10px 0;
 `;

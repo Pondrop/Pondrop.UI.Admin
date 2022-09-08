@@ -31,7 +31,7 @@ const LinkedProducts = (): JSX.Element => {
     },
   );
 
-  const { data: filterOptionsData } = useGetAllProductFilterQuery(
+  const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchVal },
     { skip: !gridData.length },
   );
@@ -130,6 +130,7 @@ const LinkedProducts = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
         withBorder={false}
+        isMenuLoading={isFilterOptionsFetching}
       />
     </div>
   );

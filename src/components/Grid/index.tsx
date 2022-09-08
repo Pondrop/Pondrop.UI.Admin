@@ -22,6 +22,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   initialState,
   onRowClick,
   withBorder = true,
+  isMenuLoading,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -46,6 +47,7 @@ const Grid: FunctionComponent<IGridProps> = ({
         filterItem={filterItem}
         handleOnFilterClick={handleOnFilterClick}
         menuData={menuData}
+        isMenuLoading={isMenuLoading}
         {...props}
       />
     );
