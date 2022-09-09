@@ -226,10 +226,6 @@ export const StyledCard = styled.div<{ width: string, height: string }>`
     width: 300px;
   }
 
-  .grid-card {
-    padding-bottom:
-  }
-
   .req-icon {
     color: red;
   }
@@ -275,9 +271,5 @@ export const StyledTextInput = styled(TextField)`
   & textarea {
     line-height: 14px;
     font-size: 14px;
-  }
-
-  .Mui-focused {
-    border-width: 10px;
   }
 `;
