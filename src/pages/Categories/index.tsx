@@ -8,18 +8,19 @@ import { categoriesColumns } from 'components/Grid/constants';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
-import { categoryInitialState } from 'store/api/categories/initialState';
 import {
   useCreateCategoryMutation,
   useGetAllCategoriesFilterQuery,
   useGetCategoriesQuery,
 } from 'store/api/categories/api';
+import { categoryInitialState } from 'store/api/categories/initialState';
 import {
   selectCategories,
   setCategoriesFilter,
   setCategoriesSearchValue,
   setCategoriesSortValue,
 } from 'store/api/categories/slice';
+import { ICreateCategoryRequest } from 'store/api/categories/types';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import {
   CategoryBtnWrapper,
@@ -30,6 +31,7 @@ import {
   StyledCategoryBtn,
   StyledTitle,
 } from '../styles';
+import CategoryDialog from './components/CategoryDialog';
 
 const Categories: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
@@ -55,8 +57,9 @@ const Categories: FunctionComponent = (): JSX.Element => {
     { skip: !gridData.length },
   );
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [, { isSuccess, reset }] = useCreateCategoryMutation({
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [createCategory, { isSuccess, reset }] = useCreateCategoryMutation({
     fixedCacheKey: 'shared-snackbar-state',
   });
 
@@ -132,11 +135,11 @@ const Categories: FunctionComponent = (): JSX.Element => {
   };
 
   const handleAddCategory = () => {
-    navigate('create', { replace: false });
+    setIsCreateModalOpen(true);
   };
 
   const handleSnackbarClose = () => {
-    setIsOpen(false);
+    setIsSnackbarOpen(false);
     reset();
   };
 
@@ -144,9 +147,17 @@ const Categories: FunctionComponent = (): JSX.Element => {
     navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
   };
 
+  const handleCreateModalClose = () => {
+    setIsCreateModalOpen(false);
+  };
+
+  const handleCreateModalSubmit = (createData: ICreateCategoryRequest) => {
+    createCategory(createData);
+  };
+
   // useEffects
   useEffect(() => {
-    setIsOpen(isSuccess);
+    setIsSnackbarOpen(isSuccess);
   }, [isSuccess]);
 
   return (
@@ -195,7 +206,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={isOpen}
+        open={isSnackbarOpen}
         onClose={handleSnackbarClose}
         autoHideDuration={3000}
       >
@@ -203,6 +214,11 @@ const Categories: FunctionComponent = (): JSX.Element => {
           Successfully created a category!
         </Alert>
       </Snackbar>
+      <CategoryDialog
+        isOpen={isCreateModalOpen}
+        handleClose={handleCreateModalClose}
+        handleSubmit={handleCreateModalSubmit}
+      />
     </MainContent>
   );
 };

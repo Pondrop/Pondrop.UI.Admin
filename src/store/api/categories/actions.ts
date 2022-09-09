@@ -1,9 +1,8 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { IFilterItem, ISortItem } from "../types";
-import { ICategoryState, ICreateCategoryRequest } from "./types";
+import { IFilterItem, IGridState, ISortItem } from "../types";
 
-const setCategoriesFilter = (state: ICategoryState, action: PayloadAction<IFilterItem>) => {
+const setCategoriesFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
   return {
     ...state,
     filterItem: {
@@ -14,14 +13,14 @@ const setCategoriesFilter = (state: ICategoryState, action: PayloadAction<IFilte
   };
 };
 
-const setCategoriesSearchValue = (state: ICategoryState, action: PayloadAction<string>) => {
+const setCategoriesSearchValue = (state: IGridState, action: PayloadAction<string>) => {
   return {
     ...state,
     searchValue: action.payload
   };
 };
 
-const setCategoriesSortValue = (state: ICategoryState, action: PayloadAction<ISortItem>) => {
+const setCategoriesSortValue = (state: IGridState, action: PayloadAction<ISortItem>) => {
   return {
     ...state,
     sortValue: {
@@ -31,11 +30,4 @@ const setCategoriesSortValue = (state: ICategoryState, action: PayloadAction<ISo
   };
 };
 
-const setCategoryFields = (state: ICategoryState, action: PayloadAction<ICreateCategoryRequest>) => {
-  return {
-    ...state,
-    categoryField: action.payload
-  };
-};
-
-export const actions = { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSortValue, setCategoryFields };
+export const actions = { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSortValue };

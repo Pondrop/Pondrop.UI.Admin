@@ -1,5 +1,3 @@
-import { IGridState } from "../types";
-
 export interface ICreateCategoryRequest {
   categoryName: string;
   description: string;
@@ -15,8 +13,4 @@ export interface ICategory {
   updatedBy: string;
   createdUtc: string;
   updatedUtc: string;
-}
-
-export interface ICategoryState extends IGridState {
-  categoryField: ICreateCategoryRequest;
 }

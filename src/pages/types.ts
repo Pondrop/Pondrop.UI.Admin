@@ -7,11 +7,6 @@ export interface ITabPanelProps {
   index: number;
   value: number;
   data?: IValue;
-  isCreate?: boolean;
-}
-
-export interface ICategoryTabProps extends ITabPanelProps {
-  isCreate: boolean;
 }
 
 export interface IState {
