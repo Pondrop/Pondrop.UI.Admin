@@ -1,14 +1,10 @@
 import { initialState } from '../constants';
-import { ICategoryState } from "./types";
+import { IGridState } from '../types';
 
-export const categoryInitialState: ICategoryState = {
+export const categoryInitialState: IGridState = {
   ...initialState,
   sortValue: {
     field: 'Category',
     sort: 'asc'
-  },
-  categoryField: {
-    categoryName: '',
-    description: ''
   }
 };

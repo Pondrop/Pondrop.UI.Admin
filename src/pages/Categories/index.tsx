@@ -57,7 +57,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
     { skip: !gridData.length },
   );
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const [createCategory, { isSuccess, reset }] = useCreateCategoryMutation({
     fixedCacheKey: 'shared-snackbar-state',
@@ -139,7 +139,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
   };
 
   const handleSnackbarClose = () => {
-    setIsOpen(false);
+    setIsSnackbarOpen(false);
     reset();
   };
 
@@ -157,7 +157,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   // useEffects
   useEffect(() => {
-    setIsOpen(isSuccess);
+    setIsSnackbarOpen(isSuccess);
   }, [isSuccess]);
 
   return (
@@ -206,7 +206,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={isOpen}
+        open={isSnackbarOpen}
         onClose={handleSnackbarClose}
         autoHideDuration={3000}
       >
