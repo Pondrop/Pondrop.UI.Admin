@@ -29,3 +29,12 @@ export const linkedProductsColumns: GridColDef[] = [
   { field: 'PossibleCategories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'Brand', headerName: 'Brand Name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
 ];
+
+export const tasksColumns: GridColDef[] = [
+  { field: 'TaskType', headerName: 'Task Type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 120, renderCell: handleRenderCell },
+  { field: 'Provider', headerName: 'Provider', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 120, renderCell: handleRenderCell },
+  { field: 'Name', headerName: 'Store Name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'Product', headerName: 'Product', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+  { field: 'DateSubmitted', headerName: 'Date Submitted', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+  { field: 'Images', headerName: 'Images', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+];

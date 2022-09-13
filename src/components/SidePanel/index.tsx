@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DescriptionOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
+import { ArtTrackOutlined, DescriptionOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
 
 import pondrop from 'assets/images/pondrop.png';
 import { useAppDispatch } from 'store';
@@ -55,6 +55,18 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
     dispatch(setStoresSearchValue(''));
   };
 
+  const handleTasksRedirect = () => {
+    setCurrentTab('tasks');
+    navigate('../tasks', { replace: true });
+    dispatch(
+      setStoresFilter({
+        columnField: '',
+        value: [],
+        operatorValue: 'isAnyOf',
+      }),
+    );
+  };
+
   return (
     <PanelWrapper>
       <img data-testid="pondrop-logo" src={pondrop} title="Pondrop" />
@@ -81,6 +93,18 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         isActive={currentTab === 'products'}
       >
         Products
+      </StyledButton>
+      <StyledButton
+        data-testid="panel-tasks-btn"
+        className="panel-btn"
+        variant="contained"
+        size="large"
+        startIcon={<ArtTrackOutlined className="task-icon" />}
+        disableElevation
+        onClick={handleTasksRedirect}
+        isActive={currentTab === 'tasks'}
+      >
+        Submitted Tasks
       </StyledButton>
       <StyledButton
         data-testid="signout-btn"
