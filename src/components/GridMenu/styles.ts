@@ -10,7 +10,7 @@ export const MenuWrapper = styled(GridColumnMenuContainer, {
   border-radius: 12px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   width: 247px;
-  height: ${({ items = 0, isLoading }) => isLoading ? 290 : items * 42}px;
+  height: ${({ items = 0, isLoading }) => isLoading ? 290 : (items + 1) * 42}px;
   max-height: 290px;
   padding: 10px 0;
 `;
@@ -54,7 +54,7 @@ export const StyledCheckbox = styled(Checkbox)`
 `;
 
 export const StyledList = styled(FixedSizeList)`
-  max-height: 290px;
+  max-height: 248px;
 
   ::-webkit-scrollbar {
     width: 5px;
@@ -66,4 +66,15 @@ export const StyledList = styled(FixedSizeList)`
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.2);
   }
+`;
+
+export const SearchFieldWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 42px;
+  align-items: center;
+`;
+
+export const MenuListWrapper = styled.div`
+  height: 100%;
 `;

@@ -1,34 +1,68 @@
+import { useState } from 'react';
 import { ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { CircularProgress } from '@mui/material';
 
+import SearchField from 'components/SearchField';
 import { CircularLoaderWrapper } from 'pages/styles';
-import { LabelDiv, MenuWrapper, RowDiv, StyledCheckbox, StyledList } from './styles';
+import { IFilterItem } from 'store/api/types';
+import {
+  LabelDiv,
+  MenuListWrapper,
+  MenuWrapper,
+  RowDiv,
+  SearchFieldWrapper,
+  StyledCheckbox,
+  StyledList,
+} from './styles';
 import { ICustomMenuProps } from './types';
-import { getAllUniqueValues } from './utils';
+import { getAllUniqueValues, handleFilterStateChange } from './utils';
 
 const CustomMenu = (props: ICustomMenuProps) => {
   const { filterItem, handleOnFilterClick, hideMenu, menuData, currentColumn, isMenuLoading = true, ...other } = props;
 
+  const uniqueValues = getAllUniqueValues(menuData[currentColumn.field]);
+  const [filteredData, setFilteredData] = useState<string[]>(uniqueValues);
+  const [appliedFilter, setAppliedFilters] = useState<IFilterItem>(filterItem as IFilterItem);
+
   const handleOnGridFilterClick = (value: string) => () => {
-    if (typeof handleOnFilterClick === 'function') handleOnFilterClick(value, currentColumn.field);
+    if (typeof handleOnFilterClick === 'function') {
+      const filterData = {
+        field: appliedFilter.columnField,
+        value: appliedFilter.value,
+      };
+      handleOnFilterClick(value, currentColumn.field, filterData);
+    }
+
+    const combinedValue =
+      appliedFilter.columnField === currentColumn.field ? handleFilterStateChange(value, appliedFilter.value) : [value];
+
+    setAppliedFilters({
+      columnField: currentColumn.field,
+      value: combinedValue,
+      operatorValue: 'isAnyOf',
+    });
   };
 
-  const uniqueValues = getAllUniqueValues(menuData[currentColumn.field]);
+  const handleOnSearchChange = (searchValue: string) => {
+    const lowercaseSearchVal = searchValue.toLowerCase();
+    const filteredItems = uniqueValues.filter((value) => value.toLowerCase().includes(lowercaseSearchVal));
+    setFilteredData(filteredItems);
+  };
 
   const MenuItems = ({ index, style }: Pick<ListChildComponentProps, 'index' | 'style'>) => {
-    const idValue = String(uniqueValues[index]).replaceAll(/\s+/g, '-');
-    const isChecked = Array.isArray(filterItem.value) ? filterItem.value.includes(uniqueValues[index]) : false;
+    const idValue = String(filteredData[index]).replaceAll(/\s+/g, '-');
+    const isChecked = Array.isArray(appliedFilter.value) ? appliedFilter.value.includes(filteredData[index]) : false;
 
     return (
       <RowDiv
         key={idValue}
         style={style}
         data-testid={`${currentColumn.field}-${idValue}`}
-        onClick={handleOnGridFilterClick(uniqueValues[index])}
+        onClick={handleOnGridFilterClick(filteredData[index])}
       >
         <StyledCheckbox value={idValue} checked={isChecked} />
-        <LabelDiv>{uniqueValues[index]}</LabelDiv>
+        <LabelDiv>{filteredData[index]}</LabelDiv>
       </RowDiv>
     );
   };
@@ -41,25 +75,36 @@ const CustomMenu = (props: ICustomMenuProps) => {
 
   const renderMenuItems = () => {
     return (
-      <AutoSizer>
-        {({ height, width }) => (
-          <StyledList
-            className={`${currentColumn.field}-List`}
-            height={height}
-            itemCount={uniqueValues.length}
-            itemSize={42}
-            width={width}
-          >
-            {MenuItems}
-          </StyledList>
-        )}
-      </AutoSizer>
+      <MenuListWrapper>
+        <SearchFieldWrapper>
+          <SearchField
+            id="category-search-field"
+            value={''}
+            isfullsize={false}
+            width={225}
+            onChange={handleOnSearchChange}
+          />
+        </SearchFieldWrapper>
+        <AutoSizer>
+          {({ height, width }) => (
+            <StyledList
+              className={`${currentColumn.field}-List`}
+              height={height}
+              itemCount={filteredData.length}
+              itemSize={42}
+              width={width}
+            >
+              {MenuItems}
+            </StyledList>
+          )}
+        </AutoSizer>
+      </MenuListWrapper>
     );
   };
 
   return (
     <MenuWrapper
-      items={uniqueValues.length}
+      items={filteredData.length}
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       isLoading={isMenuLoading}

@@ -2,12 +2,12 @@ import { getGridStringOperators, GridColDef } from "@mui/x-data-grid";
 import { handleRenderCell } from "./utils";
 
 export const storeColumns: GridColDef[] = [
-  { field: 'Provider', headerName: 'Provider', filterOperators: getGridStringOperators(),width: 120, renderCell: handleRenderCell },
-  { field: 'Name', headerName: 'Store Name', filterOperators: getGridStringOperators(), flex: 1, renderCell: handleRenderCell },
-  { field: 'Street', headerName: 'Street', filterOperators: getGridStringOperators(), flex: 2, renderCell: handleRenderCell },
-  { field: 'City', headerName: 'City', filterOperators: getGridStringOperators(), width: 150, renderCell: handleRenderCell },
-  { field: 'State', headerName: 'State', filterOperators: getGridStringOperators(), width: 100, renderCell: handleRenderCell },
-  { field: 'Zip_Code', headerName: 'Post Code', filterOperators: getGridStringOperators(), width: 150, renderCell: handleRenderCell },
+  { field: 'Provider', headerName: 'Provider', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'),width: 120, renderCell: handleRenderCell },
+  { field: 'Name', headerName: 'Store Name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'Street', headerName: 'Street', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 2, renderCell: handleRenderCell },
+  { field: 'City', headerName: 'City', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+  { field: 'State', headerName: 'State', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 100, renderCell: handleRenderCell },
+  { field: 'Zip_Code', headerName: 'Post Code', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
 ];
 
 export const productColumns: GridColDef[] = [

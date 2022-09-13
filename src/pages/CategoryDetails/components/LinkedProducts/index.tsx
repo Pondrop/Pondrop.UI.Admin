@@ -3,6 +3,7 @@ import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-g
 
 import Grid from 'components/Grid';
 import { linkedProductsColumns } from 'components/Grid/constants';
+import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
@@ -67,16 +68,16 @@ const LinkedProducts = (): JSX.Element => {
     });
   };
 
-  const handleOnFilterClick = (value: string, currentColumn: string) => {
+  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
     if (!value) return;
 
     const combinedValue =
-      filterVal.columnField === currentColumn && Array.isArray(filterVal.value)
-        ? handleFilterStateChange(value, filterVal)
+      filters.field === currColumn && Array.isArray(filters.value)
+        ? handleFilterStateChange(value, filters.value)
         : [value];
 
     setFilterVal({
-      columnField: currentColumn,
+      columnField: currColumn,
       value: combinedValue,
       operatorValue: 'isAnyOf',
     });
@@ -113,6 +114,7 @@ const LinkedProducts = (): JSX.Element => {
           value={searchVal}
           onEnterPress={handleSearchDispatch}
           isfullsize={false}
+          width={250}
         />
       </SpaceBetweenDiv>
       <Grid
