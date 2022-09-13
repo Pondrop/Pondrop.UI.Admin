@@ -5,6 +5,7 @@ import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from
 
 import Grid from 'components/Grid';
 import { categoriesColumns } from 'components/Grid/constants';
+import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -117,17 +118,17 @@ const Categories: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currentColumn: string) => {
+  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
     if (!value) return;
 
     const combinedValue =
-      categoryFilterItem.columnField === currentColumn && Array.isArray(categoryFilterItem.value)
-        ? handleFilterStateChange(value, categoryFilterItem)
+      filters.field === currColumn && Array.isArray(filters.value)
+        ? handleFilterStateChange(value, filters.value)
         : [value];
 
     dispatch(
       setCategoriesFilter({
-        columnField: currentColumn,
+        columnField: currColumn,
         value: combinedValue,
         operatorValue: 'isAnyOf',
       }),

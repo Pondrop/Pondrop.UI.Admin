@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import { productColumns } from 'components/Grid/constants';
+import { IBasicFilter } from 'components/GridMenu/types';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
@@ -110,17 +111,17 @@ const Products: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currentColumn: string) => {
+  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
     if (!value) return;
 
     const combinedValue =
-      productsFilterItem.columnField === currentColumn && Array.isArray(productsFilterItem.value)
-        ? handleFilterStateChange(value, productsFilterItem)
+      filters.field === currColumn && Array.isArray(filters.value)
+        ? handleFilterStateChange(value, filters.value)
         : [value];
 
     dispatch(
       setProductsFilter({
-        columnField: currentColumn,
+        columnField: currColumn,
         value: combinedValue,
         operatorValue: 'isAnyOf',
       }),

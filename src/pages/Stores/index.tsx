@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
+import { IBasicFilter } from 'components/GridMenu/types';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
@@ -94,17 +95,17 @@ const Stores: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currentColumn: string) => {
+  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
     if (!value) return;
 
     const combinedValue =
-      storeFilterItem.columnField === currentColumn && Array.isArray(storeFilterItem.value)
-        ? handleFilterStateChange(value, storeFilterItem)
+      filters.field === currColumn && Array.isArray(filters.value)
+        ? handleFilterStateChange(value, filters.value)
         : [value];
 
     dispatch(
       setStoresFilter({
-        columnField: currentColumn,
+        columnField: currColumn,
         value: combinedValue,
         operatorValue: 'isAnyOf',
       }),
@@ -144,6 +145,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         initialState={initialGridState}
         onRowClick={handleOnRowClick}
         isMenuLoading={isFilterOptionsFetching}
+        searchValue={searchValue}
       />
     </MainContent>
   );

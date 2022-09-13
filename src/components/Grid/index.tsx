@@ -1,7 +1,8 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid';
 import { FilterList } from '@mui/icons-material';
 
+import { IFilterItem } from 'store/api/types';
 import CustomMenu from '../GridMenu';
 import { StyledDataGrid } from './styles';
 import { IGridProps } from './types';
@@ -23,9 +24,11 @@ const Grid: FunctionComponent<IGridProps> = ({
   onRowClick,
   withBorder = true,
   isMenuLoading,
+  searchValue,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
+  const [localFilter, setLocalFilter] = useState<IFilterItem>({} as IFilterItem);
 
   useEffect(() => {
     setGridData(data as unknown as GridRowsProp[]);
@@ -40,18 +43,21 @@ const Grid: FunctionComponent<IGridProps> = ({
     return <FilterList />;
   };
 
-  const renderCustomMenu = (props: GridColumnMenuProps) => {
-    return (
-      <CustomMenu
-        data={gridData}
-        filterItem={filterItem}
-        handleOnFilterClick={handleOnFilterClick}
-        menuData={menuData}
-        isMenuLoading={isMenuLoading}
-        {...props}
-      />
-    );
-  };
+  const renderCustomMenu = useCallback(
+    (props: GridColumnMenuProps) => {
+      return (
+        <CustomMenu
+          data={gridData}
+          filterItem={localFilter}
+          handleOnFilterClick={handleOnFilterClick}
+          menuData={menuData}
+          isMenuLoading={isMenuLoading}
+          {...props}
+        />
+      );
+    },
+    [searchValue, isMenuLoading, localFilter],
+  );
 
   // helper function
   const getFilterModel = () => {
@@ -66,6 +72,10 @@ const Grid: FunctionComponent<IGridProps> = ({
     };
 
     return filterModelItem;
+  };
+
+  const handleMenuClose = () => {
+    setLocalFilter(filterItem);
   };
 
   return (
@@ -100,6 +110,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       disableColumnMenu={!!!gridData?.length}
       withBorder={withBorder}
       hasClickEvent={!!onRowClick}
+      onMenuClose={handleMenuClose}
     />
   );
 };

@@ -5,19 +5,27 @@ import { Search } from '@mui/icons-material';
 import { StyledTextField } from './styles';
 import { ISearchFieldProps } from './types';
 
-const SearchField = ({ onEnterPress, value, id, isfullsize = true }: ISearchFieldProps): JSX.Element => {
+const SearchField = ({
+  onEnterPress,
+  value,
+  id,
+  isfullsize = true,
+  width,
+  onChange,
+}: ISearchFieldProps): JSX.Element => {
   const [searchValueString, setSearchValueString] = useState<string>(value);
 
   useEffect(() => {
     setSearchValueString(value ?? '');
   }, [value]);
 
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValueString(e.target.value);
+    if (typeof onChange === 'function') onChange(e.target.value);
   };
 
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && typeof onEnterPress === 'function') {
       onEnterPress(searchValueString);
     }
   };
@@ -35,9 +43,10 @@ const SearchField = ({ onEnterPress, value, id, isfullsize = true }: ISearchFiel
         ),
       }}
       value={searchValueString}
-      onChange={handleSearch}
+      onChange={handleOnChange}
       onKeyDown={handleOnKeyDown}
       isfullsize={isfullsize}
+      width={width}
     />
   );
 };
