@@ -1,5 +1,5 @@
 import { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import { getGridStringOperators, GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid';
+import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid';
 import { FilterList } from '@mui/icons-material';
 
 import { IFilterItem } from 'store/api/types';
@@ -33,8 +33,6 @@ const Grid: FunctionComponent<IGridProps> = ({
   useEffect(() => {
     setGridData(data as unknown as GridRowsProp[]);
   }, [data]);
-
-  console.log('operators ', getGridStringOperators());
 
   useEffect(() => {
     setGridRowCount(rowCount);
@@ -76,7 +74,7 @@ const Grid: FunctionComponent<IGridProps> = ({
     return filterModelItem;
   };
 
-  const handleMenuClose = () => {
+  const handleMenuOpen = () => {
     setLocalFilter(filterItem);
   };
 
@@ -112,7 +110,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       disableColumnMenu={!!!gridData?.length}
       withBorder={withBorder}
       hasClickEvent={!!onRowClick}
-      onMenuClose={handleMenuClose}
+      onMenuOpen={handleMenuOpen}
     />
   );
 };
