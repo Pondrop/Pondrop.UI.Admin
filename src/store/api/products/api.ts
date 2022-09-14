@@ -30,7 +30,7 @@ export const productsApi = createApi({
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 
         return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&search=${searchString}*${filterQuery && `&$filter=${filterQuery}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
           method: 'GET',
         };
       },
@@ -48,7 +48,7 @@ export const productsApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&search=${searchString}*&$count=true&facet=GTIN,count:0,sort:value&facet=Company_Name,count:0,sort:value&facet=Product,count:0,sort:value&facet=PossibleCategories,count:0,sort:value&facet=Brand,count:0,sort:value`,
+          url: `/indexes/azuresql-index-products/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}&$count=true&facet=GTIN,count:0,sort:value&facet=Company_Name,count:0,sort:value&facet=Product,count:0,sort:value&facet=PossibleCategories,count:0,sort:value&facet=Brand,count:0,sort:value`,
           method: 'GET',
         };
       },
