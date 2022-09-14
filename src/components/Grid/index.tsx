@@ -74,7 +74,7 @@ const Grid: FunctionComponent<IGridProps> = ({
     return filterModelItem;
   };
 
-  const handleMenuClose = () => {
+  const handleMenuOpen = () => {
     setLocalFilter(filterItem);
   };
 
@@ -110,7 +110,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       disableColumnMenu={!!!gridData?.length}
       withBorder={withBorder}
       hasClickEvent={!!onRowClick}
-      onMenuClose={handleMenuClose}
+      onMenuOpen={handleMenuOpen}
     />
   );
 };

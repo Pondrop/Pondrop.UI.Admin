@@ -46,7 +46,9 @@ const CustomMenu = (props: ICustomMenuProps) => {
 
   const handleOnSearchChange = (searchValue: string) => {
     const lowercaseSearchVal = searchValue.toLowerCase();
-    const filteredItems = uniqueValues.filter((value) => value.toLowerCase().includes(lowercaseSearchVal));
+    const filteredItems = searchValue
+      ? uniqueValues.filter((value) => value.toLowerCase().includes(lowercaseSearchVal))
+      : uniqueValues;
     setFilteredData(filteredItems);
   };
 

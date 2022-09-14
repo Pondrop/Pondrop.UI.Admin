@@ -30,7 +30,7 @@ export const storeApi = createApi({
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*${filterQuery && `&$filter=${filterQuery}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
           method: 'GET',
         };
       },
@@ -48,7 +48,7 @@ export const storeApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString}*&$count=true&facet=Provider,count:0,sort:value&facet=Name,count:0,sort:value&facet=Street,count:0,sort:value&facet=City,count:0,sort:value&facet=State,count:0,sort:value&facet=Zip_Code,count:0,sort:value`,
+          url: `/indexes/azuresql-index-stores/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}&$count=true&facet=Provider,count:0,sort:value&facet=Name,count:0,sort:value&facet=Street,count:0,sort:value&facet=City,count:0,sort:value&facet=State,count:0,sort:value&facet=Zip_Code,count:0,sort:value`,
           method: 'GET',
         };
       },
