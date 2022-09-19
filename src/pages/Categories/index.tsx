@@ -29,8 +29,10 @@ import {
   MainContent,
   RowAlignDiv,
   RowAlignWrapper,
+  StyledBreadcrumbs,
   StyledCategoryBtn,
   StyledTitle,
+  StyledTypography,
 } from '../styles';
 import CategoryDialog from './components/CategoryDialog';
 
@@ -39,7 +41,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   // States
   const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(categoryInitialState.filterItem);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
@@ -156,33 +158,37 @@ const Categories: FunctionComponent = (): JSX.Element => {
     createCategory(createData);
   };
 
+  const handlePrevious = () => navigate(-1);
+
   // useEffects
   useEffect(() => {
     setIsSnackbarOpen(isSuccess);
   }, [isSuccess]);
 
   return (
-    <MainContent paddingSide={92} paddingTop={16}>
+    <MainContent paddingSide={92} paddingTop={42}>
       <RowAlignDiv>
         <ColAlignDiv>
+          <StyledBreadcrumbs aria-label="breadcrumb" withPadding={false}>
+            <StyledTypography className="link" onClick={handlePrevious} data-testid="products-link">
+              Products
+            </StyledTypography>
+            <StyledTypography color="text.primary">Categories</StyledTypography>
+          </StyledBreadcrumbs>
           <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="categories-header">
             Categories
           </StyledTitle>
-          <StyledTitle className="main-header" variant="caption">
-            Last updated: 12th August, 2022 @ 10:01am
-          </StyledTitle>
         </ColAlignDiv>
-        <RowAlignWrapper>
+        <RowAlignWrapper style={{ height: '54px' }}>
           <CategoryBtnWrapper rightmargin={20}>
             <StyledCategoryBtn
               data-testid="add-category-btn"
               className="add-category-btn"
               variant="contained"
               disableElevation
-              onClick={handleAddCategory}
-              height={48}
+              height={40}
             >
-              + Add Category
+              + Add category
             </StyledCategoryBtn>
           </CategoryBtnWrapper>
           <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />

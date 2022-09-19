@@ -1,14 +1,17 @@
 import { useState } from 'react';
 
 import { SpaceBetweenDiv } from 'pages/styles';
+import { IValue } from 'store/api/types';
 import { categoryDummyData } from './constants';
 import { BtnWrapper, DivWrapper, ManageCategoriesBtn, StyledList, StyledListItemButton } from './styles';
+import { ICategoryListProps } from './types';
 
-const CategoryList = () => {
+const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-  const handleCategoryClick = (id: string) => () => {
-    setSelectedCategory(id);
+  const handleCategoryClick = (category: IValue) => () => {
+    setSelectedCategory(category?.Id as string);
+    if (typeof onRowClick === 'function') onRowClick(category);
   };
 
   const generateData = () => {
@@ -16,7 +19,7 @@ const CategoryList = () => {
       <StyledListItemButton
         key={category.Id}
         selected={selectedCategory === category.Id}
-        onClick={handleCategoryClick(category.Id)}
+        onClick={handleCategoryClick(category)}
       >
         <SpaceBetweenDiv withmargin={false} style={{ width: '100%' }}>
           <span className="item category-label">{category.Category}</span>
@@ -39,6 +42,7 @@ const CategoryList = () => {
           variant="contained"
           disableElevation
           height={40}
+          onClick={onManageCategoriesClick}
         >
           Manage categories
         </ManageCategoriesBtn>

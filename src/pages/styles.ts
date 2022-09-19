@@ -88,8 +88,10 @@ export const ColAlignDiv = styled.div`
   flex-direction: column;
 `;
 
-export const StyledBreadcrumbs = styled(Breadcrumbs)`
-  padding: 0 32px 50px;
+export const StyledBreadcrumbs = styled(Breadcrumbs, {
+  shouldForwardProp: (prop) => prop !== 'withPadding'
+})<{ withPadding?: boolean }>`
+  ${({ withPadding = true }) => withPadding && 'padding: 0 32px 50px;'}
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
