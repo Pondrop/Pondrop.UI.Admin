@@ -23,10 +23,10 @@ export const ContentWrapper = styled.div`
   }
 `;
 
-export const MainContent = styled(ContentWrapper)`
-  width: calc(100vw - 440px);
-  max-height: calc(100vh - 64px);
-  padding: 16px 92px 48px;
+export const MainContent = styled(ContentWrapper)<{ paddingSide: number, paddingTop: number }>`
+  width: ${({ paddingSide }) => `calc(100vw - ${256 + (paddingSide * 2)}px);`}
+  max-height: calc(100vh - ${({ paddingTop }) => `${paddingTop + 48}`}px);
+  padding: ${({ paddingSide, paddingTop }) => `${paddingTop}px ${paddingSide}px`} 48px;
 
   .main-header {
     padding: 0;
@@ -57,12 +57,12 @@ export const StyledTitle = styled(Typography)`
 `;
 
 export const StyledSubtitle = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'ismodify'
-})<{ ismodify?: number }>`
+  shouldForwardProp: (prop) => prop !== 'paddingBottom'
+})<{ paddingBottom?: number }>`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  padding: 0 32px ${({ ismodify = 0 }) => ismodify ? '64px' : '40px'};
+  padding: 0 32px ${({ paddingBottom = 40 }) => paddingBottom}px;
   color: #001F2A;
 `;
 
@@ -244,6 +244,8 @@ export const StyledCategoryBtn = styled(Button, {
   height: ${({ height }) => height}px;
   padding: 6px 32px;
   text-transform: none;
+  border-radius: 100px;
+  background-color: #006492;
 `;
 
 export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`

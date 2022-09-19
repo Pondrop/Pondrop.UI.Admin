@@ -55,7 +55,7 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
       <StyledTitle variant="h5" gutterBottom>
         {rowData?.['Product']}
       </StyledTitle>
-      <StyledSubtitle variant="subtitle1" gutterBottom ismodify={1}></StyledSubtitle>
+      <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={60}></StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Product information" id="tab-0" aria-controls="product-detail-0" disableRipple />
       </StyledTabs>

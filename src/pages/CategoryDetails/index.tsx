@@ -71,7 +71,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
             <StyledTitle variant="h5" gutterBottom>
               {rowData?.['Category']}
             </StyledTitle>
-            <StyledSubtitle variant="subtitle1" gutterBottom ismodify={1}></StyledSubtitle>
+            <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={60}></StyledSubtitle>
           </ColAlignDiv>
           {renderUpdateCategoryBtn()}
         </SpaceBetweenDiv>
