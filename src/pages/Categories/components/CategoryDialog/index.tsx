@@ -96,7 +96,14 @@ const CategoryDialog = ({ isOpen, handleClose, handleSubmit }: ICreateCategoryPr
   };
 
   return (
-    <StyledDialog open={isOpen} onClose={handleClose} maxWidth="sm" fullWidth={true} transitionDuration={300}>
+    <StyledDialog
+      open={isOpen}
+      onClose={handleClose}
+      maxWidth="sm"
+      fullWidth={true}
+      transitionDuration={300}
+      data-testid="add-category-modal"
+    >
       <DialogTitle>Create Category</DialogTitle>
       <DialogContent>{renderCreateCategory()}</DialogContent>
       <DialogActions>{renderActionButtons()}</DialogActions>

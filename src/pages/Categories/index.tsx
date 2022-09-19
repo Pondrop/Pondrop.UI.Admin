@@ -165,7 +165,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
     <MainContent>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="stores-header">
+          <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="categories-header">
             Categories
           </StyledTitle>
           <StyledTitle className="main-header" variant="caption">

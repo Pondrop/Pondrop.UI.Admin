@@ -4,7 +4,7 @@ import { GridColumnMenuContainer } from "@mui/x-data-grid";
 import { FixedSizeList } from "react-window";
 
 export const MenuWrapper = styled(GridColumnMenuContainer, {
-  shouldForwardProp: (prop) => !['items', 'isLoading'].includes(prop)
+  shouldForwardProp: (prop) => !['isLoading'].includes(prop)
 })<{ items: number, isLoading: boolean }>`
   border: 1px solid rgba(114, 120, 126, 0.5);
   border-radius: 12px;
