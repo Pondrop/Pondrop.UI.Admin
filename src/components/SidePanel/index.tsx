@@ -71,18 +71,6 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         Stores
       </StyledButton>
       <StyledButton
-        data-testid="panel-category-btn"
-        className="panel-btn"
-        variant="contained"
-        size="large"
-        startIcon={<DescriptionOutlined className="category-icon" />}
-        disableElevation
-        onClick={handleCategoriesRedirect}
-        isActive={currentTab === 'categories'}
-      >
-        Categories
-      </StyledButton>
-      <StyledButton
         data-testid="panel-product-btn"
         className="panel-btn"
         variant="contained"

@@ -246,6 +246,14 @@ export const StyledCategoryBtn = styled(Button, {
   text-transform: none;
   border-radius: 100px;
   background-color: #006492;
+
+  &:hover {
+    background-color: rgba(20, 120, 166, 0.96);
+  }
+
+  &:active {
+    background-color: rgba(20, 120, 166, 0.92);
+  }
 `;
 
 export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`

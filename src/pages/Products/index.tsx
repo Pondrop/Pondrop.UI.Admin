@@ -26,7 +26,6 @@ import {
   CategoryBtnWrapper,
   ColAlignDiv,
   MainContent,
-  RowAlignDiv,
   RowAlignWrapper,
   SpaceBetweenDiv,
   StyledCategoryBtn,
@@ -44,19 +43,8 @@ const Products: FunctionComponent = (): JSX.Element => {
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectProducts);
-  const { data, isFetching } = useGetProductsQuery(
-    {
-      searchString: searchValue,
-      sortValue,
-      filterItem,
-      prevPageItems: pageSkip,
-      pageSize,
-    },
-    {
-      skip: searchValue === '',
-    },
-  );
+  const { filterItem, searchValue = '' } = useAppSelector(selectProducts);
+
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
@@ -69,8 +57,6 @@ const Products: FunctionComponent = (): JSX.Element => {
     PossibleCategories: filterOptionsData?.['@search.facets']?.PossibleCategories,
   };
 
-  const [rowCount, setRowCount] = useState<number>(productsDummyData.length);
-
   const initialGridState = {
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'PossibleCategories', sort: 'asc' as GridSortDirection }] },
@@ -80,18 +66,6 @@ const Products: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setProductsFilterItem(filterItem);
   }, [filterItem]);
-
-  // useEffect(() => {
-  //   if (searchValue === '') {
-  //     setGridData([]);
-  //     setRowCount(0);
-  //   }
-  // }, [searchValue]);
-
-  // useEffect(() => {
-  //   setRowCount(data?.['@odata.count'] ?? 0);
-  //   //setGridData(data?.value ?? []);
-  // }, [data]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -178,7 +152,7 @@ const Products: FunctionComponent = (): JSX.Element => {
             data={gridData}
             columns={productColumns}
             id="view-products-grid"
-            isFetching={isFetching}
+            isFetching={false}
             onFilterModelChange={onFilterModelChange}
             filterItem={productsFilterItem}
             handleOnFilterClick={handleOnFilterClick}
