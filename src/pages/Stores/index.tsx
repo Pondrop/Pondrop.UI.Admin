@@ -117,7 +117,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
   };
 
   return (
-    <MainContent>
+    <MainContent paddingSide={92} paddingTop={16}>
       <RowAlignDiv>
         <ColAlignDiv>
           <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="stores-header">

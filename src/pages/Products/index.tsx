@@ -2,8 +2,15 @@ import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
+// Components
+import Grid from 'components/Grid';
 import { productColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
+import { handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
+import CategoryList from './components/CategoryList';
+
+// Other variables
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
@@ -14,34 +21,30 @@ import {
   setProductsSearchValue,
   setProductsSortValue,
 } from 'store/api/products/slice';
-import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
-import Grid from 'components/Grid';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
-import SearchField from 'components/SearchField';
+import { productsDummyData } from './components/CategoryList/constants';
+import {
+  CategoryBtnWrapper,
+  ColAlignDiv,
+  MainContent,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCategoryBtn,
+  StyledSubtitle,
+  StyledTitle,
+} from '../styles';
 
 const Products: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [gridData, setGridData] = useState<IValue[]>([]);
+  const [gridData, setGridData] = useState<IValue[]>(productsDummyData);
   const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(productInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectProducts);
-  const { data, isFetching } = useGetProductsQuery(
-    {
-      searchString: searchValue,
-      sortValue,
-      filterItem,
-      prevPageItems: pageSkip,
-      pageSize,
-    },
-    {
-      skip: searchValue === '',
-    },
-  );
+  const { filterItem, searchValue = '' } = useAppSelector(selectProducts);
+
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
@@ -54,8 +57,6 @@ const Products: FunctionComponent = (): JSX.Element => {
     PossibleCategories: filterOptionsData?.['@search.facets']?.PossibleCategories,
   };
 
-  const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
-
   const initialGridState = {
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'PossibleCategories', sort: 'asc' as GridSortDirection }] },
@@ -65,18 +66,6 @@ const Products: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setProductsFilterItem(filterItem);
   }, [filterItem]);
-
-  useEffect(() => {
-    if (searchValue === '') {
-      setGridData([]);
-      setRowCount(0);
-    }
-  }, [searchValue]);
-
-  useEffect(() => {
-    setRowCount(data?.['@odata.count'] ?? 0);
-    setGridData(data?.value ?? []);
-  }, [data]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -133,35 +122,51 @@ const Products: FunctionComponent = (): JSX.Element => {
   };
 
   return (
-    <MainContent>
-      <RowAlignDiv>
+    <MainContent paddingSide={32} paddingTop={42}>
+      <SpaceBetweenDiv>
         <ColAlignDiv>
           <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="products-header">
             Products
           </StyledTitle>
-          <StyledTitle className="main-header" variant="caption">
-            Last updated: 12th August, 2022 @ 10:01am
-          </StyledTitle>
+          <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={33}></StyledSubtitle>
         </ColAlignDiv>
-        <SearchField id="product-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
-      </RowAlignDiv>
-      <Grid
-        data={gridData}
-        columns={productColumns}
-        id="view-products-grid"
-        isFetching={isFetching}
-        onFilterModelChange={onFilterModelChange}
-        filterItem={productsFilterItem}
-        handleOnFilterClick={handleOnFilterClick}
-        rowCount={rowCount}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
-        menuData={menuData as IFacetValue}
-        onSortModelChange={handleSortModelChange}
-        initialState={initialGridState}
-        onRowClick={handleOnRowClick}
-        isMenuLoading={isFilterOptionsFetching}
-      />
+        <RowAlignWrapper style={{ height: '54px' }}>
+          <CategoryBtnWrapper rightmargin={20}>
+            <StyledCategoryBtn
+              data-testid="add-products-btn"
+              className="add-products-btn"
+              variant="contained"
+              disableElevation
+              height={40}
+            >
+              + Add products
+            </StyledCategoryBtn>
+          </CategoryBtnWrapper>
+          <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+        </RowAlignWrapper>
+      </SpaceBetweenDiv>
+      <RowAlignWrapper>
+        <CategoryList />
+        <div style={{ height: 'fit-content', width: '100%' }}>
+          <Grid
+            data={gridData}
+            columns={productColumns}
+            id="view-products-grid"
+            isFetching={false}
+            onFilterModelChange={onFilterModelChange}
+            filterItem={productsFilterItem}
+            handleOnFilterClick={handleOnFilterClick}
+            rowCount={10}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
+            menuData={menuData as IFacetValue}
+            onSortModelChange={handleSortModelChange}
+            initialState={initialGridState}
+            onRowClick={handleOnRowClick}
+            isMenuLoading={isFilterOptionsFetching}
+          />
+        </div>
+      </RowAlignWrapper>
     </MainContent>
   );
 };

@@ -162,7 +162,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
   }, [isSuccess]);
 
   return (
-    <MainContent>
+    <MainContent paddingSide={92} paddingTop={16}>
       <RowAlignDiv>
         <ColAlignDiv>
           <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="categories-header">

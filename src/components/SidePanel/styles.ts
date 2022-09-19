@@ -11,6 +11,7 @@ export const PanelWrapper = styled.div`
   .panel-btn {
     color: #001e2f;
     font-weight: 600;
+    margin: 1px 0;
 
     &:hover {
       background-color: rgba(171, 200, 224, 0.54);
@@ -19,6 +20,7 @@ export const PanelWrapper = styled.div`
 
   .signout-btn {
     color: #ba1a1a;
+    margin-top: 56px;
 
     &:hover {
       background-color: rgba(200, 15, 15, 0.08);
@@ -37,7 +39,6 @@ export const StyledButton = styled(Button, {
   height: 48px;
   justify-content: start;
   padding: 12px;
-  margin: 8px 0;
   text-transform: none;
   background-color: ${({ isActive = false }) => isActive ? 'rgba(194, 231, 255, 0.5)' : 'transparent'};
 
