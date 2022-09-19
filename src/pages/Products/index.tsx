@@ -121,6 +121,10 @@ const Products: FunctionComponent = (): JSX.Element => {
     navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
   };
 
+  const handleOnMangeCategories = () => {
+    navigate('categories', { replace: false });
+  };
+
   return (
     <MainContent paddingSide={32} paddingTop={42}>
       <SpaceBetweenDiv>
@@ -146,7 +150,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         </RowAlignWrapper>
       </SpaceBetweenDiv>
       <RowAlignWrapper>
-        <CategoryList />
+        <CategoryList onManageCategoriesClick={handleOnMangeCategories} />
         <div style={{ height: 'fit-content', width: '100%' }}>
           <Grid
             data={gridData}

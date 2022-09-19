@@ -13,10 +13,10 @@ function App() {
           <Route path="*" element={<Navigate to="/stores" />} />
           <Route path="/stores" element={<Stores />} />
           <Route path="/stores/:store_id" element={<StoreDetails />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/categories/:category_id" element={<CategoryDetails />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:product_id" element={<ProductDetails />} />
+          <Route path="/products/categories" element={<Categories />} />
+          <Route path="/products/categories/:category_id" element={<CategoryDetails />} />
         </Routes>
       </DivWrapper>
     </BrowserRouter>
