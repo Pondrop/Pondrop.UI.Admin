@@ -32,7 +32,7 @@ const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProp
   return (
     <DivWrapper>
       <div style={{ margin: '10px' }}>
-        <span className="category-sections">Category sections</span>
+        <span className="category-sections">Parent Categories</span>
       </div>
       <StyledList>{generateData()}</StyledList>
       <BtnWrapper>
