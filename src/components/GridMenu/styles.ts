@@ -25,17 +25,6 @@ export const RowDiv = styled.div`
     background-color: rgba(0, 0, 0, 0.05);
     font-weight: 600;
   }
-
-  ::-webkit-scrollbar {
-    width: 5px;
-    background-color: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    height: 5px;
-    border-radius: 20px;
-    background-color: rgba(0, 0, 0, 0.2);
-  }
 `;
 
 export const LabelDiv = styled.div`
@@ -57,12 +46,11 @@ export const StyledList = styled(FixedSizeList)`
   max-height: 248px;
 
   ::-webkit-scrollbar {
-    width: 5px;
-    background-color: transparent;
+    width: 10px;
   }
 
   ::-webkit-scrollbar-thumb {
-    height: 5px;
+    height: 10px;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.2);
   }
