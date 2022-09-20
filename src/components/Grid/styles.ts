@@ -5,12 +5,19 @@ import { DataGrid } from "@mui/x-data-grid";
 export const StyledDataGrid = styled(DataGrid, {
   shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent'].includes(prop)
 })<{ withBorder: boolean, hasClickEvent: boolean }>`
-  padding: 16px 16px 0;
+  padding: 8px 16px;
   
   ${({ withBorder }) => withBorder ? `
     border-radius: 12px;
     border: 1px solid #dde3ea;
   ` : 'border: none;'}
+
+  & .MuiDataGrid-columnHeaders {
+    min-height: 48px !important;
+    max-height: 48px !important;
+    line-height: 48px !important;
+    font-size: 12px;
+  }
 
   & .MuiDataGrid-columnSeparator {
     display: none;
@@ -22,6 +29,8 @@ export const StyledDataGrid = styled(DataGrid, {
 
   & .MuiDataGrid-footerContainer {
     justify-content: center;
+    height: 44px;
+    padding: 16px 0 4px;
   }
 
   & .MuiTablePagination-selectLabel,.MuiTablePagination-displayedRows {

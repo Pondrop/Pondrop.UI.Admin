@@ -11,7 +11,7 @@ export const categoryDummyData = [
   },
   {
     Id: '3',
-    Category: 'Daity, milk & eggs',
+    Category: 'Dairy, Milk & Eggs',
     Count: 1879
   },
   {
