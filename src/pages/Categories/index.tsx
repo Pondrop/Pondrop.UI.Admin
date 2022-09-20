@@ -89,6 +89,13 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
+    dispatch(
+      setCategoriesFilter({
+        columnField: '',
+        value: '',
+        operatorValue: 'isAnyOf',
+      }),
+    );
     dispatch(setCategoriesSearchValue(searchValue));
   };
 

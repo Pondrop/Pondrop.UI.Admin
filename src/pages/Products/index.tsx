@@ -69,6 +69,13 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
+    dispatch(
+      setProductsFilter({
+        columnField: '',
+        value: '',
+        operatorValue: 'isAnyOf',
+      }),
+    );
     dispatch(setProductsSearchValue(searchValue));
   };
 
