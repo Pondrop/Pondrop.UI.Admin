@@ -19,6 +19,10 @@ export const StyledDataGrid = styled(DataGrid, {
     font-size: 12px;
   }
 
+  & .MuiDataGrid-virtualScroller {
+    margin-top: 48px !important;
+  }
+
   & .MuiDataGrid-columnSeparator {
     display: none;
   }

@@ -116,8 +116,6 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
     );
   };
 
-  console.log('data ', data?.value);
-
   return (
     <MainContent paddingSide={92} paddingTop={16}>
       <RowAlignDiv>

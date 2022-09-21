@@ -158,7 +158,7 @@ const Products: FunctionComponent = (): JSX.Element => {
       </SpaceBetweenDiv>
       <RowAlignWrapper>
         <CategoryList onManageCategoriesClick={handleOnMangeCategories} />
-        <div style={{ height: 'fit-content', width: '100%' }}>
+        <div style={{ height: 'fit-content', width: 'calc(100vw - 617px)' }}>
           <Grid
             data={gridData}
             columns={productColumns}

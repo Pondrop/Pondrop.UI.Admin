@@ -1,5 +1,5 @@
 import { getGridStringOperators, GridColDef } from "@mui/x-data-grid";
-import { handleRenderCell } from "./utils";
+import { handleRenderCell, handleRenderCellDate } from "./utils";
 
 // filterOperators to be updated to make way for ssr filters, disabled most operators for now
 
@@ -32,7 +32,7 @@ export const linkedProductsColumns: GridColDef[] = [
 
 export const tasksColumns: GridColDef[] = [
   { field: 'taskType', headerName: 'Task Type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
-  { field: 'submittedUtc', headerName: 'Date Submitted', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+  { field: 'submittedUtc', headerName: 'Date & Time Submitted', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 200, renderCell: handleRenderCellDate },
   { field: 'retailerName', headerName: 'Provider', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 120, renderCell: handleRenderCell },
   { field: 'storeName', headerName: 'Store Name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
   { field: 'Product', headerName: 'Product', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
