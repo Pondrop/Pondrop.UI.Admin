@@ -1,10 +1,9 @@
 import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DescriptionOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
+import { ArtTrackOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
 
 import pondrop from 'assets/images/pondrop.png';
 import { useAppDispatch } from 'store';
-import { setCategoriesFilter, setCategoriesSearchValue } from 'store/api/categories/slice';
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
 import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 
@@ -15,19 +14,6 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
-
-  const handleCategoriesRedirect = () => {
-    setCurrentTab('categories');
-    navigate('../categories', { replace: true });
-    dispatch(
-      setCategoriesFilter({
-        columnField: '',
-        value: [],
-        operatorValue: 'isAnyOf',
-      }),
-    );
-    dispatch(setCategoriesSearchValue(''));
-  };
 
   const handleProductsRedirect = () => {
     setCurrentTab('products');
@@ -53,6 +39,18 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
       }),
     );
     dispatch(setStoresSearchValue(''));
+  };
+
+  const handleTasksRedirect = () => {
+    setCurrentTab('tasks');
+    navigate('../tasks', { replace: true });
+    dispatch(
+      setStoresFilter({
+        columnField: '',
+        value: [],
+        operatorValue: 'isAnyOf',
+      }),
+    );
   };
 
   return (
@@ -81,6 +79,18 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         isActive={currentTab === 'products'}
       >
         Products
+      </StyledButton>
+      <StyledButton
+        data-testid="panel-tasks-btn"
+        className="panel-btn"
+        variant="contained"
+        size="large"
+        startIcon={<ArtTrackOutlined className="task-icon" />}
+        disableElevation
+        onClick={handleTasksRedirect}
+        isActive={currentTab === 'tasks'}
+      >
+        Submissions
       </StyledButton>
       <StyledButton
         data-testid="signout-btn"

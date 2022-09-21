@@ -4,22 +4,26 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { categoriesApi, categoriesMicroService } from './api/categories/api';
 import { storeApi } from './api/stores/api';
 import { productsApi } from './api/products/api';
+import { tasksApi } from './api/tasks/api';
 import categoriesReducer from './api/categories/slice';
 import productsReducer from './api/products/slice';
 import storeReducer from './api/stores/slice';
+import tasksReducer from './api/tasks/slice';
 import userReducer from './user/slice';
 
 // global store
 export const store = configureStore({
   reducer: {
     categories: categoriesReducer,
-    store: storeReducer,
     products: productsReducer,
+    store: storeReducer,
+    tasks: tasksReducer,
     user: userReducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [categoriesMicroService.reducerPath]: categoriesMicroService.reducer,
-    [storeApi.reducerPath]: storeApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
+    [storeApi.reducerPath]: storeApi.reducer,
+    [tasksApi.reducerPath]: tasksApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -29,7 +33,8 @@ export const store = configureStore({
       .concat(storeApi.middleware)
       .concat(productsApi.middleware)
       .concat(categoriesApi.middleware)
-      .concat(categoriesMicroService.middleware),
+      .concat(categoriesMicroService.middleware)
+      .concat(tasksApi.middleware),
 });
 
 // types
