@@ -64,6 +64,13 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
+    dispatch(
+      setStoresFilter({
+        columnField: '',
+        value: '',
+        operatorValue: 'isAnyOf',
+      }),
+    );
     dispatch(setStoresSearchValue(searchValue));
   };
 

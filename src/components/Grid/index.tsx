@@ -2,8 +2,13 @@ import { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid';
 import { FilterList } from '@mui/icons-material';
 
+// API Types
 import { IFilterItem } from 'store/api/types';
-import CustomMenu from '../GridMenu';
+
+// Components
+import CustomGridEmptyState from 'components/EmptyState';
+import CustomMenu from 'components/GridMenu';
+
 import { StyledDataGrid } from './styles';
 import { IGridProps } from './types';
 
@@ -91,6 +96,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       components={{
         ColumnMenuIcon: renderMenuIcon,
         ColumnMenu: renderCustomMenu,
+        NoResultsOverlay: CustomGridEmptyState,
       }}
       componentsProps={{
         pagination: { showFirstButton: true, showLastButton: true },

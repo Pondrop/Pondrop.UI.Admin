@@ -12,12 +12,12 @@ export const ContentWrapper = styled.div`
   }
 
   ::-webkit-scrollbar {
-    width: 7px;
+    width: 8px;
     background-color: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    height: 7px;
+    height: 8px;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.2);
   }
@@ -25,8 +25,8 @@ export const ContentWrapper = styled.div`
 
 export const MainContent = styled(ContentWrapper)<{ paddingSide: number, paddingTop: number }>`
   width: ${({ paddingSide }) => `calc(100vw - ${256 + (paddingSide * 2)}px);`}
-  max-height: calc(100vh - ${({ paddingTop }) => `${paddingTop + 48}`}px);
-  padding: ${({ paddingSide, paddingTop }) => `${paddingTop}px ${paddingSide}px`} 48px;
+  max-height: calc(100vh - ${({ paddingTop }) => `${paddingTop + 24}`}px);
+  padding: ${({ paddingSide, paddingTop }) => `${paddingTop}px ${paddingSide}px`} 24px;
 
   .main-header {
     padding: 0;
