@@ -1,10 +1,9 @@
 import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArtTrackOutlined, DescriptionOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
+import { ArtTrackOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
 
 import pondrop from 'assets/images/pondrop.png';
 import { useAppDispatch } from 'store';
-import { setCategoriesFilter, setCategoriesSearchValue } from 'store/api/categories/slice';
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
 import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 
