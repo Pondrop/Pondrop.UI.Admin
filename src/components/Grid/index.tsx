@@ -102,7 +102,7 @@ const Grid: FunctionComponent<IGridProps> = ({
         pagination: { showFirstButton: true, showLastButton: true },
       }}
       loading={isFetching}
-      getRowId={(row) => row.Id}
+      getRowId={(row) => row.Id ?? row.id}
       filterModel={getFilterModel()}
       onFilterModelChange={onFilterModelChange}
       paginationMode="server"

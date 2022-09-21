@@ -16,19 +16,6 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
 
   const navigate = useNavigate();
 
-  const handleCategoriesRedirect = () => {
-    setCurrentTab('categories');
-    navigate('../categories', { replace: true });
-    dispatch(
-      setCategoriesFilter({
-        columnField: '',
-        value: [],
-        operatorValue: 'isAnyOf',
-      }),
-    );
-    dispatch(setCategoriesSearchValue(''));
-  };
-
   const handleProductsRedirect = () => {
     setCurrentTab('products');
     navigate('../products', { replace: true });
@@ -104,7 +91,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         onClick={handleTasksRedirect}
         isActive={currentTab === 'tasks'}
       >
-        Submitted Tasks
+        Submissions
       </StyledButton>
       <StyledButton
         data-testid="signout-btn"
