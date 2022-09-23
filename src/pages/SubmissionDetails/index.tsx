@@ -1,10 +1,11 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
+import moment from 'moment';
 
 import { IState } from 'pages/types';
-import { useGetStoreInfoQuery } from 'store/api/stores/api';
-import StoreInfoPanel from './components/SubmissionInfo';
+import { useGetSubmissionInfoQuery } from 'store/api/tasks/api';
+import SubmissionInfoPanel from './components/SubmissionInfo';
 
 import {
   CircularLoaderWrapper,
@@ -25,10 +26,10 @@ const SubmissionDetails: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
   const { submission_id } = useParams();
 
-  const { data, isFetching } = useGetStoreInfoQuery({ storeId: submission_id ?? '' }, { skip: !!location.state });
+  const { data, isFetching } = useGetSubmissionInfoQuery({ submissionId: submission_id ?? '' });
 
   const state = location?.state as IState;
-  const rowData = state?.rowData ?? data?.value[0];
+  const rowData = state?.rowData;
   const isLoading = state?.rowData ? false : isFetching;
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
@@ -49,18 +50,18 @@ const SubmissionDetails: FunctionComponent = (): JSX.Element => {
         <StyledTypography className="link" onClick={handlePrevious} data-testid="stores-link">
           Submitted tasks
         </StyledTypography>
-        <StyledTypography color="text.primary">Low stock item</StyledTypography>
+        <StyledTypography color="text.primary">{state?.rowData?.taskType}</StyledTypography>
       </StyledBreadcrumbs>
       <StyledTitle variant="h5" gutterBottom>
-        Low stock item
+        {state?.rowData?.taskType}
       </StyledTitle>
       <StyledSubtitle variant="subtitle1" gutterBottom>
-        -- --
+        Submitted {moment(state?.rowData?.submittedUtc).format('hh:mm:ss Do MMMM YYYY')}
       </StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Task information" id="tab-0" aria-controls="task-detail-0" disableRipple />
       </StyledTabs>
-      <StoreInfoPanel value={currentTab} index={0} data={rowData} />
+      <SubmissionInfoPanel value={currentTab} index={0} data={rowData} />
     </div>
   );
 

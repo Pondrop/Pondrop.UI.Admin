@@ -59,12 +59,12 @@ export const submissionsMicroService = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getSubmissionInfo: builder.query<IValue, void>({
+    getSubmissionInfo: builder.query<IValue, { submissionId: string }>({
       query: (arg) => {
+        const { submissionId } = arg;
         return {
-          url: `/Submission`,
+          url: `/Submission/${submissionId}`,
           method: 'GET',
-          body: JSON.stringify(arg),
         };
       },
     }),
