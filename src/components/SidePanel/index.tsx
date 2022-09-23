@@ -42,8 +42,8 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   };
 
   const handleTasksRedirect = () => {
-    setCurrentTab('tasks');
-    navigate('../tasks', { replace: true });
+    setCurrentTab('submissions');
+    navigate('../submissions', { replace: true });
     dispatch(
       setStoresFilter({
         columnField: '',
@@ -88,7 +88,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         startIcon={<ArtTrackOutlined className="task-icon" />}
         disableElevation
         onClick={handleTasksRedirect}
-        isActive={currentTab === 'tasks'}
+        isActive={currentTab === 'submissions'}
       >
         Submissions
       </StyledButton>

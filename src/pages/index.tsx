@@ -5,5 +5,15 @@ import ProductDetails from './ProductDetails';
 import Stores from './Stores';
 import StoreDetails from './StoreDetails';
 import SubmittedTasks from './SubmittedTasks';
+import SubmissionDetails from './SubmissionDetails';
 
-export { Categories, CategoryDetails, Products, ProductDetails, Stores, StoreDetails, SubmittedTasks };
+export {
+  Categories,
+  CategoryDetails,
+  Products,
+  ProductDetails,
+  Stores,
+  StoreDetails,
+  SubmittedTasks,
+  SubmissionDetails,
+};
