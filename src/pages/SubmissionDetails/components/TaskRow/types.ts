@@ -1,12 +1,12 @@
-import { IValue } from "store/api/types";
-
-interface TaskRowValue {
-  field: string;
-  label: string;
-  value: string;
-}
+import { ISteps } from "store/api/tasks/types";
 
 export interface ITaskRowProps {
-  url: string;
-  rowData: TaskRowValue[];
+  stepData?: ISteps;
 }
+
+export enum IValueTypeFields {
+  integer = "intValue",
+  currency = "doubleValue",
+  picker = "stringValue",
+  multilineText = "stringValue",
+} 

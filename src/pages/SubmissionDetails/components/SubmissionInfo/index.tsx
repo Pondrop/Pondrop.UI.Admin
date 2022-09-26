@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react';
 
-import { IValue } from 'store/api/types';
+import { ISubmissionDetailsResponse } from 'store/api/tasks/types';
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
-import { ITabPanelProps } from 'pages/types';
+import { ISubmissionInfoPanelProps } from 'pages/types';
 import TaskRow from '../TaskRow';
-import { submissionTitles, taskData } from './constants';
+import { submissionTitles } from './constants';
 
-const SubmissionInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
-  const [taskInfo, setTaskInfo] = useState<IValue>({});
+const SubmissionInfoPanel = ({ value, index, data }: ISubmissionInfoPanelProps): JSX.Element => {
+  const [taskInfo, setTaskInfo] = useState<ISubmissionDetailsResponse>({} as ISubmissionDetailsResponse);
 
   useEffect(() => {
-    setTaskInfo(data ?? {});
+    setTaskInfo(data as ISubmissionDetailsResponse);
   }, [data]);
 
   const renderStoreDetails = () => {
     return submissionTitles.map((row, index) => (
-      <SpaceBetweenDiv key={`${taskInfo.Id}-details-${index}`}>
+      <SpaceBetweenDiv key={`${taskInfo.id}-details-${index}`}>
         <span className="row-label">{row.label}</span>
         <span className="row-value singleline">
-          {taskInfo?.[row.field] ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}
+          {taskInfo?.[row.field as keyof ISubmissionDetailsResponse] ?? (
+            <i style={{ marginRight: '2px' }}>Not supplied</i>
+          )}
         </span>
       </SpaceBetweenDiv>
     ));
@@ -27,8 +29,9 @@ const SubmissionInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Elemen
   const renderTaskData = () => {
     return (
       <div>
-        <TaskRow url={taskData[0].url} rowData={taskData[0].data} />
-        <TaskRow url={taskData[1].url} rowData={taskData[1].data} />
+        {data?.steps.map((step) => (
+          <TaskRow stepData={step} key={step.id} />
+        ))}
       </div>
     );
   };

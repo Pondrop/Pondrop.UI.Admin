@@ -1,24 +1,63 @@
-import { ColAlignDiv, RowAlignWrapper, SpaceBetweenDiv } from 'pages/styles';
-import { ImgWrapper } from './styles';
-import { ITaskRowProps } from './types';
+import { FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
 
-const TaskRow = ({ url, rowData }: ITaskRowProps) => {
+import { ColAlignDiv, RowAlignWrapper, SpaceBetweenDiv } from 'pages/styles';
+import { IFields, IValueTypes } from 'store/api/tasks/types';
+import { ImgWrapper } from './styles';
+import { ITaskRowProps, IValueTypeFields } from './types';
+
+const TaskRow = ({ stepData }: ITaskRowProps) => {
   const renderImage = () => {
+    const hasPhoto = !!stepData?.fields[0]?.values[0]?.photoUrl;
+    const photoUrl = stepData?.fields[0]?.values[0]?.photoUrl;
+    const photoLabel = stepData?.fields[0]?.label;
+
+    const emptyImage =
+      stepData?.fields[0]?.type === 'photo' ? (
+        <ImageNotSupportedOutlined sx={{ height: '125px', width: '125px' }} />
+      ) : (
+        <FormatAlignJustifyOutlined sx={{ height: '125px', width: '125px' }} />
+      );
+
     return (
       <ImgWrapper>
-        <img src={url} alt={url} height="125px" width="125px" />
+        {!hasPhoto ? emptyImage : <img src={photoUrl as string} alt={photoLabel} height="125px" width="125px" />}
       </ImgWrapper>
     );
   };
 
+  const renderComment = (value: string | number | null) => {
+    const hasComment = !!value;
+
+    if (!hasComment) return undefined;
+
+    return <i style={{ marginRight: '2px' }}>"{value}"</i>;
+  };
+
+  const renderField = (step: IFields) => {
+    const isComment = step.label === 'Comments';
+    const isCurrency = step.type === 'currency';
+
+    let fieldValue =
+      step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
+
+    if (isCurrency) fieldValue = '$ ' + Number(fieldValue).toFixed(2);
+
+    return (
+      <SpaceBetweenDiv key={step.id} style={{ width: '400px' }}>
+        <span className="row-label">{step.label}</span>
+        <span className="row-value singleline">
+          {(isComment ? renderComment(fieldValue) : fieldValue) ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}
+        </span>
+      </SpaceBetweenDiv>
+    );
+  };
+
   const renderData = () => {
-    return rowData.map((row) => {
-      return (
-        <SpaceBetweenDiv key={row.field} style={{ width: '250px' }}>
-          <span className="row-label">{row.label}</span>
-          <span className="row-value singleline">{row.value}</span>
-        </SpaceBetweenDiv>
-      );
+    if (!stepData) return;
+
+    const stepValues = stepData?.fields.filter((step) => step.type !== 'photo');
+    return stepValues.map((step) => {
+      return renderField(step);
     });
   };
 
