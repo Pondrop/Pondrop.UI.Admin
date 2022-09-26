@@ -177,11 +177,11 @@ export const StyledTabContent = styled.div`
   }
 `;
 
-export const StyledCard = styled.div<{ width: string, height: string }>`
+export const StyledCard = styled.div<{ width: string, height?: string }>`
   margin: 16px 0 0 32px;
   padding: 16px;
-  width: ${({ width }) => width};
-  height: ${({ height }) => height};
+  width: ${({ width }) => width ?? '100%'};
+  height: ${({ height }) => height ?? 'fit-content'};
   background-color: #ffffff;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 12px;

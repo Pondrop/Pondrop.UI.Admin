@@ -1,5 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
+import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import { tasksColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
@@ -14,6 +15,8 @@ import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
 const SubmittedTasks: FunctionComponent = (): JSX.Element => {
+  const navigate = useNavigate();
+
   // States
   const [taskFilterItem, setTaskFilterItem] = useState<IFilterItem>(taskInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
@@ -116,6 +119,10 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
     );
   };
 
+  const handleOnRowClick = (params: GridRowParams) => {
+    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
+  };
+
   return (
     <MainContent paddingSide={92} paddingTop={16}>
       <RowAlignDiv>
@@ -143,6 +150,7 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
+        onRowClick={handleOnRowClick}
         isMenuLoading={isFilterOptionsFetching}
         searchValue={searchValue}
       />

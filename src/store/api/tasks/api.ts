@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IApiResponse, IFilterItem, ISortItem } from '../types';
+import { IApiResponse, IFilterItem, ISortItem, IValue } from '../types';
+import { ISubmissionDetailsResponse } from './types';
 
 export const tasksApi = createApi({
   reducerPath: 'tasksApi',
@@ -47,4 +48,29 @@ export const tasksApi = createApi({
   }),
 });
 
+export const submissionsMicroService = createApi({
+  reducerPath: 'submissionsMicroService',
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: "https://template-submission-service.ashyocean-bde16918.australiaeast.azurecontainerapps.io",
+    prepareHeaders: (headers) => {
+      headers.set('Content-Type', 'application/json');
+      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDlkMzcwOS1jMmY5LTRkMDYtOGVhNy04NTc5OTBjYTdlN2IiLCJlbWFpbCI6ImFkbWluQHhhbS5jb20uYXUiLCJ0eXAiOiJBZG1pbiIsIm5iZiI6MTY2MzA0NjEzMywiZXhwIjoxNjk0NTgyMTMzLCJpYXQiOjE2NjMwNDYxMzN9.zMyjBMXOR6wVAol0UcZC9jdN6p9M2eSJekBJzamXwbs');
+
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getSubmissionInfo: builder.query<ISubmissionDetailsResponse, { submissionId: string }>({
+      query: (arg) => {
+        const { submissionId } = arg;
+        return {
+          url: `/Submission/${submissionId}`,
+          method: 'GET',
+        };
+      },
+    }),
+  }),
+});
+
 export const { useGetAllTaskFilterQuery, useGetTasksQuery } = tasksApi;
+export const { useGetSubmissionInfoQuery } = submissionsMicroService;
