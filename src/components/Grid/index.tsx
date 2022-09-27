@@ -6,7 +6,7 @@ import { FilterList } from '@mui/icons-material';
 import { IFilterItem } from 'store/api/types';
 
 // Components
-import CustomGridEmptyState from 'components/EmptyState';
+import CustomEmptyState from 'components/EmptyState';
 import CustomMenu from 'components/GridMenu';
 
 import { StyledDataGrid } from './styles';
@@ -64,6 +64,10 @@ const Grid: FunctionComponent<IGridProps> = ({
     [searchValue, isMenuLoading, localFilter],
   );
 
+  const renderEmptyState = () => {
+    return <CustomEmptyState displayText="No matches found." />;
+  };
+
   // helper function
   const getFilterModel = () => {
     const filterModelItem = {
@@ -96,7 +100,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       components={{
         ColumnMenuIcon: renderMenuIcon,
         ColumnMenu: renderCustomMenu,
-        NoResultsOverlay: CustomGridEmptyState,
+        NoResultsOverlay: renderEmptyState,
       }}
       componentsProps={{
         pagination: { showFirstButton: true, showLastButton: true },

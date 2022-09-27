@@ -76,6 +76,12 @@ const CustomMenu = (props: ICustomMenuProps) => {
   );
 
   const renderMenuItems = () => {
+    if (uniqueValues.length === 0)
+      return (
+        <MenuListWrapper style={{ display: 'flex', alignItems: 'center' }}>
+          <i>No options available.</i>
+        </MenuListWrapper>
+      );
     return (
       <MenuListWrapper>
         <SearchFieldWrapper>

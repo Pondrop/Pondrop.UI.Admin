@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
 
-export const EmptyStateWrapper = styled.div`
+export const EmptyStateWrapper = styled.div<{ height?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: ${({ height }) => height ?? '100%'};
 
   svg {
     fill: rgba(0, 0, 0, 0.5);
