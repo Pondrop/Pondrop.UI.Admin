@@ -13,7 +13,7 @@ import CategoryList from './components/CategoryList';
 // Other variables
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
-import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
+import { useGetAllProductFilterQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import {
   selectProducts,
@@ -52,9 +52,8 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const menuData = {
     GTIN: filterOptionsData?.['@search.facets']?.GTIN,
-    Company_Name: filterOptionsData?.['@search.facets']?.Company_Name,
     Product: filterOptionsData?.['@search.facets']?.Product,
-    PossibleCategories: filterOptionsData?.['@search.facets']?.PossibleCategories,
+    Categories: filterOptionsData?.['@search.facets']?.Categories,
   };
 
   const initialGridState = {

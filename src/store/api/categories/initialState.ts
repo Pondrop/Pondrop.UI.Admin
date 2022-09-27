@@ -4,7 +4,7 @@ import { IGridState } from '../types';
 export const categoryInitialState: IGridState = {
   ...initialState,
   sortValue: {
-    field: 'Category',
+    field: 'name',
     sort: 'asc'
   }
 };

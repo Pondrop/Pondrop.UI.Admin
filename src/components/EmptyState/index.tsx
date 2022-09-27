@@ -1,14 +1,15 @@
 import { ReportOutlined } from '@mui/icons-material';
 
 import { EmptyStateWrapper } from './styles';
+import { IEmptyStateProps } from './types';
 
-const CustomGridEmptyState = () => {
+const CustomEmptyState = ({ height, displayText }: IEmptyStateProps) => {
   return (
-    <EmptyStateWrapper>
+    <EmptyStateWrapper height={height}>
       <ReportOutlined />
-      <span>No matches found.</span>
+      <span>{displayText}</span>
     </EmptyStateWrapper>
   );
 };
 
-export default CustomGridEmptyState;
+export default CustomEmptyState;

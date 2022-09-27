@@ -65,4 +65,10 @@ export const SearchFieldWrapper = styled.div`
 
 export const MenuListWrapper = styled.div`
   height: 100%;
+
+  i {
+    color: rgba(0, 0, 0, 0.4);
+    margin-left: 16px;
+    font-size: 14px;
+  }
 `;

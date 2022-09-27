@@ -31,7 +31,7 @@ export const categoriesApi = createApi({
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 
         return {
-          url: `/indexes/azuresql-index-category/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
+          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
           method: 'GET',
         };
       },
@@ -40,7 +40,7 @@ export const categoriesApi = createApi({
       query: (arg) => {
         const { categoryId } = arg;
         return {
-          url: `/indexes/azuresql-index-category/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${categoryId}'`}`,
+          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${categoryId}'`}`,
           method: 'GET',
         };
       },
@@ -49,7 +49,15 @@ export const categoriesApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/azuresql-index-category/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}&$count=true&facet=Category,count:0,sort:value&facet=Description,count:0,sort:value`,
+          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}&$count=true&facet=name,count:0,sort:value`,
+          method: 'GET',
+        };
+      },
+    }),
+    getParentCategories: builder.query<IApiResponse, void>({
+      query: () => {
+        return {
+          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview&$filter=type eq 'parent'`,
           method: 'GET',
         };
       },
@@ -80,5 +88,5 @@ export const categoriesMicroService = createApi({
   }),
 });
 
-export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery } = categoriesApi;
-export const { useCreateCategoryMutation} = categoriesMicroService;
+export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery, useGetParentCategoriesQuery } = categoriesApi;
+export const { useCreateCategoryMutation } = categoriesMicroService;

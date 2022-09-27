@@ -67,7 +67,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
   });
 
   const menuData = {
-    Category: filterOptionsData?.['@search.facets']?.Category,
+    name: filterOptionsData?.['@search.facets']?.name,
     Description: filterOptionsData?.['@search.facets']?.Description,
   };
 
@@ -75,7 +75,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   const initialGridState = {
     pagination: { pageSize },
-    sorting: { sortModel: [{ field: 'Category', sort: 'asc' as GridSortDirection }] },
+    sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
 
   // Use Effects
@@ -194,6 +194,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
               variant="contained"
               disableElevation
               height={40}
+              disabled
             >
               + Add category
             </StyledCategoryBtn>
