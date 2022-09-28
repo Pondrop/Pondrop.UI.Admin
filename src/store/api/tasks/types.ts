@@ -1,9 +1,16 @@
+export interface IItemValue {
+  itemId: string;
+  itemName: string;
+  itemType: string;
+}
+
 export interface IValueTypes {
   doubleValue: number | null;
   id: string;
   intValue: number | null;
   photoUrl: string | null;
   stringValue: string | null;
+  itemValue: IItemValue | null;
 }
 
 export interface IFields {
