@@ -49,10 +49,10 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
         <StyledTypography className="link" onClick={handlePrevious} data-testid="stores-link">
           Stores
         </StyledTypography>
-        <StyledTypography color="text.primary">{rowData?.['Name']}</StyledTypography>
+        <StyledTypography color="text.primary">{`${rowData?.['Provider']} ${rowData?.['Name']}`}</StyledTypography>
       </StyledBreadcrumbs>
       <StyledTitle variant="h5" gutterBottom>
-        {rowData?.['Name']}
+        {`${rowData?.['Provider']} ${rowData?.['Name']}`}
       </StyledTitle>
       <StyledSubtitle variant="subtitle1" gutterBottom>
         {`${rowData?.['Street']}, ${rowData?.['City']} ${rowData?.['State']} ${rowData?.['Zip_Code']}`}
