@@ -57,31 +57,31 @@ describe('<App />', () => {
     const { findByTestId, getByTestId } = renderApp();
     const user = userEvent.setup();
 
-    const categoryBtn = await findByTestId('panel-category-btn');
+    const productBtn = await findByTestId('panel-product-btn');
 
-    await user.click(categoryBtn);
+    await user.click(productBtn);
 
-    const categoryTitle = getByTestId('categories-header');
-    expect(categoryTitle).toBeInTheDocument();
+    const productsTitle = getByTestId('products-header');
+    expect(productsTitle).toBeInTheDocument();
+
+    const manageCategBtn = await findByTestId('manage-categories-btn');
+
+    await user.click(manageCategBtn);
+
+    const categoriesTitle = getByTestId('categories-header');
+    expect(categoriesTitle).toBeInTheDocument();
   });
 
-  test('should show Add Category modal', async () => {
+  test('should show Submissions page', async () => {
     const { findByTestId, getByTestId } = renderApp();
     const user = userEvent.setup();
 
-    const categoryBtn = await findByTestId('panel-category-btn');
+    const submissionsBtn = await findByTestId('panel-submissions-btn');
 
-    await user.click(categoryBtn);
+    await user.click(submissionsBtn);
 
-    const categoryTitle = getByTestId('categories-header');
-    expect(categoryTitle).toBeInTheDocument();
-
-    const addCategoryBtn = getByTestId('add-category-btn');
-
-    await user.click(addCategoryBtn);
-
-    const categoryModal = screen.getByTestId('add-category-modal');
-    expect(categoryModal).toBeInTheDocument();
+    const submissionsTitle = getByTestId('submissons-header');
+    expect(submissionsTitle).toBeInTheDocument();
   });
 
   test('should show Store Details page', async () => {
@@ -100,11 +100,11 @@ describe('<App />', () => {
     expect(productHeader).toBeInTheDocument();
   });
 
-  test('should show Category Details page', async () => {
-    changeJSDOMURL('http://localhost:3000/categories/48634be1-b1e4-4071-ad86-60730281f44a');
+  test('should show Submission Details page', async () => {
+    changeJSDOMURL('http://localhost:3000/submissions/fe3c91a8-d08d-4591-8da9-8a1ba5accafb');
     const { findByTestId } = renderApp();
 
-    const categoryHeader = await findByTestId('categories-link');
-    expect(categoryHeader).toBeInTheDocument();
+    const submissionsHeader = await findByTestId('submissions-link');
+    expect(submissionsHeader).toBeInTheDocument();
   });
 });

@@ -127,7 +127,7 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
     <MainContent paddingSide={92} paddingTop={16}>
       <RowAlignDiv>
         <ColAlignDiv>
-          <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="products-header">
+          <StyledTitle className="main-header" variant="h5" gutterBottom data-testid="submissons-header">
             Submissions
           </StyledTitle>
           <StyledTitle className="main-header" variant="caption">

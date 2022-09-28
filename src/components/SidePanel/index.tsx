@@ -81,7 +81,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         Products
       </StyledButton>
       <StyledButton
-        data-testid="panel-tasks-btn"
+        data-testid="panel-submissions-btn"
         className="panel-btn"
         variant="contained"
         size="large"
