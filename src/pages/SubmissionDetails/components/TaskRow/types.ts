@@ -9,4 +9,5 @@ export enum IValueTypeFields {
   currency = "doubleValue",
   picker = "stringValue",
   multilineText = "stringValue",
+  search = "itemValue",
 } 

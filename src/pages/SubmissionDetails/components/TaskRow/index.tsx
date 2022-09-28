@@ -1,7 +1,7 @@
 import { FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
 
 import { ColAlignDiv, RowAlignWrapper, SpaceBetweenDiv } from 'pages/styles';
-import { IFields, IValueTypes } from 'store/api/tasks/types';
+import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
 import { ImgWrapper } from './styles';
 import { ITaskRowProps, IValueTypeFields } from './types';
 
@@ -25,7 +25,7 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     );
   };
 
-  const renderComment = (value: string | number | null) => {
+  const renderComment = (value: string | null) => {
     const hasComment = !!value;
 
     if (!hasComment) return undefined;
@@ -33,21 +33,31 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     return <i style={{ marginRight: '2px' }}>"{value}"</i>;
   };
 
+  const renderValues = (isComment: boolean, fieldValue: string | number | IItemValue | null) => {
+    if (!fieldValue || !isComment) {
+      return (
+        <span className="row-value singleline">{fieldValue ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}</span>
+      );
+    } else if (isComment) {
+      return <span className="row-value multiline">{renderComment(fieldValue as string)}</span>;
+    }
+  };
+
   const renderField = (step: IFields) => {
-    const isComment = step.label === 'Comments';
+    const isComment = step.type === 'multilineText';
     const isCurrency = step.type === 'currency';
+    const isProduct = step.type === 'search';
 
     let fieldValue =
       step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
 
     if (isCurrency) fieldValue = '$ ' + Number(fieldValue).toFixed(2);
+    else if (isProduct) fieldValue = (fieldValue as IItemValue)?.itemName;
 
     return (
       <SpaceBetweenDiv key={step.id} style={{ width: '400px' }}>
-        <span className="row-label">{step.label}</span>
-        <span className="row-value singleline">
-          {(isComment ? renderComment(fieldValue) : fieldValue) ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}
-        </span>
+        <span className="row-label">{step.label === 'Add a product' ? 'Product' : step.label}</span>
+        {renderValues(isComment, fieldValue)}
       </SpaceBetweenDiv>
     );
   };

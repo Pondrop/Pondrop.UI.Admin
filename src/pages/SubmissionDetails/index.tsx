@@ -41,7 +41,7 @@ const SubmissionDetails: FunctionComponent = (): JSX.Element => {
   const renderContent = () => (
     <div>
       <StyledBreadcrumbs aria-label="breadcrumb">
-        <StyledTypography className="link" onClick={handlePrevious} data-testid="stores-link">
+        <StyledTypography className="link" onClick={handlePrevious} data-testid="submissions-link">
           Submitted tasks
         </StyledTypography>
         <StyledTypography color="text.primary">{data?.templateTitle}</StyledTypography>

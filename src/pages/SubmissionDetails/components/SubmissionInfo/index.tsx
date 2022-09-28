@@ -13,9 +13,9 @@ const SubmissionInfoPanel = ({ value, index, data }: ISubmissionInfoPanelProps):
     setTaskInfo(data as ISubmissionDetailsResponse);
   }, [data]);
 
-  const renderStoreDetails = () => {
+  const renderSubmissionDetails = () => {
     return submissionTitles.map((row, index) => (
-      <SpaceBetweenDiv key={`${taskInfo.id}-details-${index}`}>
+      <SpaceBetweenDiv key={`${taskInfo?.id}-details-${index}`}>
         <span className="row-label">{row.label}</span>
         <span className="row-value singleline">
           {taskInfo?.[row.field as keyof ISubmissionDetailsResponse] ?? (
@@ -37,12 +37,12 @@ const SubmissionInfoPanel = ({ value, index, data }: ISubmissionInfoPanelProps):
   };
 
   return (
-    <StyledTabContent role="tabpanel" hidden={value !== index} id="store-detail-0" aria-labelledby="tab-0">
+    <StyledTabContent role="tabpanel" hidden={value !== index} id="task-detail-0" aria-labelledby="tab-0">
       <StyledCard width="400px">
         <StyledCardTitle variant="h6" gutterBottom>
           Details
         </StyledCardTitle>
-        {renderStoreDetails()}
+        {renderSubmissionDetails()}
         <RowAlignWrapper></RowAlignWrapper>
       </StyledCard>
       <StyledCard width="600px">

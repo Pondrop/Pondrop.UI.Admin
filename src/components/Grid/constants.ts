@@ -20,7 +20,7 @@ export const productColumns: GridColDef[] = [
 
 export const categoriesColumns: GridColDef[] = [
   { field: 'name', headerName: 'Name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
-  { field: 'Description', headerName: 'Category section', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 2, renderCell: handleRenderCell },
+  { field: 'Description', headerName: 'Parent Category', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 2, renderCell: handleRenderCell },
 ];
 
 export const linkedProductsColumns: GridColDef[] = [
