@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 export const StyledDataGrid = styled(DataGrid, {
@@ -69,6 +69,7 @@ export const StyledDataGrid = styled(DataGrid, {
 
   & .MuiDataGrid-cell {
     padding: 10px;
+    min-height: 52px !important;
   }
 
   & .MuiDataGrid-cellContent {
@@ -93,4 +94,16 @@ export const StyledCellContent = styled(Typography)`
   font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+export const StyledChipWrapper = styled(Paper)`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style: none;
+  background: transparent;
+
+  .chip-component {
+    margin: 4px;
+  }
 `;

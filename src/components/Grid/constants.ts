@@ -1,5 +1,5 @@
 import { getGridStringOperators, GridColDef } from "@mui/x-data-grid";
-import { handleRenderCell, handleRenderCellDate } from "./utils";
+import { handleRenderCell, handleRenderCellDate, handleRenderChips } from "./utils";
 
 // filterOperators to be updated to make way for ssr filters, disabled most operators for now
 
@@ -15,7 +15,7 @@ export const storeColumns: GridColDef[] = [
 export const productColumns: GridColDef[] = [
   { field: 'Name', headerName: 'Product Name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
   { field: 'GTIN', headerName: 'GTIN', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
-  { field: 'Categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
+  { field: 'Categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderChips },
 ];
 
 export const categoriesColumns: GridColDef[] = [

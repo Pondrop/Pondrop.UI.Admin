@@ -81,72 +81,120 @@ export const productsDummyData = [
     Id: '1',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '2',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '3',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '4',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '5',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '6',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '7',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '8',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '9',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '10',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '11',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
   {
     Id: '12',
     Name: 'Dairy Farmers Lite White Reduced Fat Milk',
     GTIN: '8006285003201',
-    Categories: 'Dairy, Milk, Fullcream milk'
+    Categories: [
+      { id: 1, name: 'Dairy' },
+      { id: 2, name: 'Milk' },
+      { id: 3, name: 'Fullcream Milk' },
+    ],
   },
 ]; 
