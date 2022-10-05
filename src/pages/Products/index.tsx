@@ -12,7 +12,7 @@ import CategoryList from './components/CategoryList';
 
 // Other variables
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, IProductValue } from 'store/api/types';
 import { useGetAllProductFilterQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import {
@@ -37,7 +37,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [gridData, setGridData] = useState<IValue[]>(productsDummyData);
+  const [gridData, setGridData] = useState<IProductValue[]>(productsDummyData);
   const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(productInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);

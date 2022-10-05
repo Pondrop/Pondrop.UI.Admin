@@ -38,3 +38,14 @@ export interface IGridState {
   sortValue: ISortItem;
 }
 
+export interface ICategories {
+  id: string | number;
+  name: string;
+}
+
+export interface IProductValue {
+  Id: string;
+  Name: string;
+  GTIN: string;
+  Categories: ICategories[];
+}

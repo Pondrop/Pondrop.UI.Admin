@@ -5,7 +5,7 @@ import { IFacetValue, IFilterItem, IValue } from "store/api/types";
 import { IBasicFilter } from "components/GridMenu/types";
 
 export interface IGridProps {
-  data?: IValue[];
+  data?: unknown[];
   columns: GridColDef[];
   id: string;
   isFetching: boolean;

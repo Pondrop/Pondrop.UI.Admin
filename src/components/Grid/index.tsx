@@ -121,6 +121,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       withBorder={withBorder}
       hasClickEvent={!!onRowClick}
       onMenuOpen={handleMenuOpen}
+      getRowHeight={() => 'auto'}
     />
   );
 };

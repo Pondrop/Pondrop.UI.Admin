@@ -3,7 +3,9 @@ import { Tooltip } from '@mui/material';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import moment from 'moment';
 
-import { StyledCellContent } from './styles';
+import Chips from 'components/Chips';
+import { ICategories } from 'store/api/types';
+import { StyledCellContent, StyledChipWrapper } from './styles';
 
 export const handleRenderCell = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
@@ -41,5 +43,15 @@ export const handleRenderCellDate = (params: GridRenderCellParams) => {
         {cellValue}
       </StyledCellContent>
     </Tooltip>
+  );
+};
+
+export const handleRenderChips = (params: GridRenderCellParams) => {
+  return (
+    <StyledChipWrapper>
+      {params?.value.map((val: ICategories) => (
+        <Chips key={val.id} label={val.name} />
+      ))}
+    </StyledChipWrapper>
   );
 };
