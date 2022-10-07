@@ -1,10 +1,12 @@
 export const categoryTitles = [
   {
     field: 'Category',
-    label: 'Category'
+    label: 'Category Name',
+    placeholder: 'Category Name'
   },
   {
-    field: 'Description',
-    label: 'Category Description'
+    field: 'parentCategory',
+    label: 'Parent Category',
+    placeholder: '- Select Parent Category -'
   },
 ];

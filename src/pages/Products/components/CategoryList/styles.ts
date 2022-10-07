@@ -53,7 +53,8 @@ export const ManageCategoriesBtn = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'height'
 })<{ height: number }>`
   height: ${({ height }) => height}px;
-  padding: 6px 32px;
+  padding: 10px 32px;
+  line-height: 20px;
   text-transform: none;
   border-radius: 100px;
   border: 1px solid #72787E;
