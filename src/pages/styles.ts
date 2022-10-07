@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Tab, Tabs, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -244,7 +244,8 @@ export const StyledCategoryBtn = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'height'
 })<{ height: number }>`
   height: ${({ height }) => height}px;
-  padding: 6px 32px;
+  padding: 10px 24px;
+  line-height: 20px;
   text-transform: none;
   border-radius: 100px;
   background-color: #006492;
@@ -261,27 +262,4 @@ export const StyledCategoryBtn = styled(Button, {
 export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`
   align-self: center;
   margin-right: ${({ rightmargin }) => rightmargin}px;
-`;
-
-export const StyledTextInput = styled(TextField)`
-  height: 14px;
-
-  & legend {
-    display: none;
-  }
-
-  & fieldset {
-    top: 0;
-  }
-
-  & input {
-    line-height: 14px;
-    font-size: 14px;
-    padding: 4px 14px;
-  }
-
-  & textarea {
-    line-height: 14px;
-    font-size: 14px;
-  }
 `;

@@ -195,7 +195,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
               variant="contained"
               disableElevation
               height={40}
-              disabled
+              onClick={handleAddCategory}
             >
               + Add category
             </StyledCategoryBtn>
