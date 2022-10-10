@@ -98,7 +98,6 @@ export const StyledCellContent = styled(Typography)`
 
 export const StyledChipWrapper = styled(Paper)`
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
   list-style: none;
   background: transparent;
