@@ -41,6 +41,10 @@ export const ContentDetails = styled(ContentWrapper)`
   width: calc(100vw - 255px);
   max-height: calc(100vh - 36px);
   padding-top: 36px;
+
+  .right-margin {
+    margin-right: 24px;
+  }
 `;
 
 export const StyledTypography = styled(Typography)`
@@ -86,6 +90,10 @@ export const RowAlignDiv = styled(SpaceBetweenDiv)`
 export const ColAlignDiv = styled.div`
   display: flex;
   flex-direction: column;
+
+  .ul {
+    padding-inline-start: 16px !important;
+  }
 `;
 
 export const StyledBreadcrumbs = styled(Breadcrumbs, {
@@ -118,16 +126,21 @@ export const StyledTabs = styled(Tabs)`
     margin-left: 32px;
   }
 
-  .MuiTab-root.Mui-selected {
+  .MuiTab-root {
     font-size: 12px;
     line-height: 16px;
     color: #001E2C;
     text-transform: none;
-    background-color: #fafcff;
     border-width: 1px 1px 0px 1px;
     border-style: solid;
-    border-color: rgba(0, 0, 0, 0.12);
+    border-color: transparent;
     border-radius: 8px 8px 0px 0px;
+  }
+
+  .MuiTab-root.Mui-selected {
+    color: #001E2C;
+    background-color: #fafcff;
+    border-color: rgba(0, 0, 0, 0.12);
   }
 
   .MuiTabs-indicator {
@@ -136,11 +149,6 @@ export const StyledTabs = styled(Tabs)`
 `;
 
 export const StyledTab = styled(Tab)`
-  .Mui-selected {
-    font-size: 12px;
-    line-height: 16px;
-    color: #001E2C;
-  }
 `;
 
 export const CircularLoaderWrapper = styled.div<{ height: string }>`
@@ -175,6 +183,11 @@ export const StyledTabContent = styled.div`
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.2);
   }
+
+  .card-details {
+    font-size: 12px;
+    line-height: 16px;
+  }
 `;
 
 export const StyledCard = styled.div<{ width: string, height?: string }>`
@@ -189,7 +202,7 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
   span {
     font-size: 14px;
     line-height: 28px;
-    color: #000000;
+    color: #000000 !important;
   }
 
   .row-label {
@@ -213,14 +226,8 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
   }
 
   .multiline {
-    max-width: 300px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
     overflow: hidden;
-    text-align: right;
     line-height: 16px;
-    max-height: 64px;
     text-overflow: ellipsis;
   }
 
@@ -238,6 +245,22 @@ export const StyledCardTitle = styled(Typography)`
   font-size: 18px;
   font-weight: 400;
   margin-bottom: 16px;
+
+  .info-icon {
+    .MuiSvgIcon-root {
+      height: 13px;
+      width: 13px;
+    }
+  }
+
+  svg {
+    fill: #006492;
+  }
+
+  .MuiIconButton-root {
+    height: 24px;
+    width: 24px;
+  }
 `;
 
 export const StyledCategoryBtn = styled(Button, {

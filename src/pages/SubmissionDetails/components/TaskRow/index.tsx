@@ -39,7 +39,11 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
         <span className="row-value singleline">{fieldValue ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}</span>
       );
     } else if (isComment) {
-      return <span className="row-value multiline">{renderComment(fieldValue as string)}</span>;
+      return (
+        <span className="row-value multiline" style={{ maxWidth: '300px', textAlign: 'right' }}>
+          {renderComment(fieldValue as string)}
+        </span>
+      );
     }
   };
 

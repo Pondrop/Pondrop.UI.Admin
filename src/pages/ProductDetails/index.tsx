@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
 import { useGetProductInfoQuery } from 'store/api/products/api';
+import ActivityInfoPanel from './components/ActivityInfoPanel';
 import ProductInfoPanel from './components/ProductInfoPanel';
 import { IState } from 'pages/types';
 
@@ -50,16 +51,21 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
         <StyledTypography className="link" onClick={handlePrevious} data-testid="products-link">
           Products
         </StyledTypography>
-        <StyledTypography color="text.primary">{rowData?.['Product']}</StyledTypography>
+        <StyledTypography color="text.primary">Dairy Farmers Lite White Reduced Fat Milk</StyledTypography>
       </StyledBreadcrumbs>
-      <StyledTitle variant="h5" gutterBottom>
-        {rowData?.['Product']}
+      <StyledTitle variant="h5" style={{ margin: '0' }}>
+        Dairy Farmers Lite White Reduced Fat Milk
       </StyledTitle>
-      <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={60}></StyledSubtitle>
+      <StyledTitle className="main-header" variant="caption">
+        Last updated: 12th August, 2022 @ 10:01am
+      </StyledTitle>
+      <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={50}></StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Product information" id="tab-0" aria-controls="product-detail-0" disableRipple />
+        <StyledTab label="Activity" id="tab-1" aria-controls="product-detail-1" disableRipple />
       </StyledTabs>
       <ProductInfoPanel value={currentTab} index={0} data={rowData} />
+      <ActivityInfoPanel value={currentTab} index={1} data={rowData} />
     </div>
   );
 
