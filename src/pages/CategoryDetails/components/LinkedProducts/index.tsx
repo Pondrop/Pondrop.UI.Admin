@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Info, PlaylistAdd } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import Grid from 'components/Grid';
-import { linkedProductsColumns } from 'components/Grid/constants';
+import { productColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
-import { SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+import { productsDummyData } from 'pages/Products/components/CategoryList/constants';
+import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
-import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, ISortItem, IProductValue } from 'store/api/types';
+import { tooltipContent } from '../CategoryInfoPanel/constants';
 
 const LinkedProducts = (): JSX.Element => {
-  const [gridData, setGridData] = useState<IValue[]>([]);
+  const [gridData, setGridData] = useState<IProductValue[]>(productsDummyData);
   const [searchVal, setSearchVal] = useState<string>('');
   const [filterVal, setFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
   const [sortVal, setSortVal] = useState<ISortItem>(productInitialState.sortValue);
@@ -98,28 +102,40 @@ const LinkedProducts = (): JSX.Element => {
     });
   };
 
-  useEffect(() => {
-    setRowCount(data?.['@odata.count'] ?? 0);
-    setGridData(data?.value ?? []);
-  }, [data]);
-
   return (
     <div>
       <SpaceBetweenDiv>
-        <StyledCardTitle variant="h6" gutterBottom>
-          Linked Products
+        <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+          <SpaceBetweenDiv withmargin={false}>
+            <RowAlignWrapper>
+              Linked products
+              <Tooltip title={tooltipContent['linkedProducts']} placement="top">
+                <div className="info-icon" style={{ marginLeft: '8px' }}>
+                  <Info />
+                </div>
+              </Tooltip>
+            </RowAlignWrapper>
+            <IconButton aria-label="Add category" size="small" style={{ marginLeft: '4px' }}>
+              <PlaylistAdd fontSize="inherit" />
+            </IconButton>
+          </SpaceBetweenDiv>
         </StyledCardTitle>
-        <SearchField
-          id="category-search-field"
-          value={searchVal}
-          onEnterPress={handleSearchDispatch}
-          isfullsize={false}
-          width={250}
-        />
+        <div className="linked-products">
+          <SearchField
+            id="category-search-field"
+            value={searchVal}
+            onEnterPress={handleSearchDispatch}
+            isfullsize={false}
+            width={266}
+            padding="8px 12px 8px 0"
+            variant="outlined"
+            placeholder="Search by product name or barcode"
+          />
+        </div>
       </SpaceBetweenDiv>
       <Grid
         data={gridData}
-        columns={linkedProductsColumns}
+        columns={productColumns}
         id="view-products-mini-grid"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
@@ -133,6 +149,8 @@ const LinkedProducts = (): JSX.Element => {
         initialState={initialGridState}
         withBorder={false}
         isMenuLoading={isFilterOptionsFetching}
+        withPadding={false}
+        withCheckboxSelection={true}
       />
     </div>
   );

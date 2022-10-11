@@ -91,6 +91,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
             isfullsize={false}
             width={225}
             onChange={handleOnSearchChange}
+            padding="4px 2px"
           />
         </SearchFieldWrapper>
         <AutoSizer>

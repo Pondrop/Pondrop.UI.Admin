@@ -153,7 +153,12 @@ const Products: FunctionComponent = (): JSX.Element => {
               + Add products
             </StyledCategoryBtn>
           </CategoryBtnWrapper>
-          <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+          <SearchField
+            id="category-search-field"
+            value={searchValue}
+            onEnterPress={handleSearchDispatch}
+            padding="16px 14px 14px"
+          />
         </RowAlignWrapper>
       </SpaceBetweenDiv>
       <RowAlignWrapper>

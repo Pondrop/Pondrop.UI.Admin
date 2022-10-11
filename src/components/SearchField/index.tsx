@@ -12,6 +12,9 @@ const SearchField = ({
   isfullsize = true,
   width,
   onChange,
+  padding,
+  variant = 'standard',
+  placeholder = 'Search',
 }: ISearchFieldProps): JSX.Element => {
   const [searchValueString, setSearchValueString] = useState<string>(value);
 
@@ -33,8 +36,9 @@ const SearchField = ({
   return (
     <StyledTextField
       id={id}
-      variant="standard"
-      placeholder="Search"
+      className="search-field"
+      variant={variant}
+      placeholder={placeholder}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -47,6 +51,7 @@ const SearchField = ({
       onKeyDown={handleOnKeyDown}
       isfullsize={isfullsize}
       width={width}
+      padding={padding}
     />
   );
 };

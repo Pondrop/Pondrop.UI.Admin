@@ -79,6 +79,21 @@ export const RowAlignWrapper = styled.div`
 export const SpaceBetweenDiv = styled(RowAlignWrapper)<{ withmargin?: boolean }>`
   justify-content: space-between;
   ${({ withmargin = true }) => withmargin && 'margin: 4px 0;'}
+
+  .linked-products {
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+    }
+
+    .MuiOutlinedInput-input {
+      font-size: 12px;
+    }
+
+    .MuiSvgIcon-root {
+      height: 20px !important;
+      width: 20px !important;
+    }
+  }
 `;
 
 export const RowAlignDiv = styled(SpaceBetweenDiv)`

@@ -1,29 +1,14 @@
 export const categoryTitles = [
   {
-    field: 'Category',
-    label: 'Category'
+    field: 'categoryName',
+    label: 'Name'
   },
   {
-    field: 'Description',
-    label: 'Category Description'
+    field: 'parentName',
+    label: 'Parent category'
   },
 ];
 
-export const activityValues = [
-  {
-    label: 'Date created',
-    value: '-'
-  },
-  {
-    label: 'Date last updated',
-    value: '-'
-  },
-  {
-    label: 'Status',
-    value: '-'
-  },
-  {
-    label: 'Status last updated',
-    value: '-'
-  },
-];
+export const tooltipContent = {
+  linkedProducts: "All products require at least one category link. To modify the category for a product linked to only one category, add the new category before removing the current one."
+}

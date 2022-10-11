@@ -4,15 +4,14 @@ import { CircularProgress } from '@mui/material';
 
 import { IState } from 'pages/types';
 import { useGetCategoryInfoQuery } from 'store/api/categories/api';
+import ActivityInfoPanel from './components/ActivityInfoPanel';
 import CategoryInfoPanel from './components/CategoryInfoPanel';
 import {
-  CategoryBtnWrapper,
   CircularLoaderWrapper,
   ColAlignDiv,
   ContentDetails,
   SpaceBetweenDiv,
   StyledBreadcrumbs,
-  StyledCategoryBtn,
   StyledSubtitle,
   StyledTab,
   StyledTabs,
@@ -42,25 +41,14 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
 
   const handlePrevious = () => navigate(-1);
 
+  const handleProductsRedirect = () => {
+    navigate('../products', { replace: true });
+  };
+
   const renderLoader = () => (
     <CircularLoaderWrapper height="calc(100vh - 36px)">
       <CircularProgress size={100} thickness={3} />
     </CircularLoaderWrapper>
-  );
-
-  const renderUpdateCategoryBtn = () => (
-    <CategoryBtnWrapper rightmargin={32} style={{ alignSelf: 'flex-start' }}>
-      <StyledCategoryBtn
-        data-testid="update-category-btn"
-        className="update-category-btn"
-        variant="contained"
-        disableElevation
-        height={40}
-        disabled={true}
-      >
-        + Update Category
-      </StyledCategoryBtn>
-    </CategoryBtnWrapper>
   );
 
   const renderHeader = () => {
@@ -68,12 +56,14 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
       <>
         <SpaceBetweenDiv withmargin={false}>
           <ColAlignDiv>
-            <StyledTitle variant="h5" gutterBottom>
-              {rowData?.['Category']}
+            <StyledTitle variant="h5" style={{ margin: '0' }}>
+              {rowData?.['categoryName']}
             </StyledTitle>
-            <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={60}></StyledSubtitle>
+            <StyledTitle className="main-header" variant="caption">
+              Last updated: 12th August, 2022 @ 10:01am
+            </StyledTitle>
+            <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={50}></StyledSubtitle>
           </ColAlignDiv>
-          {renderUpdateCategoryBtn()}
         </SpaceBetweenDiv>
       </>
     );
@@ -82,16 +72,21 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const renderContent = () => (
     <div>
       <StyledBreadcrumbs aria-label="breadcrumb">
+        <StyledTypography className="link" onClick={handleProductsRedirect} data-testid="products-link">
+          Products
+        </StyledTypography>
         <StyledTypography className="link" onClick={handlePrevious} data-testid="categories-link">
           Categories
         </StyledTypography>
-        <StyledTypography color="text.primary">{rowData?.['Category']}</StyledTypography>
+        <StyledTypography color="text.primary">{rowData?.['categoryName']}</StyledTypography>
       </StyledBreadcrumbs>
       {renderHeader()}
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Category information" id="tab-0" aria-controls="category-detail-0" disableRipple />
+        <StyledTab label="Activity" id="tab-1" aria-controls="category-detail-1" disableRipple />
       </StyledTabs>
       <CategoryInfoPanel value={currentTab} index={0} data={rowData} />
+      <ActivityInfoPanel value={currentTab} index={1} data={rowData} />
     </div>
   );
 

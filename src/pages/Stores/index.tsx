@@ -134,7 +134,12 @@ const Stores: FunctionComponent = (): JSX.Element => {
             Last updated: 12th August, 2022 @ 10:01am
           </StyledTitle>
         </ColAlignDiv>
-        <SearchField id="store-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+        <SearchField
+          id="store-search-field"
+          value={searchValue}
+          onEnterPress={handleSearchDispatch}
+          padding="16px 14px 14px"
+        />
       </RowAlignDiv>
       <Grid
         data={data?.value}

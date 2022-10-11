@@ -2,13 +2,13 @@ import styled from "@emotion/styled";
 import { TextField } from "@mui/material";
 
 export const StyledTextField = styled(TextField, {
-  shouldForwardProp: (prop) => !['isfullsize', 'width'].includes(prop)
-})<{ isfullsize: boolean, width?: number }>`
+  shouldForwardProp: (prop) => !['isfullsize', 'width', 'padding'].includes(prop)
+})<{ isfullsize: boolean, width?: number, padding: string }>`
   width: ${({ isfullsize, width }) => isfullsize ? '321px' : `${width}px` };
   
   & input {
     height: 24px;
-    padding: ${({ isfullsize }) => isfullsize ? '16px 14px 14px' : '4px 2px' };
+    padding: ${({ padding }) => padding};
   }
 
   ${({ isfullsize }) => isfullsize && 
@@ -17,5 +17,11 @@ export const StyledTextField = styled(TextField, {
     }`
   }
 
-  
+  & legend {
+    display: none;
+  }
+
+  & fieldset {
+    top: 0;
+  }
 `;
