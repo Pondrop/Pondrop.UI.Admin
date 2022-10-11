@@ -31,7 +31,7 @@ export const categoriesApi = createApi({
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 
         return {
-          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
+          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
           method: 'GET',
         };
       },
@@ -40,7 +40,7 @@ export const categoriesApi = createApi({
       query: (arg) => {
         const { categoryId } = arg;
         return {
-          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${categoryId}'`}`,
+          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${categoryId}'`}`,
           method: 'GET',
         };
       },
@@ -49,7 +49,7 @@ export const categoriesApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}&$count=true&facet=name,count:0,sort:value`,
+          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}&$count=true&facet=categoryName,count:0,sort:value&facet=parentName,count:0,sort:value`,
           method: 'GET',
         };
       },
