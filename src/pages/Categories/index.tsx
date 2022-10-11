@@ -155,7 +155,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   const handleOnRowClick = (params: GridRowParams) => {
     // Uncomment when feature will be worked on
-    // navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
+    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
   };
 
   const handleCreateModalClose = () => {
@@ -200,7 +200,12 @@ const Categories: FunctionComponent = (): JSX.Element => {
               + Add category
             </StyledCategoryBtn>
           </CategoryBtnWrapper>
-          <SearchField id="category-search-field" value={searchValue} onEnterPress={handleSearchDispatch} />
+          <SearchField
+            id="category-search-field"
+            value={searchValue}
+            onEnterPress={handleSearchDispatch}
+            padding="16px 14px 14px"
+          />
         </RowAlignWrapper>
       </RowAlignDiv>
       <Grid

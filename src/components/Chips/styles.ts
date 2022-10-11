@@ -12,7 +12,7 @@ export const StyledChip = styled(Chip)`
   }
 
   &:active {
-    background-color: rgba(20, 218, 237, 0.88);
+    background-color: rgba(180, 200, 220, 0.8);
   }
 
   & span {

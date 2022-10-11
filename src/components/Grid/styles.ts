@@ -3,9 +3,9 @@ import { Paper, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 export const StyledDataGrid = styled(DataGrid, {
-  shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent'].includes(prop)
-})<{ withBorder: boolean, hasClickEvent: boolean }>`
-  padding: 8px 16px;
+  shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent', 'withPadding'].includes(prop)
+})<{ withBorder: boolean, hasClickEvent: boolean, withPadding?: boolean }>`
+  ${({ withPadding = true }) => withPadding && 'padding: 8px 16px;'}
   
   ${({ withBorder }) => withBorder ? `
     border-radius: 12px;

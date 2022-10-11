@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react';
+import { IconButton } from '@mui/material';
+import { EditOutlined, Info } from '@mui/icons-material';
 
-import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
+import {
+  ColAlignDiv,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCard,
+  StyledCardTitle,
+  StyledTabContent,
+} from 'pages/styles';
 import { ITabPanelProps } from 'pages/types';
 import { IValue } from 'store/api/types';
-import { activityValues, categoryTitles } from './constants';
+import { categoryTitles } from './constants';
 import LinkedProducts from '../LinkedProducts';
 
 const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
@@ -15,47 +24,44 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
 
   const renderDetails = () => {
     return (
-      <div>
-        <SpaceBetweenDiv key={`${categoryInfo.Id}-details-0`}>
-          <span className="row-label">{categoryTitles[0].label}</span>
-          <span className="row-value singleline">{categoryInfo?.Category}</span>
-        </SpaceBetweenDiv>
-        <SpaceBetweenDiv key={`${categoryInfo.Id}-details-1`}>
-          <span className="row-label">{categoryTitles[1].label}</span>
-          <span className="row-value multiline">{categoryInfo?.Description}</span>
-        </SpaceBetweenDiv>
-      </div>
+      <ColAlignDiv>
+        <span className="row-label card-details">{categoryTitles[0].label}</span>
+        <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
+          {categoryInfo?.[categoryTitles[0].field]}
+        </span>
+        <span className="row-label card-details">{categoryTitles[1].label}</span>
+        <span className="row-value multiline card-details" style={{ maxWidth: '100%' }}>
+          {categoryInfo?.[categoryTitles[1].field]}
+        </span>
+      </ColAlignDiv>
     );
-  };
-
-  const renderActivity = () => {
-    return activityValues.map((activity, index) => (
-      <SpaceBetweenDiv key={`${categoryInfo.Id}-activity-${index}`}>
-        <span className="row-label">{activity.label}</span>
-        <span className="row-value singleline">{activity.value}</span>
-      </SpaceBetweenDiv>
-    ));
   };
 
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="category-detail-0" aria-labelledby="tab-0">
-      <RowAlignWrapper>
-        <StyledCard width="450px" height="160px">
-          <StyledCardTitle variant="h6" gutterBottom>
-            Details
+      <RowAlignWrapper className="right-margin">
+        <StyledCard width="100%">
+          <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+            <SpaceBetweenDiv withmargin={false}>
+              <RowAlignWrapper>
+                Category
+                <div className="info-icon" style={{ marginLeft: '8px' }}>
+                  <Info />
+                </div>
+              </RowAlignWrapper>
+              <IconButton aria-label="edit" size="small">
+                <EditOutlined fontSize="inherit" />
+              </IconButton>
+            </SpaceBetweenDiv>
           </StyledCardTitle>
           {renderDetails()}
         </StyledCard>
-        <StyledCard width="309px" height="160px">
-          <StyledCardTitle variant="h6" gutterBottom>
-            Activity
-          </StyledCardTitle>
-          {renderActivity()}
+      </RowAlignWrapper>
+      <RowAlignWrapper className="right-margin">
+        <StyledCard className="grid-card" width="100%" height="fit-content">
+          <LinkedProducts />
         </StyledCard>
       </RowAlignWrapper>
-      <StyledCard className="grid-card" width="calc(100% - 96px)" height="fit-content">
-        <LinkedProducts />
-      </StyledCard>
     </StyledTabContent>
   );
 };

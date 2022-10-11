@@ -22,4 +22,6 @@ export interface IGridProps {
   withBorder?: boolean;
   isMenuLoading?: boolean;
   searchValue?: string;
+  withPadding?: boolean;
+  withCheckboxSelection?: boolean;
 }
