@@ -67,15 +67,15 @@ const Categories: FunctionComponent = (): JSX.Element => {
   });
 
   const menuData = {
-    name: filterOptionsData?.['@search.facets']?.name,
-    Description: filterOptionsData?.['@search.facets']?.Description,
+    categoryName: filterOptionsData?.['@search.facets']?.categoryName,
+    parentName: filterOptionsData?.['@search.facets']?.parentName,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
     pagination: { pageSize },
-    sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
+    sorting: { sortModel: [{ field: 'categoryName', sort: 'asc' as GridSortDirection }] },
   };
 
   // Use Effects
