@@ -39,7 +39,7 @@ export const attributesChips = [
   { id: 1, name: 'Organic' },
   { id: 2, name: 'Reduced fat' },
   { id: 3, name: 'Australian made' },
-  { id: 3, name: 'Lite' },
+  { id: 4, name: 'Lite' },
 ];
 
 export const productTestData = [
@@ -56,18 +56,22 @@ export const productTestData = [
 export const packagingTestData = [
   {
     label: 'Net contents',
+    field: 'netContent',
     value: '2'
   },
   {
     label: 'Net content UOM',
+    field: 'netContentUom',
     value: 'Litres'
   },
   {
     label: 'Multipack',
+    field: 'multipack',
     value: 'No'
   },
   {
     label: 'Quantity of children',
+    field: 'quantity',
     value: '0'
   }
 ];
@@ -75,22 +79,27 @@ export const packagingTestData = [
 export const organisationTestData = [
   {
     label: 'Company name',
+    field: 'companyName',
     value: 'Dairy Farmers PTY LTD'
   },
   {
     label: 'Brand',
+    field: 'brand',
     value: 'Dairy Farmers Milk'
   },
   {
     label: 'External reference ID',
+    field: 'externalReferenceId',
     value: 'ABC1234567'
   },
   {
     label: 'GTIN',
+    field: 'GTIN',
     value: '9429000038225'
   },
   {
     label: 'GLN',
+    field: 'GLN',
     value: '9429000038225'
   }
 ];
