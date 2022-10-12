@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
@@ -12,29 +12,24 @@ import { productsDummyData } from 'pages/Products/components/CategoryList/consta
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
-import { IFacetValue, IFilterItem, ISortItem, IProductValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, ISortItem, IProductValue, IValue } from 'store/api/types';
 import { tooltipContent } from '../CategoryInfoPanel/constants';
 
 const LinkedProducts = (): JSX.Element => {
-  const [gridData, setGridData] = useState<IProductValue[]>(productsDummyData);
+  const [gridData, setGridData] = useState<IValue[]>([]);
   const [searchVal, setSearchVal] = useState<string>('');
   const [filterVal, setFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
   const [sortVal, setSortVal] = useState<ISortItem>(productInitialState.sortValue);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
-  const { data, isFetching } = useGetProductsQuery(
-    {
-      searchString: searchVal,
-      sortValue: sortVal,
-      filterItem: filterVal,
-      prevPageItems: pageSkip,
-      pageSize,
-    },
-    {
-      skip: searchVal === '',
-    },
-  );
+  const { data, isFetching } = useGetProductsQuery({
+    searchString: searchVal,
+    sortValue: sortVal,
+    filterItem: filterVal,
+    prevPageItems: pageSkip,
+    pageSize,
+  });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchVal },
@@ -42,18 +37,20 @@ const LinkedProducts = (): JSX.Element => {
   );
 
   const menuData = {
-    GTIN: filterOptionsData?.['@search.facets']?.GTIN,
-    Product: filterOptionsData?.['@search.facets']?.Product,
-    PossibleCategories: filterOptionsData?.['@search.facets']?.PossibleCategories,
-    Brand: filterOptionsData?.['@search.facets']?.Brand,
+    name: filterOptionsData?.['@search.facets']?.name,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
     pagination: { pageSize },
-    sorting: { sortModel: [{ field: 'PossibleCategories', sort: 'asc' as GridSortDirection }] },
+    sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
+
+  useEffect(() => {
+    setRowCount(data?.['@odata.count'] ?? 0);
+    setGridData(data?.value ?? []);
+  }, [data]);
 
   const handleSearchDispatch = (searchValue: string) => {
     setSearchVal(searchValue);
