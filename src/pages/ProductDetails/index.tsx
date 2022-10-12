@@ -1,6 +1,7 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
+import moment from 'moment';
 
 import { useGetProductInfoQuery } from 'store/api/products/api';
 import ActivityInfoPanel from './components/ActivityInfoPanel';
@@ -51,13 +52,13 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
         <StyledTypography className="link" onClick={handlePrevious} data-testid="products-link">
           Products
         </StyledTypography>
-        <StyledTypography color="text.primary">Dairy Farmers Lite White Reduced Fat Milk</StyledTypography>
+        <StyledTypography color="text.primary">{rowData?.name}</StyledTypography>
       </StyledBreadcrumbs>
       <StyledTitle variant="h5" style={{ margin: '0' }}>
-        Dairy Farmers Lite White Reduced Fat Milk
+        {rowData?.name}
       </StyledTitle>
       <StyledTitle className="main-header" variant="caption">
-        Last updated: 12th August, 2022 @ 10:01am
+        Last updated: {moment(rowData?.updatedUtc).format('Do MMMM YYYY @ h:mm:ss a')}
       </StyledTitle>
       <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={50}></StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>

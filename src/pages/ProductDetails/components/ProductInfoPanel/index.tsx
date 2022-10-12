@@ -55,13 +55,13 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
       <ColAlignDiv>
         <span className="row-label card-details">{productTestData[0].label}</span>
         <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
-          {productTestData[0].value}
+          {productInfo?.name}
         </span>
         <span className="row-label card-details">{productTestData[1].label}</span>
         <span className="row-value multiline card-details" style={{ maxWidth: '100%' }}>
-          {productTestData[1].value}
+          {productInfo?.shortDescription}
         </span>
-        <ul style={{ paddingInlineStart: '16px' }}>
+        {/* <ul style={{ paddingInlineStart: '16px' }}>
           <li className="row-value card-details">Rich in calcium</li>
           <li className="row-value card-details">Natural source of protein</li>
           <li className="row-value card-details">No artificial additives or preservatives</li>
@@ -73,7 +73,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
         <span className="row-value card-details">Rich in calcium</span>
         <span className="row-value card-details">Natural source of protein</span>
         <span className="row-value card-details">High quality.</span>
-        <span className="row-value card-details">Nutritious and delicious milk.</span>
+        <span className="row-value card-details">Nutritious and delicious milk.</span> */}
       </ColAlignDiv>
     );
   };
@@ -85,7 +85,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
           {row.label}
         </span>
         <span className="row-value singleline card-details" style={{ lineHeight: '20px' }}>
-          {row.value}
+          {productInfo?.[row.field] ?? '-'}
         </span>
       </SpaceBetweenDiv>
     ));
@@ -98,7 +98,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
           {row.label}
         </span>
         <span className="row-value singleline card-details" style={{ lineHeight: '20px' }}>
-          {row.value}
+          {productInfo?.[row.field] ?? '-'}
         </span>
       </SpaceBetweenDiv>
     ));
