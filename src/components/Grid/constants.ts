@@ -13,9 +13,9 @@ export const storeColumns: GridColDef[] = [
 ];
 
 export const productColumns: GridColDef[] = [
-  { field: 'Name', headerName: 'Product name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
+  { field: 'name', headerName: 'Product name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'GTIN', headerName: 'GTIN', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
-  { field: 'Categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderChips },
+  { field: 'Categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
 ];
 
 export const categoriesColumns: GridColDef[] = [

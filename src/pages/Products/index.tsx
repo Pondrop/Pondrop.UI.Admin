@@ -12,8 +12,8 @@ import CategoryList from './components/CategoryList';
 
 // Other variables
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem, IProductValue } from 'store/api/types';
-import { useGetAllProductFilterQuery } from 'store/api/products/api';
+import { IFacetValue, IFilterItem, IProductValue, IValue } from 'store/api/types';
+import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import {
   selectProducts,
@@ -37,13 +37,20 @@ const Products: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [gridData, setGridData] = useState<IProductValue[]>(productsDummyData);
+  const [gridData, setGridData] = useState<IValue[]>([]);
   const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(productInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '' } = useAppSelector(selectProducts);
+  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectProducts);
+  const { data, isFetching } = useGetProductsQuery({
+    searchString: searchValue,
+    sortValue,
+    filterItem,
+    prevPageItems: pageSkip,
+    pageSize,
+  });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchValue },
@@ -51,20 +58,32 @@ const Products: FunctionComponent = (): JSX.Element => {
   );
 
   const menuData = {
-    GTIN: filterOptionsData?.['@search.facets']?.GTIN,
-    Product: filterOptionsData?.['@search.facets']?.Product,
-    Categories: filterOptionsData?.['@search.facets']?.Categories,
+    name: filterOptionsData?.['@search.facets']?.name,
   };
+
+  const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
     pagination: { pageSize },
-    sorting: { sortModel: [{ field: 'PossibleCategories', sort: 'asc' as GridSortDirection }] },
+    sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
 
   // Use Effects
   useEffect(() => {
     setProductsFilterItem(filterItem);
   }, [filterItem]);
+
+  useEffect(() => {
+    if (searchValue === '') {
+      setGridData([]);
+      setRowCount(0);
+    }
+  }, [searchValue]);
+
+  useEffect(() => {
+    setRowCount(data?.['@odata.count'] ?? 0);
+    setGridData(data?.value ?? []);
+  }, [data]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -124,7 +143,6 @@ const Products: FunctionComponent = (): JSX.Element => {
   };
 
   const handleOnRowClick = (params: GridRowParams) => {
-    // Uncomment when feature will be worked on
     navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
   };
 
@@ -168,11 +186,11 @@ const Products: FunctionComponent = (): JSX.Element => {
             data={gridData}
             columns={productColumns}
             id="view-products-grid"
-            isFetching={false}
+            isFetching={isFetching}
             onFilterModelChange={onFilterModelChange}
             filterItem={productsFilterItem}
             handleOnFilterClick={handleOnFilterClick}
-            rowCount={10}
+            rowCount={rowCount}
             onPageChange={onPageChange}
             onPageSizeChange={onPageSizeChange}
             menuData={menuData as IFacetValue}

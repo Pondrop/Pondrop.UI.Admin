@@ -57,7 +57,7 @@ export const categoriesApi = createApi({
     getParentCategories: builder.query<IApiResponse, void>({
       query: () => {
         return {
-          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview&$filter=type eq 'parent'`,
+          url: `/indexes/cosmosdb-index-category/docs?api-version=2021-04-30-Preview&$filter=type eq 'parent'&$orderby=name asc`,
           method: 'GET',
         };
       },
