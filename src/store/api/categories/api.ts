@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse, IFilterItem, ISortItem } from '../types';
-import { ICategory, ICreateCategoryRequest } from './types';
+import { ICategory, ICategoryGrouping, ICreateCategoryRequest, ICreateCategGroupingRequest } from './types';
 
 export const categoriesApi = createApi({
   reducerPath: 'categoriesApi',
@@ -71,7 +71,7 @@ export const categoriesMicroService = createApi({
     baseUrl: "https://product-service.ashyocean-bde16918.australiaeast.azurecontainerapps.io",
     prepareHeaders: (headers) => {
       headers.set('Content-Type', 'application/json');
-
+      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDlkMzcwOS1jMmY5LTRkMDYtOGVhNy04NTc5OTBjYTdlN2IiLCJlbWFpbCI6ImFkbWluQHhhbS5jb20uYXUiLCJ0eXAiOiJBZG1pbiIsIm5iZiI6MTY2MzA0NjEzMywiZXhwIjoxNjk0NTgyMTMzLCJpYXQiOjE2NjMwNDYxMzN9.zMyjBMXOR6wVAol0UcZC9jdN6p9M2eSJekBJzamXwbs');
       return headers;
     },
   }),
@@ -85,8 +85,17 @@ export const categoriesMicroService = createApi({
         };
       },
     }),
+    createCategoryGrouping: builder.mutation<ICategoryGrouping, ICreateCategGroupingRequest>({
+      query: (arg) => {
+        return {
+          url: `/CategoryGrouping/create`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
   }),
 });
 
 export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery, useGetParentCategoriesQuery } = categoriesApi;
-export const { useCreateCategoryMutation } = categoriesMicroService;
+export const { useCreateCategoryMutation, useCreateCategoryGroupingMutation } = categoriesMicroService;

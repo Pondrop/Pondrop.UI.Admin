@@ -1,7 +1,9 @@
-import { ICreateCategoryRequest } from "store/api/categories/types";
+import { ICategoryDialogData } from "store/api/categories/types";
 
 export interface ICreateCategoryProps {
   isOpen: boolean;
   handleClose: () => void;
-  handleSubmit: (createData: ICreateCategoryRequest) => void;
+  handleSubmit: (createData: ICategoryDialogData) => void;
+  errorMessage?: string;
+  isLoading: boolean;
 }

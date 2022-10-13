@@ -8,15 +8,21 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Info } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, StyledCategoryBtn } from 'pages/styles';
+import { CircularLoaderWrapper, ErrorMsgWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
 import { useGetParentCategoriesQuery } from 'store/api/categories/api';
 import { categoryTitles } from './constants';
 import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { ICreateCategoryProps } from './types';
 
-const CategoryDialog = ({ isOpen, handleClose, handleSubmit }: ICreateCategoryProps): JSX.Element => {
+const CategoryDialog = ({
+  isOpen,
+  handleClose,
+  handleSubmit,
+  errorMessage,
+  isLoading,
+}: ICreateCategoryProps): JSX.Element => {
   const selectComponent = useRef<HTMLInputElement>(null);
   const [position, setPosition] = useState<DOMRect>({} as DOMRect);
   const [categoryName, setCategoryName] = useState<string>('');
@@ -27,6 +33,10 @@ const CategoryDialog = ({ isOpen, handleClose, handleSubmit }: ICreateCategoryPr
 
   useEffect(() => {
     setPosition(selectComponent?.current ? selectComponent?.current?.getBoundingClientRect() : ({} as DOMRect));
+    if (!isOpen) {
+      setCategoryName('');
+      setParentCategory('');
+    }
   }, [isOpen]);
 
   const handleSelectClose = () => {
@@ -52,15 +62,12 @@ const CategoryDialog = ({ isOpen, handleClose, handleSubmit }: ICreateCategoryPr
   };
 
   const handleModalSubmit = () => {
-    //handleSubmit({ categoryName, description });
-    setCategoryName('');
-    setParentCategory('');
-    handleClose();
+    handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
   };
 
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="100px">
-      <CircularProgress size={50} thickness={2} />
+  const renderLoader = (height: number) => (
+    <CircularLoaderWrapper height={`${height}px`}>
+      <CircularProgress size={height / 2} thickness={6} />
     </CircularLoaderWrapper>
   );
 
@@ -68,7 +75,7 @@ const CategoryDialog = ({ isOpen, handleClose, handleSubmit }: ICreateCategoryPr
     if (isFetching) {
       return (
         <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-          {renderLoader()}
+          {renderLoader(100)}
         </MenuItem>
       );
     } else {
@@ -175,7 +182,7 @@ const CategoryDialog = ({ isOpen, handleClose, handleSubmit }: ICreateCategoryPr
 
   const renderActionButtons = () => {
     return (
-      <div>
+      <RowAlignWrapper>
         <StyledCategoryBtn
           data-testid="add-category-btn"
           className="add-category-btn"
@@ -183,11 +190,19 @@ const CategoryDialog = ({ isOpen, handleClose, handleSubmit }: ICreateCategoryPr
           disableElevation
           height={40}
           onClick={handleModalSubmit}
-          disabled={categoryName === '' || parentCategory === ''}
+          disabled={categoryName === '' || parentCategory === '' || isLoading}
         >
-          Create
+          {isLoading ? renderLoader(34) : 'Create'}
         </StyledCategoryBtn>
-      </div>
+        {errorMessage !== '' && !isLoading && (
+          <ErrorMsgWrapper>
+            <div className="info-icon" style={{ margin: '0 4px 0 8px' }}>
+              <Info />
+            </div>
+            {errorMessage}
+          </ErrorMsgWrapper>
+        )}
+      </RowAlignWrapper>
     );
   };
 
