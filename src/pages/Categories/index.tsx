@@ -11,6 +11,7 @@ import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   useCreateCategoryMutation,
+  useCreateCategoryGroupingMutation,
   useGetAllCategoriesFilterQuery,
   useGetCategoriesQuery,
 } from 'store/api/categories/api';
@@ -21,7 +22,7 @@ import {
   setCategoriesSearchValue,
   setCategoriesSortValue,
 } from 'store/api/categories/slice';
-import { ICreateCategoryRequest } from 'store/api/categories/types';
+import { ICategory, ICategoryDialogData } from 'store/api/categories/types';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import {
   CategoryBtnWrapper,
@@ -62,9 +63,27 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
-  const [createCategory, { isSuccess, reset }] = useCreateCategoryMutation({
-    fixedCacheKey: 'shared-snackbar-state',
-  });
+  const [parentCategory, setParentCategory] = useState<string>('');
+  const [errMsg, setErrMsg] = useState<string>('');
+  const [
+    createCategory,
+    {
+      data: createCategoryResponse,
+      isSuccess: isCreateCategSuccess,
+      error: createCategError,
+      reset: resetCreateCategSuccess,
+      isLoading: isCreateCategLoading,
+    },
+  ] = useCreateCategoryMutation();
+  const [
+    createCategoryGrouping,
+    {
+      data: createCategGroupingResponse,
+      isSuccess: isCreateCategGroupingSuccess,
+      reset: resetCreateCategGroupingSuccess,
+      isLoading: isCreateCategGroupLoading,
+    },
+  ] = useCreateCategoryGroupingMutation();
 
   const menuData = {
     categoryName: filterOptionsData?.['@search.facets']?.categoryName,
@@ -150,7 +169,8 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   const handleSnackbarClose = () => {
     setIsSnackbarOpen(false);
-    reset();
+    resetCreateCategSuccess();
+    resetCreateCategGroupingSuccess();
   };
 
   const handleOnRowClick = (params: GridRowParams) => {
@@ -160,18 +180,35 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   const handleCreateModalClose = () => {
     setIsCreateModalOpen(false);
+    setErrMsg('');
   };
 
-  const handleCreateModalSubmit = (createData: ICreateCategoryRequest) => {
-    createCategory(createData);
+  const handleCreateModalSubmit = async (createData: ICategoryDialogData) => {
+    const { name, higherLevelCategoryId } = createData;
+    setParentCategory(higherLevelCategoryId);
+    createCategory({ name, type: 'category', publicationLifecycleId: '1' });
   };
 
   const handlePrevious = () => navigate(-1);
 
-  // useEffects
   useEffect(() => {
-    setIsSnackbarOpen(isSuccess);
-  }, [isSuccess]);
+    if (isCreateCategSuccess) {
+      createCategoryGrouping({
+        higherLevelCategoryId: parentCategory,
+        lowerLevelCategoryId: (createCategoryResponse as ICategory)?.id,
+        publicationLifecycleId: (createCategoryResponse as ICategory)?.publicationLifecycleId,
+      });
+    }
+  }, [isCreateCategSuccess]);
+
+  useEffect(() => {
+    handleCreateModalClose();
+    setIsSnackbarOpen(isCreateCategGroupingSuccess);
+  }, [isCreateCategGroupingSuccess]);
+
+  useEffect(() => {
+    if (createCategError && 'data' in createCategError) setErrMsg(String(createCategError?.data));
+  }, [createCategError]);
 
   return (
     <MainContent paddingSide={92} paddingTop={42}>
@@ -232,13 +269,15 @@ const Categories: FunctionComponent = (): JSX.Element => {
         autoHideDuration={3000}
       >
         <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
-          Successfully created a category!
+          New category created successfully
         </Alert>
       </Snackbar>
       <CategoryDialog
         isOpen={isCreateModalOpen}
         handleClose={handleCreateModalClose}
         handleSubmit={handleCreateModalSubmit}
+        errorMessage={errMsg}
+        isLoading={isCreateCategLoading || isCreateCategGroupLoading}
       />
     </MainContent>
   );

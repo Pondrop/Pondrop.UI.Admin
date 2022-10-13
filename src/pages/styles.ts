@@ -301,3 +301,20 @@ export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`
   align-self: center;
   margin-right: ${({ rightmargin }) => rightmargin}px;
 `;
+
+export const ErrorMsgWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  color: red;
+  margin-left: 8px;
+  align-items: center;
+
+  .info-icon {
+    .MuiSvgIcon-root {
+      fill: red;
+      height: 18px;
+      width: 18px;
+    }
+  }
+`;
