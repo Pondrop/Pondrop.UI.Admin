@@ -78,7 +78,6 @@ const Categories: FunctionComponent = (): JSX.Element => {
   const [
     createCategoryGrouping,
     {
-      data: createCategGroupingResponse,
       isSuccess: isCreateCategGroupingSuccess,
       reset: resetCreateCategGroupingSuccess,
       isLoading: isCreateCategGroupLoading,

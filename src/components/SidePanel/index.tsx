@@ -1,11 +1,18 @@
 import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArtTrackOutlined, Logout, ShoppingCartOutlined, Storefront } from '@mui/icons-material';
+import {
+  CenterFocusStrongOutlined,
+  FactCheckOutlined,
+  Logout,
+  ShoppingCartOutlined,
+  Storefront,
+} from '@mui/icons-material';
 
 import pondrop from 'assets/images/pondrop.png';
 import { useAppDispatch } from 'store';
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
 import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
+import { setTasksFilter, setTasksSearchValue } from 'store/api/tasks/slice';
 
 import { StyledButton, PanelWrapper } from './styles';
 
@@ -14,6 +21,11 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
+
+  const handleCampaignsRedirect = () => {
+    setCurrentTab('campaigns');
+    navigate('../campaigns', { replace: true });
+  };
 
   const handleProductsRedirect = () => {
     setCurrentTab('products');
@@ -45,12 +57,13 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
     setCurrentTab('submissions');
     navigate('../submissions', { replace: true });
     dispatch(
-      setStoresFilter({
+      setTasksFilter({
         columnField: '',
         value: [],
         operatorValue: 'isAnyOf',
       }),
     );
+    dispatch(setTasksSearchValue(''));
   };
 
   return (
@@ -81,11 +94,23 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         Products
       </StyledButton>
       <StyledButton
+        data-testid="panel-campaigns-btn"
+        className="panel-btn"
+        variant="contained"
+        size="large"
+        startIcon={<FactCheckOutlined className="campaigns-icon" />}
+        disableElevation
+        onClick={handleCampaignsRedirect}
+        isActive={currentTab === 'campaigns'}
+      >
+        Campaigns
+      </StyledButton>
+      <StyledButton
         data-testid="panel-submissions-btn"
         className="panel-btn"
         variant="contained"
         size="large"
-        startIcon={<ArtTrackOutlined className="task-icon" />}
+        startIcon={<CenterFocusStrongOutlined className="task-icon" />}
         disableElevation
         onClick={handleTasksRedirect}
         isActive={currentTab === 'submissions'}
