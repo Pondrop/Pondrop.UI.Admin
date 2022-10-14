@@ -19,6 +19,7 @@ import {
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+import CampaignDialog from './components/CampaignDialog';
 
 const Campaigns: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
@@ -43,6 +44,8 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
   //   { searchString: searchValue },
   //   { skip: !gridData.length },
   // );
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // const menuData = {
   //   Provider: filterOptionsData?.['@search.facets']?.Provider,
@@ -125,8 +128,16 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     // );
   };
 
+  const handleNewCampaign = () => {
+    setIsModalOpen(true);
+  };
+
   const handleOnRowClick = (params: GridRowParams) => {
     navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -145,7 +156,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
               variant="contained"
               disableElevation
               height={40}
-              disabled
+              onClick={handleNewCampaign}
             >
               + New campaign
             </StyledCategoryBtn>
@@ -175,6 +186,11 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
         onRowClick={handleOnRowClick}
         isMenuLoading={false}
         searchValue={''}
+      />
+      <CampaignDialog
+        isOpen={isModalOpen}
+        handleClose={handleModalClose}
+        // handleSubmit={handleCreateModalSubmit}
       />
     </MainContent>
   );
