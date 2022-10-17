@@ -128,4 +128,12 @@ export const StyledMenuItem = styled(MenuItem)`
   font-size: 12px;
   padding: 8px;
   margin: 0 8px;
+
+  &:focus {
+    background-color: transparent;
+  }
+
+  &:hover {
+    background-color: rgba(0,0,0,0.04);
+  }
 `;
