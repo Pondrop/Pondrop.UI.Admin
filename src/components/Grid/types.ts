@@ -24,4 +24,5 @@ export interface IGridProps {
   searchValue?: string;
   withPadding?: boolean;
   withCheckboxSelection?: boolean;
+  rowHeight?: number;
 }

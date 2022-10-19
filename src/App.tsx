@@ -4,6 +4,7 @@ import {
   Campaigns,
   Categories,
   CategoryDetails,
+  NewCampaign,
   Products,
   ProductDetails,
   Stores,
@@ -28,6 +29,7 @@ function App() {
           <Route path="/products/categories" element={<Categories />} />
           <Route path="/products/categories/:category_id" element={<CategoryDetails />} />
           <Route path="/campaigns" element={<Campaigns />} />
+          <Route path="/campaigns/new" element={<NewCampaign />} />
           <Route path="/submissions" element={<SubmittedTasks />} />
           <Route path="/submissions/:submission_id" element={<SubmissionDetails />} />
         </Routes>

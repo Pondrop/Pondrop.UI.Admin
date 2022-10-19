@@ -20,3 +20,9 @@ export interface ISubmissionInfoPanelProps extends CommonTabPanelProps {
 export interface IState {
   rowData?: IValue;
 }
+
+export interface IModalState {
+  campaignTitle: string;
+  campaignType: string;
+  template: string;
+}

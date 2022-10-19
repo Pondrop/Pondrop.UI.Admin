@@ -32,6 +32,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   searchValue,
   withPadding = true,
   withCheckboxSelection = false,
+  rowHeight,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -123,9 +124,10 @@ const Grid: FunctionComponent<IGridProps> = ({
       withBorder={withBorder}
       hasClickEvent={!!onRowClick}
       onMenuOpen={handleMenuOpen}
-      getRowHeight={() => 'auto'}
+      getRowHeight={() => rowHeight ?? 'auto'}
       withPadding={withPadding}
       checkboxSelection={withCheckboxSelection}
+      rowHeight={rowHeight}
     />
   );
 };

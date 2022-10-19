@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CircularProgress,
   DialogActions,
@@ -17,6 +18,8 @@ import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledText
 import { INewCampaignProps } from './types';
 
 const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element => {
+  const navigate = useNavigate();
+
   // Refs and select component positions
   const typeSelectComponent = useRef<HTMLInputElement>(null);
   const templateSelectComponent = useRef<HTMLInputElement>(null);
@@ -86,7 +89,7 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   };
 
   const handleModalSubmit = () => {
-    handleClose();
+    navigate('new', { replace: false, state: { campaignTitle, campaignType, template } });
     //handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
   };
 
