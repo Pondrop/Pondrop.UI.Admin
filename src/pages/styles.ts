@@ -314,11 +314,11 @@ export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`
   margin-right: ${({ rightmargin }) => rightmargin}px;
 `;
 
-export const ErrorMsgWrapper = styled.div`
+export const MessageWrapper = styled.div<{ color: string }>`
   display: flex;
   flex-direction: row;
   font-size: 12px;
-  color: red;
+  color: ${({ color }) => color};
   margin-left: 8px;
   align-items: center;
 

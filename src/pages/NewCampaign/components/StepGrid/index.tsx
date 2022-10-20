@@ -8,7 +8,7 @@ import { categoriesColumns, productColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
-import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
 import { useAppDispatch, useAppSelector } from 'store';
 import { initialState } from 'store/api/constants';
 import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
@@ -217,6 +217,29 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
     });
   };
 
+  const renderSelectedCount = () => {
+    if (
+      (stepType === 'product' && selectedProductsIds?.length === 0) ||
+      (stepType === 'category' && selectedCategoriesIds?.length === 0)
+    )
+      return;
+    let count;
+    let focus;
+    if (stepType === 'category') {
+      count = selectedCategoriesIds?.length ?? 0;
+      focus = count > 1 ? 'categories ' : 'category';
+    } else {
+      count = selectedProductsIds?.length ?? 0;
+      focus = count > 1 ? 'products' : 'product';
+    }
+
+    return (
+      <MessageWrapper color="#006492">
+        {count} {focus} selected
+      </MessageWrapper>
+    );
+  };
+
   return (
     <div>
       <SpaceBetweenDiv withmargin={false}>
@@ -229,6 +252,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
                   <Info />
                 </div>
               </Tooltip>
+              {renderSelectedCount()}
             </RowAlignWrapper>
           </SpaceBetweenDiv>
         </StyledCardTitle>
@@ -266,6 +290,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
         rowHeight={40}
         onSelectionModelChange={onSelectionModelChange}
         selectionModel={getSelectedIds()}
+        hideFooterSelectedRowCount={true}
       />
     </div>
   );

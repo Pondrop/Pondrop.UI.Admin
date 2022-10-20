@@ -35,6 +35,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   rowHeight,
   onSelectionModelChange,
   selectionModel,
+  hideFooterSelectedRowCount = false,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
@@ -133,6 +134,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       onSelectionModelChange={onSelectionModelChange}
       selectionModel={selectionModel}
       keepNonExistentRowsSelected
+      hideFooterSelectedRowCount={hideFooterSelectedRowCount}
     />
   );
 };
