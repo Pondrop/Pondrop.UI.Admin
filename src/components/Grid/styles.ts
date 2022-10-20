@@ -3,8 +3,8 @@ import { Paper, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 export const StyledDataGrid = styled(DataGrid, {
-  shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent', 'withPadding'].includes(prop)
-})<{ withBorder: boolean, hasClickEvent: boolean, withPadding?: boolean }>`
+  shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent', 'withPadding', 'rowHeight'].includes(prop)
+})<{ withBorder: boolean, hasClickEvent: boolean, withPadding?: boolean, rowHeight?: number }>`
   ${({ withPadding = true }) => withPadding && 'padding: 8px 16px;'}
   
   ${({ withBorder }) => withBorder ? `
@@ -69,7 +69,7 @@ export const StyledDataGrid = styled(DataGrid, {
 
   & .MuiDataGrid-cell {
     padding: 10px;
-    min-height: 52px !important;
+    min-height: ${({ rowHeight }) => rowHeight ?? 52 }px !important;
   }
 
   & .MuiDataGrid-cellContent {

@@ -30,4 +30,11 @@ const setCategoriesSortValue = (state: IGridState, action: PayloadAction<ISortIt
   };
 };
 
-export const actions = { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSortValue };
+const setCategoriesSelectedIds = (state: IGridState, action: PayloadAction<string[]>) => {
+  return {
+    ...state,
+    selectedIds: action.payload
+  };
+};
+
+export const actions = { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSelectedIds, setCategoriesSortValue };

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, ErrorMsgWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
 import { useGetParentCategoriesQuery } from 'store/api/categories/api';
 import { categoryTitles } from './constants';
 import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
@@ -195,12 +195,12 @@ const CategoryDialog = ({
           {isLoading ? renderLoader(34) : 'Create'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
-          <ErrorMsgWrapper>
+          <MessageWrapper color="red">
             <div className="info-icon" style={{ margin: '0 4px 0 8px' }}>
               <Info />
             </div>
             {errorMessage}
-          </ErrorMsgWrapper>
+          </MessageWrapper>
         )}
       </RowAlignWrapper>
     );

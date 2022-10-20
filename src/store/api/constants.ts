@@ -10,5 +10,6 @@ export const initialState: IGridState = {
   sortValue: {
     field: '',
     sort: null
-  }
+  },
+  selectedIds: [],
 };

@@ -79,21 +79,6 @@ export const RowAlignWrapper = styled.div`
 export const SpaceBetweenDiv = styled(RowAlignWrapper)<{ withmargin?: boolean }>`
   justify-content: space-between;
   ${({ withmargin = true }) => withmargin && 'margin: 4px 0;'}
-
-  .linked-products {
-    .MuiOutlinedInput-root {
-      border-radius: 8px;
-    }
-
-    .MuiOutlinedInput-input {
-      font-size: 12px;
-    }
-
-    .MuiSvgIcon-root {
-      height: 20px !important;
-      width: 20px !important;
-    }
-  }
 `;
 
 export const RowAlignDiv = styled(SpaceBetweenDiv)`
@@ -253,6 +238,21 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
   .req-icon {
     color: red;
   }
+
+  .linked-products, .select-focus {
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+    }
+
+    .MuiOutlinedInput-input {
+      font-size: 12px;
+    }
+
+    .MuiSvgIcon-root {
+      height: 20px !important;
+      width: 20px !important;
+    }
+  }
 `;
 
 export const StyledCardTitle = styled(Typography)`
@@ -297,16 +297,28 @@ export const StyledCategoryBtn = styled(Button, {
   }
 `;
 
+export const StyleOutlinedBtn = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'height'
+})<{ height: number }>`
+  height: ${({ height }) => height}px;
+  padding: 10px 24px;
+  line-height: 20px;
+  text-transform: none;
+  border-radius: 100px;
+  color: #006492;
+  border-color: #006492;
+`;
+
 export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`
   align-self: center;
   margin-right: ${({ rightmargin }) => rightmargin}px;
 `;
 
-export const ErrorMsgWrapper = styled.div`
+export const MessageWrapper = styled.div<{ color: string }>`
   display: flex;
   flex-direction: row;
   font-size: 12px;
-  color: red;
+  color: ${({ color }) => color};
   margin-left: 8px;
   align-items: center;
 
