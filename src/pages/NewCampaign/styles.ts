@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Tabs, Tab, Typography } from "@mui/material";
+import { Box, Tabs, Typography } from "@mui/material";
 
 export const StyledSteps = styled(Tabs)`
   background-color: #ffffff;
@@ -27,15 +27,34 @@ export const CircleDiv = styled.div<{ isactive: boolean }>`
   border-radius: 50%;
   color: #ffffff;
   font-weight: 700;
-  margin-right: 10px;
+  margin-right: 9px;
 `;
 
 export const TabLabelTypography = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isActive'
-})<{ isActive: boolean }>`
+  shouldForwardProp: (prop) => !['isActive', 'isSuccess'].includes(prop)
+})<{ isActive: boolean, isSuccess: boolean }>`
   font-size: 14px;
   line-height: 20px;
   text-transform: none;
   font-weight: 500;
-  color: ${({ isActive }) => isActive ? '#006492' : 'rgba(0, 0, 0, 0.76)'};
+  color: ${({ isActive, isSuccess }) => {
+    if (isSuccess) return '#0a9829';
+    else if (isActive) return '#006492';
+    else return 'rgba(0, 0, 0, 0.76)';
+  }};
+`;
+
+export const StyledBox = styled(Box)`
+  display: inline-flex;
+  align-items: center;
+
+  .check-icon {
+    margin: 0 6px 0 0;
+    display: flex;
+    svg {
+      fill: #0A9829;
+      height: 24px;
+      width: 24px;
+    }
+  }
 `;
