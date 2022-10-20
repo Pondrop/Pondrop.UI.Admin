@@ -1,10 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
+import { campaignsApi } from './api/campaigns/api';
 import { categoriesApi, categoriesMicroService } from './api/categories/api';
 import { storeApi } from './api/stores/api';
 import { productsApi } from './api/products/api';
 import { tasksApi, submissionsMicroService } from './api/tasks/api';
+import campaignsReducer from './api/campaigns/slice';
 import categoriesReducer from './api/categories/slice';
 import productsReducer from './api/products/slice';
 import storeReducer from './api/stores/slice';
@@ -14,11 +16,13 @@ import userReducer from './user/slice';
 // global store
 export const store = configureStore({
   reducer: {
+    campaigns: campaignsReducer,
     categories: categoriesReducer,
     products: productsReducer,
     store: storeReducer,
     tasks: tasksReducer,
     user: userReducer,
+    [campaignsApi.reducerPath]: campaignsApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [categoriesMicroService.reducerPath]: categoriesMicroService.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
@@ -36,7 +40,8 @@ export const store = configureStore({
       .concat(categoriesApi.middleware)
       .concat(categoriesMicroService.middleware)
       .concat(tasksApi.middleware)
-      .concat(submissionsMicroService.middleware),
+      .concat(submissionsMicroService.middleware)
+      .concat(campaignsApi.middleware),
 });
 
 // types
