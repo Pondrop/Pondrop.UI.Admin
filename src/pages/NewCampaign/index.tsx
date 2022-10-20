@@ -114,6 +114,11 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
       );
   };
 
+  const getTabLabel = () => {
+    if (state?.template === '1') return 'Select category';
+    else return 'Select products';
+  };
+
   const renderContent = () => (
     <div>
       <StyledBreadcrumbs aria-label="breadcrumb" sx={{ padding: '0 64px 34px !important' }}>
@@ -125,7 +130,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
       {renderHeader()}
       <StyledSteps value={currentStep} onChange={handleChange}>
         <Tab
-          label={<TabLabel count={1}>Select products</TabLabel>}
+          label={<TabLabel count={1}>{getTabLabel()}</TabLabel>}
           id="tab-0"
           aria-controls="step-0"
           disableRipple
