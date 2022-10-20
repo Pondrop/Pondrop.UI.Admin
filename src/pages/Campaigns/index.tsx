@@ -2,9 +2,16 @@ import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
-import { campignsColumns } from 'components/Grid/constants';
+import { campaignsColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
 import { useAppDispatch, useAppSelector } from 'store';
+import { useGetAllCampaignFilterQuery, useGetCampaignsQuery } from 'store/api/campaigns/api';
+import {
+  selectCampaigns,
+  setCampaignsFilter,
+  setCampaignsSearchValue,
+  setCampaignsSortValue,
+} from 'store/api/campaigns/slice';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { initialState } from 'store/api/constants';
 import {
@@ -29,78 +36,79 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
-  // const dispatch = useAppDispatch();
-  // const { filterItem, searchValue = '', sortValue } = useAppSelector(selectStores);
-  // const { data, isFetching } = useGetStoresQuery({
-  //   searchString: searchValue,
-  //   sortValue,
-  //   filterItem,
-  //   prevPageItems: pageSkip,
-  //   pageSize,
-  // });
+  const dispatch = useAppDispatch();
+  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectCampaigns);
+  const { data, isFetching } = useGetCampaignsQuery({
+    searchString: searchValue,
+    sortValue,
+    filterItem,
+    prevPageItems: pageSkip,
+    pageSize,
+  });
 
-  // const gridData = data?.value ?? [];
-  // const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllStoreFilterQuery(
-  //   { searchString: searchValue },
-  //   { skip: !gridData.length },
-  // );
+  const gridData = data?.value ?? [];
+  const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllCampaignFilterQuery(
+    { searchString: searchValue },
+    { skip: !gridData.length },
+  );
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  // const menuData = {
-  //   Provider: filterOptionsData?.['@search.facets']?.Provider,
-  //   Name: filterOptionsData?.['@search.facets']?.Name,
-  //   Street: filterOptionsData?.['@search.facets']?.Street,
-  //   City: filterOptionsData?.['@search.facets']?.City,
-  //   State: filterOptionsData?.['@search.facets']?.State,
-  //   Zip_Code: filterOptionsData?.['@search.facets']?.Zip_Code,
-  // };
+  const menuData = {
+    name: filterOptionsData?.['@search.facets']?.name,
+    selectedTemplateTitle: filterOptionsData?.['@search.facets']?.selectedTemplateTitle,
+    campaignType: filterOptionsData?.['@search.facets']?.campaignType,
+    numberOfStores: filterOptionsData?.['@search.facets']?.numberOfStores,
+    completions: filterOptionsData?.['@search.facets']?.completions,
+    campaignPublishedDate: filterOptionsData?.['@search.facets']?.campaignPublishedDate,
+    campaignStatus: filterOptionsData?.['@search.facets']?.campaignStatus,
+  };
 
-  // const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
+  const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
     pagination: { pageSize: 20 },
   };
 
   // Use Effects
-  // useEffect(() => {
-  //   setCampaignFilterItem(filterItem);
-  // }, [filterItem]);
+  useEffect(() => {
+    setCampaignFilterItem(filterItem);
+  }, [filterItem]);
 
-  // useEffect(() => {
-  //   setRowCount(data?.['@odata.count'] ?? 0);
-  // }, [data]);
+  useEffect(() => {
+    setRowCount(data?.['@odata.count'] ?? 0);
+  }, [data]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    // dispatch(
-    //   setStoresFilter({
-    //     columnField: '',
-    //     value: '',
-    //     operatorValue: 'isAnyOf',
-    //   }),
-    // );
-    // dispatch(setStoresSearchValue(searchValue));
+    dispatch(
+      setCampaignsFilter({
+        columnField: '',
+        value: '',
+        operatorValue: 'isAnyOf',
+      }),
+    );
+    dispatch(setCampaignsSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    // dispatch(
-    //   setStoresFilter({
-    //     columnField: model.items[0].columnField,
-    //     value: model.items[0].value,
-    //     operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-    //   }),
-    // );
+    dispatch(
+      setCampaignsFilter({
+        columnField: model.items[0].columnField,
+        value: model.items[0].value,
+        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
+      }),
+    );
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
-    // dispatch(
-    //   setStoresSortValue({
-    //     field: model[0]?.field,
-    //     sort: model[0]?.sort,
-    //   }),
-    // );
+    dispatch(
+      setCampaignsSortValue({
+        field: model[0]?.field,
+        sort: model[0]?.sort,
+      }),
+    );
   };
 
   const onPageChange = (page: number) => {
@@ -119,13 +127,13 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
         ? handleFilterStateChange(value, filters.value)
         : [value];
 
-    // dispatch(
-    //   setStoresFilter({
-    //     columnField: currColumn,
-    //     value: combinedValue,
-    //     operatorValue: 'isAnyOf',
-    //   }),
-    // );
+    dispatch(
+      setCampaignsFilter({
+        columnField: currColumn,
+        value: combinedValue,
+        operatorValue: 'isAnyOf',
+      }),
+    );
   };
 
   const handleNewCampaign = () => {
@@ -170,21 +178,21 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
         </RowAlignWrapper>
       </RowAlignDiv>
       <Grid
-        data={[]}
-        columns={campignsColumns}
-        id="view-stores-grid"
-        isFetching={false}
+        data={data?.value}
+        columns={campaignsColumns}
+        id="view-campaigns-grid"
+        isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={campaignFilterItem}
         handleOnFilterClick={handleOnFilterClick}
-        rowCount={20}
+        rowCount={rowCount}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
-        menuData={{} as IFacetValue}
+        menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
         onRowClick={handleOnRowClick}
-        isMenuLoading={false}
+        isMenuLoading={isFilterOptionsFetching}
         searchValue={''}
       />
       <CampaignDialog
