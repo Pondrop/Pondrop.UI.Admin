@@ -1,7 +1,7 @@
 import { MouseEvent } from "react";
-import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridRowParams, GridSortModel, MuiEvent } from "@mui/x-data-grid";
+import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridInputSelectionModel, GridRowParams, GridSelectionModel, GridSortModel, MuiEvent } from "@mui/x-data-grid";
 
-import { IFacetValue, IFilterItem, IValue } from "store/api/types";
+import { IFacetValue, IFilterItem } from "store/api/types";
 import { IBasicFilter } from "components/GridMenu/types";
 
 export interface IGridProps {
@@ -25,4 +25,6 @@ export interface IGridProps {
   withPadding?: boolean;
   withCheckboxSelection?: boolean;
   rowHeight?: number;
+  onSelectionModelChange?: (selectionModel: GridSelectionModel) => void;
+  selectionModel?: GridInputSelectionModel;
 }

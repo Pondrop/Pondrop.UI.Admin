@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
-import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import Grid from 'components/Grid';
 import { categoriesColumns, productColumns } from 'components/Grid/constants';
@@ -9,11 +9,14 @@ import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+import { useAppDispatch, useAppSelector } from 'store';
 import { initialState } from 'store/api/constants';
 import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
 import { categoryInitialState } from 'store/api/categories/initialState';
+import { selectCategories, setCategoriesSelectedIds } from 'store/api/categories/slice';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
+import { selectProducts, setProductsSelectedIds } from 'store/api/products/slice';
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 import { IStepGrid } from './types';
 
@@ -25,6 +28,10 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
+
+  const dispatch = useAppDispatch();
+  const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
+  const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
 
   // Product API Call
   const { data: productData, isFetching: isProductFetching } = useGetProductsQuery(
@@ -81,7 +88,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
     }
     setRowCount(tempRowCount ?? 0);
     setGridData(tempData ?? []);
-  }, [productData, categoryData]);
+  }, [productData, categoryData, stepType]);
 
   useEffect(() => {
     if (stepType === 'product') {
@@ -109,7 +116,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
       };
     }
     setMenuData((tempMenuData ?? {}) as IFacetValue);
-  }, [isProductFilterOptionsFetching]);
+  }, [isProductFilterOptionsFetching, isCategFilterOptionsFetching]);
 
   useEffect(() => {
     if (stepType === 'product' && searchVal.length < 3) {
@@ -153,6 +160,11 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
     else return 'store name and address';
   };
 
+  const getSelectedIds = () => {
+    if (stepType === 'product') return selectedProductsIds;
+    else if (stepType === 'category') return selectedCategoriesIds;
+  };
+
   const handleSearchDispatch = (searchValue: string) => {
     setSearchVal(searchValue);
     if (searchValue === '') {
@@ -168,6 +180,11 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
       value: model.items[0].value,
       operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
     });
+  };
+
+  const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
+    if (stepType === 'product') dispatch(setProductsSelectedIds(selectionModel as string[]));
+    else if (stepType === 'category') dispatch(setCategoriesSelectedIds(selectionModel as string[]));
   };
 
   const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
@@ -247,6 +264,8 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
         withPadding={false}
         withCheckboxSelection={true}
         rowHeight={40}
+        onSelectionModelChange={onSelectionModelChange}
+        selectionModel={getSelectedIds()}
       />
     </div>
   );

@@ -1,10 +1,12 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, CircularProgress, Tab } from '@mui/material';
+import { Box, Tab } from '@mui/material';
 
+import { useAppSelector } from 'store';
+import { selectCategories } from 'store/api/categories/slice';
+import { selectProducts } from 'store/api/products/slice';
 import { IModalState } from 'pages/types';
 import {
-  CircularLoaderWrapper,
   ColAlignDiv,
   ContentDetails,
   SpaceBetweenDiv,
@@ -29,6 +31,9 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   // API values
   const state = location?.state as IModalState;
 
+  const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
+  const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
+
   // Handlers
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setCurrentStep(newValue);
@@ -40,12 +45,6 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     if (currentStep === 0) return state?.template === '1' ? 'category' : 'product';
     else return 'store';
   };
-
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="calc(100vh - 36px)">
-      <CircularProgress size={100} thickness={3} />
-    </CircularLoaderWrapper>
-  );
 
   const renderHeader = () => {
     return (
@@ -75,15 +74,23 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   };
 
   const renderButtons = () => {
-    if (currentStep === 0)
+    if (currentStep === 0) {
+      const isNextDisabled =
+        state?.template === '1' ? selectedCategoriesIds?.length !== 1 : selectedProductsIds?.length === 0;
       return (
         <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px', justifyContent: 'flex-end' }}>
-          <StyledCategoryBtn data-testid="step-1-next-btn" variant="contained" disableElevation height={40}>
+          <StyledCategoryBtn
+            data-testid="step-1-next-btn"
+            variant="contained"
+            disableElevation
+            height={40}
+            disabled={isNextDisabled}
+          >
             Next
           </StyledCategoryBtn>
         </SpaceBetweenDiv>
       );
-    else if (currentStep === 1)
+    } else if (currentStep === 1)
       return (
         <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px' }}>
           <StyleOutlinedBtn data-testid="step-2-back-btn" variant="outlined" disableElevation height={40}>

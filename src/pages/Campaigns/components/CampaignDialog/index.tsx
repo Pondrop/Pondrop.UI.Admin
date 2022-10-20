@@ -11,14 +11,17 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
+import { useAppDispatch, useAppSelector } from 'store';
+import { setCategoriesSelectedIds } from 'store/api/categories/slice';
+import { setProductsSelectedIds } from 'store/api/products/slice';
 import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { useGetParentCategoriesQuery } from 'store/api/categories/api';
 import { campaignTitles, campaignTypeData, templateData } from './constants';
 import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { INewCampaignProps } from './types';
 
 const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // Refs and select component positions
   const typeSelectComponent = useRef<HTMLInputElement>(null);
@@ -89,6 +92,8 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   };
 
   const handleModalSubmit = () => {
+    if (template === '1') dispatch(setCategoriesSelectedIds([]));
+    else dispatch(setProductsSelectedIds([]));
     navigate('new', { replace: false, state: { campaignTitle, campaignType, template } });
     //handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
   };
