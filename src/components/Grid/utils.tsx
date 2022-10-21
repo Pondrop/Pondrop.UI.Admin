@@ -26,6 +26,27 @@ export const handleRenderCell = (params: GridRenderCellParams) => {
   );
 };
 
+export const handleRenderCellFormat = (params: GridRenderCellParams) => {
+  const tooltipTextRef = useRef<HTMLDivElement>(null);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (tooltipTextRef?.current) {
+      setShowTooltip(tooltipTextRef.current.clientWidth < tooltipTextRef.current.scrollWidth);
+    }
+  }, []);
+
+  const capitalizedValue = params.value[0].toUpperCase() + params.value.slice(1);
+
+  return (
+    <Tooltip title={capitalizedValue ?? ''} placement="top" key={params.id} arrow disableHoverListener={!showTooltip}>
+      <StyledCellContent ref={tooltipTextRef} id={`styled-content-${params.id}-${params.field}`}>
+        {capitalizedValue}
+      </StyledCellContent>
+    </Tooltip>
+  );
+};
+
 export const handleRenderCellDate = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
