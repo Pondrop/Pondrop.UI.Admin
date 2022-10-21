@@ -10,37 +10,55 @@ import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
 import { useAppDispatch, useAppSelector } from 'store';
-import { initialState } from 'store/api/constants';
 import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
-import { categoryInitialState } from 'store/api/categories/initialState';
-import { selectCategories, setCategoriesSelectedIds } from 'store/api/categories/slice';
+import {
+  selectCategories,
+  setCategoriesFilter,
+  setCategoriesSearchValue,
+  setCategoriesSelectedIds,
+  setCategoriesSortValue,
+} from 'store/api/categories/slice';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
-import { productInitialState } from 'store/api/products/initialState';
-import { selectProducts, setProductsSelectedIds } from 'store/api/products/slice';
-import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
+import {
+  selectProducts,
+  setProductsFilter,
+  setProductsSearchValue,
+  setProductsSelectedIds,
+  setProductsSortValue,
+} from 'store/api/products/slice';
+import { IFacetValue, IValue } from 'store/api/types';
 import { IStepGrid } from './types';
 
 const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   const [gridData, setGridData] = useState<IValue[]>([]);
-  const [searchVal, setSearchVal] = useState<string>('');
-  const [filterVal, setFilterVal] = useState<IFilterItem>(initialState.filterItem);
-  const [sortVal, setSortVal] = useState<ISortItem>(initialState.sortValue);
-  const [pageSize, setPageSize] = useState<number>(10);
-  const [pageSkip, setPageSkip] = useState<number>(0);
+  const [productPageSize, setProductPageSize] = useState<number>(10);
+  const [productPageSkip, setProductPageSkip] = useState<number>(0);
+  const [categPageSize, setCategPageSize] = useState<number>(10);
+  const [categPageSkip, setCategPageSkip] = useState<number>(0);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
 
   const dispatch = useAppDispatch();
-  const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
-  const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
+  const {
+    filterItem: productFilterItem,
+    searchValue: productSearchValue = '',
+    selectedIds: selectedProductsIds,
+    sortValue: productSortValue,
+  } = useAppSelector(selectProducts);
+  const {
+    filterItem: categFilterItem,
+    searchValue: categSearchValue = '',
+    selectedIds: selectedCategoriesIds,
+    sortValue: categSortValue,
+  } = useAppSelector(selectCategories);
 
   // Product API Call
   const { data: productData, isFetching: isProductFetching } = useGetProductsQuery(
     {
-      searchString: searchVal,
-      sortValue: sortVal,
-      filterItem: filterVal,
-      prevPageItems: pageSkip,
-      pageSize,
+      searchString: productSearchValue,
+      sortValue: productSortValue,
+      filterItem: productFilterItem,
+      prevPageItems: productPageSkip,
+      pageSize: productPageSize,
     },
     {
       skip: stepType !== 'product',
@@ -50,11 +68,11 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   // Categories API Call
   const { data: categoryData, isFetching: isCategFetching } = useGetCategoriesQuery(
     {
-      searchString: searchVal,
-      sortValue: sortVal,
-      filterItem: filterVal,
-      prevPageItems: pageSkip,
-      pageSize,
+      searchString: categSearchValue,
+      sortValue: categSortValue,
+      filterItem: categFilterItem,
+      prevPageItems: categPageSkip,
+      pageSize: categPageSize,
     },
     {
       skip: stepType !== 'category',
@@ -63,14 +81,14 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
 
   // Product Filter Options
   const { data: productFilterOptions, isFetching: isProductFilterOptionsFetching } = useGetAllProductFilterQuery(
-    { searchString: searchVal },
-    { skip: !gridData.length || stepType !== 'product' },
+    { searchString: productSearchValue },
+    { skip: !productData?.value?.length || stepType !== 'product' },
   );
 
   // Categories Filter Options
   const { data: categoryOptionsData, isFetching: isCategFilterOptionsFetching } = useGetAllCategoriesFilterQuery(
-    { searchString: searchVal },
-    { skip: !gridData.length || stepType !== 'category' },
+    { searchString: categSearchValue },
+    { skip: !categoryData?.value.length || stepType !== 'category' },
   );
 
   const [rowCount, setRowCount] = useState<number>(0);
@@ -79,28 +97,17 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
     let tempData;
     let tempRowCount;
 
-    if (stepType === 'product' && searchVal.length > 2) {
+    if (stepType === 'product' && productSearchValue.length > 2) {
       tempRowCount = productData?.['@odata.count'];
       tempData = productData?.value;
     } else if (stepType === 'category') {
       tempRowCount = categoryData?.['@odata.count'];
       tempData = categoryData?.value;
     }
+
     setRowCount(tempRowCount ?? 0);
     setGridData(tempData ?? []);
   }, [productData, categoryData, stepType]);
-
-  useEffect(() => {
-    if (stepType === 'product') {
-      setFilterVal(productInitialState.filterItem);
-      setSortVal(productInitialState.sortValue);
-      setSearchVal('');
-    } else if (stepType === 'category') {
-      setFilterVal(categoryInitialState.filterItem);
-      setSortVal(categoryInitialState.sortValue);
-      setSearchVal('');
-    }
-  }, [stepType]);
 
   useEffect(() => {
     let tempMenuData;
@@ -119,67 +126,105 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   }, [isProductFilterOptionsFetching, isCategFilterOptionsFetching]);
 
   useEffect(() => {
-    if (stepType === 'product' && searchVal.length < 3) {
+    if (stepType === 'product' && productSearchValue.length < 3) {
       setGridData([]);
       setRowCount(0);
     }
-  }, [searchVal]);
+  }, [productSearchValue]);
 
   const getInitialState = () => {
-    const initialGridState = {
-      pagination: { pageSize },
-      sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
-    };
+    let tempGridState;
+
     if (stepType === 'product') {
-      return {
-        ...initialGridState,
+      tempGridState = {
+        pagination: { pageSize: productPageSize },
         sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
       };
-    } else if (stepType === 'category') {
-      return {
-        ...initialGridState,
+    } else {
+      tempGridState = {
+        pagination: { pageSize: categPageSize },
         sorting: { sortModel: [{ field: 'categoryName', sort: 'asc' as GridSortDirection }] },
       };
     }
+
+    return tempGridState;
   };
 
   const getColHeader = () => {
-    if (stepType === 'product') return productColumns;
-    else return categoriesColumns;
+    return stepType === 'product' ? productColumns : categoriesColumns;
   };
 
   const getHeaderLabel = () => {
     if (stepType === 'product') return 'products';
-    else if (stepType === 'category') return 'category';
-    else return 'stores';
+    else return 'category';
+  };
+
+  const getSearchFieldValue = () => {
+    if (stepType === 'product') return productSearchValue;
+    else return categSearchValue;
   };
 
   const getSearchFieldPlaceholder = () => {
     if (stepType === 'product') return 'product name and barcode';
-    else if (stepType === 'category') return 'category name';
-    else return 'store name and address';
+    else return 'category name';
   };
 
   const getSelectedIds = () => {
     if (stepType === 'product') return selectedProductsIds;
-    else if (stepType === 'category') return selectedCategoriesIds;
+    else return selectedCategoriesIds;
+  };
+
+  const getFilterValue = () => {
+    if (stepType === 'product') return productFilterItem;
+    else return categFilterItem;
   };
 
   const handleSearchDispatch = (searchValue: string) => {
-    setSearchVal(searchValue);
-    if (searchValue === '') {
-      setGridData([]);
-      setRowCount(0);
+    if (stepType === 'product') {
+      dispatch(
+        setProductsFilter({
+          columnField: '',
+          value: '',
+          operatorValue: 'isAnyOf',
+        }),
+      );
+      dispatch(setProductsSearchValue(searchValue));
+
+      if (searchValue === '') {
+        setGridData([]);
+        setRowCount(0);
+      }
+    } else if (stepType === 'category') {
+      dispatch(
+        setCategoriesFilter({
+          columnField: '',
+          value: '',
+          operatorValue: 'isAnyOf',
+        }),
+      );
+      dispatch(setCategoriesSearchValue(searchValue));
     }
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    setFilterVal({
-      columnField: model.items[0].columnField,
-      value: model.items[0].value,
-      operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-    });
+    if (stepType === 'product') {
+      dispatch(
+        setProductsFilter({
+          columnField: model.items[0].columnField,
+          value: model.items[0].value,
+          operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
+        }),
+      );
+    } else if (stepType === 'category') {
+      dispatch(
+        setCategoriesFilter({
+          columnField: model.items[0].columnField,
+          value: model.items[0].value,
+          operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
+        }),
+      );
+    }
   };
 
   const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
@@ -195,26 +240,51 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
         ? handleFilterStateChange(value, filters.value)
         : [value];
 
-    setFilterVal({
-      columnField: currColumn,
-      value: combinedValue,
-      operatorValue: 'isAnyOf',
-    });
+    if (stepType === 'product') {
+      dispatch(
+        setProductsFilter({
+          columnField: currColumn,
+          value: combinedValue,
+          operatorValue: 'isAnyOf',
+        }),
+      );
+    } else if (stepType === 'category') {
+      dispatch(
+        setCategoriesFilter({
+          columnField: currColumn,
+          value: combinedValue,
+          operatorValue: 'isAnyOf',
+        }),
+      );
+    }
   };
 
   const onPageChange = (page: number) => {
-    setPageSkip(page * pageSize);
+    if (stepType === 'category') setCategPageSkip(page * categPageSize);
+    else if (stepType === 'product') setProductPageSkip(page * productPageSize);
   };
 
   const onPageSizeChange = (pageSize: number) => {
-    setPageSize(pageSize);
+    if (stepType === 'category') setCategPageSize(pageSize);
+    else if (stepType === 'product') setProductPageSize(pageSize);
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
-    setSortVal({
-      field: model[0]?.field,
-      sort: model[0]?.sort,
-    });
+    if (stepType === 'category') {
+      dispatch(
+        setCategoriesSortValue({
+          field: model[0]?.field,
+          sort: model[0]?.sort,
+        }),
+      );
+    } else if (stepType === 'product') {
+      dispatch(
+        setProductsSortValue({
+          field: model[0]?.field,
+          sort: model[0]?.sort,
+        }),
+      );
+    }
   };
 
   const renderSelectedCount = () => {
@@ -259,7 +329,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
         <div className="select-focus" style={{ height: '40px' }}>
           <SearchField
             id="focus-search-field"
-            value={searchVal}
+            value={getSearchFieldValue()}
             onEnterPress={handleSearchDispatch}
             isfullsize={false}
             width={266}
@@ -275,7 +345,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
         id="view-focus-mini-grid"
         isFetching={isProductFetching || isCategFetching}
         onFilterModelChange={onFilterModelChange}
-        filterItem={filterVal}
+        filterItem={getFilterValue()}
         handleOnFilterClick={handleOnFilterClick}
         rowCount={rowCount}
         onPageChange={onPageChange}

@@ -239,7 +239,7 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
     color: red;
   }
 
-  .linked-products, .select-focus {
+  .linked-products, .select-focus, .select-store {
     .MuiOutlinedInput-root {
       border-radius: 8px;
     }

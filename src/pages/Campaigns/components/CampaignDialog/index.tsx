@@ -1,20 +1,13 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton, SelectChangeEvent } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-import { useAppDispatch, useAppSelector } from 'store';
+import { useAppDispatch } from 'store';
 import { setCategoriesSelectedIds } from 'store/api/categories/slice';
 import { setProductsSelectedIds } from 'store/api/products/slice';
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { setStoresSelectedIds } from 'store/api/stores/slice';
+import { RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
 import { campaignTitles, campaignTypeData, templateData } from './constants';
 import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { INewCampaignProps } from './types';
@@ -94,30 +87,8 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   const handleModalSubmit = () => {
     if (template === '1') dispatch(setCategoriesSelectedIds([]));
     else dispatch(setProductsSelectedIds([]));
+    dispatch(setStoresSelectedIds([]));
     navigate('new', { replace: false, state: { campaignTitle, campaignType, template } });
-    //handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
-  };
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
-  const renderStates = () => {
-    // if (isFetching) {
-    //   return (
-    //     <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-    //       {renderLoader(100)}
-    //     </MenuItem>
-    //   );
-    // } else {
-    //   return (
-    //     <MenuItem>
-    //       <i style={{ color: '#72787e', fontSize: '12px' }}>No Parent Categories found.</i>
-    //     </MenuItem>
-    //   );
-    // }
   };
 
   const renderFields = () => {

@@ -1,13 +1,13 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
-import { initialState } from 'store/api/constants';
+import { storeInitialState } from 'store/api/stores/initialState';
 import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
@@ -18,7 +18,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem>(initialState.filterItem);
+  const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem>(storeInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
@@ -50,7 +50,8 @@ const Stores: FunctionComponent = (): JSX.Element => {
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
-    pagination: { pageSize: 10 },
+    pagination: { pageSize },
+    sorting: { sortModel: [{ field: 'Provider', sort: 'asc' as GridSortDirection }] },
   };
 
   // Use Effects

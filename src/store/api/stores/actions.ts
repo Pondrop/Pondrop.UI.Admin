@@ -30,4 +30,11 @@ const setStoresSortValue = (state: IGridState, action: PayloadAction<ISortItem>)
   };
 };
 
-export const actions = { setStoresFilter, setStoresSearchValue, setStoresSortValue };
+const setStoresSelectedIds = (state: IGridState, action: PayloadAction<string[]>) => {
+  return {
+    ...state,
+    selectedIds: action.payload
+  };
+};
+
+export const actions = { setStoresFilter, setStoresSearchValue, setStoresSelectedIds, setStoresSortValue };

@@ -12,6 +12,14 @@ export const storeColumns: GridColDef[] = [
   { field: 'Zip_Code', headerName: 'Post code', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
 ];
 
+export const campaignStoreColumns: GridColDef[] = [
+  { field: 'Provider', headerName: 'Provider', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'),width: 200, renderCell: handleRenderCell },
+  { field: 'Name', headerName: 'Store name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'City', headerName: 'Suburb', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 200, renderCell: handleRenderCell },
+  { field: 'State', headerName: 'State', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 200, renderCell: handleRenderCell },
+  { field: 'Zip_Code', headerName: 'Post code', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 200, renderCell: handleRenderCell },
+];
+
 export const productColumns: GridColDef[] = [
   { field: 'name', headerName: 'Product name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'GTIN', headerName: 'GTIN', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
