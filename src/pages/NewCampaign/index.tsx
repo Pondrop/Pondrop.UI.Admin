@@ -6,6 +6,7 @@ import { CheckCircle } from '@mui/icons-material';
 import { useAppSelector } from 'store';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
+import { selectStores } from 'store/api/stores/slice';
 import { IModalState } from 'pages/types';
 import {
   ColAlignDiv,
@@ -35,6 +36,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
 
   const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
   const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
+  const { selectedIds: selectedStoresIds } = useAppSelector(selectStores);
 
   // Handlers
   const handleChange = (event: SyntheticEvent, newValue: number) => {
@@ -109,7 +111,8 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
           </StyledCategoryBtn>
         </SpaceBetweenDiv>
       );
-    } else if (currentStep === 1)
+    } else if (currentStep === 1) {
+      const isNextDisabled = selectedStoresIds?.length === 0;
       return (
         <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px' }}>
           <StyleOutlinedBtn
@@ -121,12 +124,18 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
           >
             Back
           </StyleOutlinedBtn>
-          <StyledCategoryBtn data-testid="step-2-next-btn" variant="contained" disableElevation height={40} disabled>
+          <StyledCategoryBtn
+            data-testid="step-2-next-btn"
+            variant="contained"
+            disableElevation
+            height={40}
+            disabled={isNextDisabled}
+          >
             Next
           </StyledCategoryBtn>
         </SpaceBetweenDiv>
       );
-    else
+    } else
       return (
         <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px' }}>
           <StyleOutlinedBtn data-testid="step-3-back-btn" variant="outlined" disableElevation height={40}>

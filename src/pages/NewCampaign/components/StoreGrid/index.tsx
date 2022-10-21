@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import Grid from 'components/Grid';
 import { campaignStoreColumns } from 'components/Grid/constants';
@@ -59,7 +59,8 @@ const StoreGrid = (): JSX.Element => {
   const [storeRowCount, setStoreRowCount] = useState<number>(0);
 
   const initialGridState = {
-    pagination: { pageSize: 10 },
+    pagination: { pageSize: storePageSize },
+    sorting: { sortModel: [{ field: 'Provider', sort: 'asc' as GridSortDirection }] },
   };
 
   useEffect(() => {
@@ -146,7 +147,7 @@ const StoreGrid = (): JSX.Element => {
           <SpaceBetweenDiv withmargin={false}>
             <RowAlignWrapper>
               Select stores
-              <Tooltip title={`Select the stores to be included in your campaign`} placement="top">
+              <Tooltip title="Select the stores where your campaign will be available" placement="top">
                 <div className="info-icon" style={{ marginLeft: '8px' }}>
                   <Info />
                 </div>
