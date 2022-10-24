@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Button, Tab, Tabs, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -44,6 +44,22 @@ export const ContentDetails = styled(ContentWrapper)`
 
   .right-margin {
     margin-right: 24px;
+  }
+
+  .campaign-review {
+    margin: 8px 64px 0 32px;
+  }
+
+  .last-review {
+    margin: 8px 64px 34px 32px;
+
+    .placeholder {
+      color: #72787e;
+    }
+  
+    & .MuiInputBase-root {
+      width: 450px;
+    }
   }
 `;
 
@@ -231,14 +247,6 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
     text-overflow: ellipsis;
   }
 
-  .create-components {
-    width: 300px;
-  }
-
-  .req-icon {
-    color: red;
-  }
-
   .linked-products, .select-focus, .select-store {
     .MuiOutlinedInput-root {
       border-radius: 8px;
@@ -253,13 +261,25 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
       width: 20px !important;
     }
   }
+
+  .info-icon {
+    align-self: center;
+    svg {
+      fill: #006492;
+    }
+
+    .MuiSvgIcon-root {
+      height: 13px;
+      width: 13px;
+    }
+  }
 `;
 
 export const StyledCardTitle = styled(Typography)`
   line-height: 24px;
   font-size: 18px;
   font-weight: 400;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 
   .info-icon {
     .MuiSvgIcon-root {
@@ -328,5 +348,36 @@ export const MessageWrapper = styled.div<{ color: string }>`
       height: 18px;
       width: 18px;
     }
+  }
+`;
+
+export const StyledTextInput = styled(TextField)`
+  width: 100%;
+
+  & legend {
+    display: none;
+  }
+
+  & fieldset {
+    top: 0;
+  }
+
+  & input {
+    height: 16px;
+    line-height: 16px;
+    font-size: 12px;
+    padding: 16px 12px;
+    border-radius: 8px;
+    color: #001f2a;
+
+    &::placeholder {
+      color: #72787e;
+      opacity: 1;
+    }
+  }
+
+  .MuiOutlinedInput-root,.MuiPaper-root-MuiDialog-paper {
+    border-color: rgba(0, 0, 0, 0.24) !important;
+    border-radius: 8px !important;
   }
 `;

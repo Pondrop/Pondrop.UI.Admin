@@ -1,0 +1,169 @@
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Info } from '@mui/icons-material';
+
+import { useAppSelector } from 'store';
+import { selectCategories } from 'store/api/categories/slice';
+import { selectProducts } from 'store/api/products/slice';
+import { selectStores } from 'store/api/stores/slice';
+import {
+  ColAlignDiv,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCard,
+  StyledCardTitle,
+  StyledTextInput,
+} from 'pages/styles';
+import { IModalState } from 'pages/types';
+import { campaignInfoTitles, campaignTypeId, campaignTemplateemplateId } from './constants';
+import { IReviewCardsInfo } from './types';
+
+const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
+  const [campaignInfo, setCampaignInfo] = useState<IModalState>({} as IModalState);
+  const [storeCompletion, setStoreCompletion] = useState<number>();
+
+  const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
+  const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
+  const { selectedIds: selectedStoresIds } = useAppSelector(selectStores);
+
+  useEffect(() => {
+    setCampaignInfo(data ?? {});
+  }, [data]);
+
+  const handleCompletionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setStoreCompletion(Number(e.target.value));
+  };
+
+  const renderDetails = () => {
+    const typeId = campaignInfo?.[campaignInfoTitles[1].field as keyof IModalState];
+    const templateId = campaignInfo?.[campaignInfoTitles[2].field as keyof IModalState];
+    return (
+      <ColAlignDiv>
+        <span className="row-label card-details">{campaignInfoTitles[0].label}</span>
+        <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
+          {campaignInfo?.[campaignInfoTitles[0].field as keyof IModalState]}
+        </span>
+        <span className="row-label card-details">{campaignInfoTitles[1].label}</span>
+        <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
+          {campaignTypeId[typeId as keyof typeof campaignTypeId]}
+        </span>
+        <span className="row-label card-details">{campaignInfoTitles[2].label}</span>
+        <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
+          {campaignTemplateemplateId[templateId as keyof typeof campaignTypeId]}
+        </span>
+      </ColAlignDiv>
+    );
+  };
+
+  const getHeaderLabel = () => (campaignInfo?.template === '1' ? 'Category' : 'Products');
+
+  const getSelectedNumber = (value: number) => {
+    return (
+      <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
+        {value}
+      </span>
+    );
+  };
+
+  const renderConditions = () => {
+    return (
+      <ColAlignDiv>
+        <RowAlignWrapper>
+          <span className="row-label card-details">Completions per store</span>
+          <div className="info-icon" style={{ marginLeft: '8px' }}>
+            <Info />
+          </div>
+        </RowAlignWrapper>
+        <StyledTextInput
+          id="store-completion-input"
+          margin="none"
+          variant="outlined"
+          type="number"
+          value={storeCompletion}
+          onChange={handleCompletionChange}
+          sx={{ marginBottom: '20px' }}
+          placeholder="Number of task completions per store"
+        />
+        <RowAlignWrapper>
+          <span className="row-label card-details">Completions per store</span>
+          <div className="info-icon" style={{ marginLeft: '8px' }}>
+            <Info />
+          </div>
+        </RowAlignWrapper>
+      </ColAlignDiv>
+    );
+  };
+
+  return (
+    <div>
+      <RowAlignWrapper className="campaign-review" style={{ margin: '8px 64px 0 32px !important' }}>
+        <StyledCard width="100%">
+          <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+            <SpaceBetweenDiv withmargin={false}>
+              <RowAlignWrapper>
+                Campaign
+                <div className="info-icon" style={{ marginLeft: '8px' }}>
+                  <Info />
+                </div>
+              </RowAlignWrapper>
+            </SpaceBetweenDiv>
+          </StyledCardTitle>
+          {renderDetails()}
+        </StyledCard>
+      </RowAlignWrapper>
+      <RowAlignWrapper className="campaign-review">
+        <StyledCard width="100%">
+          <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+            <SpaceBetweenDiv withmargin={false}>
+              <RowAlignWrapper>
+                {getHeaderLabel()}
+                <div className="info-icon" style={{ marginLeft: '8px' }}>
+                  <Info />
+                </div>
+              </RowAlignWrapper>
+            </SpaceBetweenDiv>
+          </StyledCardTitle>
+          {getSelectedNumber(
+            (campaignInfo?.template === '1' ? selectedCategoriesIds?.length : selectedProductsIds?.length) ?? 0,
+          )}
+        </StyledCard>
+      </RowAlignWrapper>
+      <RowAlignWrapper className="campaign-review">
+        <StyledCard width="100%">
+          <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+            <SpaceBetweenDiv withmargin={false}>
+              <RowAlignWrapper>
+                Stores
+                <div className="info-icon" style={{ marginLeft: '8px' }}>
+                  <Info />
+                </div>
+              </RowAlignWrapper>
+            </SpaceBetweenDiv>
+          </StyledCardTitle>
+          {getSelectedNumber(selectedStoresIds?.length ?? 0)}
+        </StyledCard>
+      </RowAlignWrapper>
+      <RowAlignWrapper className="last-review">
+        <StyledCard width="100%">
+          <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+            <SpaceBetweenDiv withmargin={false}>
+              <RowAlignWrapper>
+                Set conditions
+                <div className="info-icon" style={{ marginLeft: '8px' }}>
+                  <Info />
+                </div>
+              </RowAlignWrapper>
+            </SpaceBetweenDiv>
+          </StyledCardTitle>
+          <div style={{ marginBottom: '24px', maxWidth: '100%' }}>
+            <span className="row-value singleline card-details">
+              Define how many shoppers will be offered and under what conditions.
+            </span>
+          </div>
+          {renderConditions()}
+        </StyledCard>
+      </RowAlignWrapper>
+    </div>
+  );
+};
+
+export default ReviewCardsInfo;
