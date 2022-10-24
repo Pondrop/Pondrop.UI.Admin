@@ -1,5 +1,9 @@
 import { ChangeEvent, useEffect, useState } from 'react';
+import { TextField } from '@mui/material';
 import { Info } from '@mui/icons-material';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import moment, { Moment } from 'moment';
 
 import { useAppSelector } from 'store';
 import { selectCategories } from 'store/api/categories/slice';
@@ -15,11 +19,13 @@ import {
 } from 'pages/styles';
 import { IModalState } from 'pages/types';
 import { campaignInfoTitles, campaignTypeId, campaignTemplateemplateId } from './constants';
+import { StyledDatePicker } from './styles';
 import { IReviewCardsInfo } from './types';
 
 const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
   const [campaignInfo, setCampaignInfo] = useState<IModalState>({} as IModalState);
   const [storeCompletion, setStoreCompletion] = useState<number>();
+  const [endDate, setEndDate] = useState<Moment | null>(moment());
 
   const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
   const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
@@ -84,11 +90,25 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
           placeholder="Number of task completions per store"
         />
         <RowAlignWrapper>
-          <span className="row-label card-details">Completions per store</span>
+          <span className="row-label card-details">Campaign end date</span>
           <div className="info-icon" style={{ marginLeft: '8px' }}>
             <Info />
           </div>
         </RowAlignWrapper>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <StyledDatePicker
+            renderInput={(props) => <TextField {...props} />}
+            value={endDate}
+            onChange={(value) => setEndDate(value as Moment)}
+            minDateTime={moment().subtract(1, 'minutes')}
+            PaperProps={{
+              sx: {
+                border: '1px solid rgba(0, 0, 0, 0.24) !important',
+                borderRadius: '8px !important',
+              },
+            }}
+          />
+        </LocalizationProvider>
       </ColAlignDiv>
     );
   };
