@@ -8,7 +8,6 @@ import { productColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
-import { productsDummyData } from 'pages/Products/components/CategoryList/constants';
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';

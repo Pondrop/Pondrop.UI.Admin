@@ -12,8 +12,8 @@ import CategoryList from './components/CategoryList';
 
 // Other variables
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem, IProductValue, IValue } from 'store/api/types';
-import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+import { useGetAllProductFilterQuery, useGetParentCategoriesQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import {
   selectProducts,
@@ -21,7 +21,6 @@ import {
   setProductsSearchValue,
   setProductsSortValue,
 } from 'store/api/products/slice';
-import { productsDummyData } from './components/CategoryList/constants';
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -51,6 +50,7 @@ const Products: FunctionComponent = (): JSX.Element => {
     prevPageItems: pageSkip,
     pageSize,
   });
+  const { data: parentCategoryData } = useGetParentCategoriesQuery();
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchValue },

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IApiResponse, IFilterItem, ISortItem } from '../types';
+import { IApiResponse, IFilterItem, ISortItem, IValue } from '../types';
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
@@ -56,4 +56,27 @@ export const productsApi = createApi({
   }),
 });
 
+export const productsMicroService = createApi({
+  reducerPath: 'productsMicroService',
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: "https://product-service.ashyocean-bde16918.australiaeast.azurecontainerapps.io",
+    prepareHeaders: (headers) => {
+      headers.set('Content-Type', 'application/json');
+      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDlkMzcwOS1jMmY5LTRkMDYtOGVhNy04NTc5OTBjYTdlN2IiLCJlbWFpbCI6ImFkbWluQHhhbS5jb20uYXUiLCJ0eXAiOiJBZG1pbiIsIm5iZiI6MTY2MzA0NjEzMywiZXhwIjoxNjk0NTgyMTMzLCJpYXQiOjE2NjMwNDYxMzN9.zMyjBMXOR6wVAol0UcZC9jdN6p9M2eSJekBJzamXwbs');
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getParentCategories: builder.query<IValue[], void>({
+      query: () => {
+        return {
+          url: '/ParentCategories',
+          method: 'GET',
+        };
+      },
+    }),
+  })
+});
+
 export const { useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery } = productsApi;
+export const { useGetParentCategoriesQuery } = productsMicroService;
