@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 
 import CustomEmptyState from 'components/EmptyState';
 import { CircularLoaderWrapper, SpaceBetweenDiv } from 'pages/styles';
-import { useGetParentCategoriesQuery } from 'store/api/categories/api';
+import { useGetParentCategoriesQuery } from 'store/api/products/api';
 import { IValue } from 'store/api/types';
-import { categoryDummyData } from './constants';
 import { BtnWrapper, DivWrapper, ManageCategoriesBtn, StyledList, StyledListItemButton } from './styles';
 import { ICategoryListProps } from './types';
 
@@ -14,6 +13,17 @@ const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProp
   const { data, isFetching } = useGetParentCategoriesQuery();
 
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [parentCategoryData, setParentCategoryData] = useState<IValue[]>(data ?? []);
+
+  useEffect(() => {
+    const sortedData = data?.slice();
+    sortedData?.sort((a, b) => {
+      if (a.categoryName < b.categoryName) return -1;
+      if (a.categoryName > b.categoryName) return 1;
+      return 0;
+    });
+    setParentCategoryData(sortedData ?? []);
+  }, [data]);
 
   const handleCategoryClick = (category: IValue) => () => {
     setSelectedCategory(category?.id as string);
@@ -29,18 +39,18 @@ const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProp
   // Uncomment once CORS issue is resolved
   const generateData = () => {
     if (isFetching) return renderLoader();
-    else if (data?.value?.length === 0)
+    else if (parentCategoryData?.length === 0)
       return <CustomEmptyState height="400px" displayText="No Parent Categories found." />;
 
-    return data?.value?.map((category) => (
+    return parentCategoryData?.map((category) => (
       <StyledListItemButton
         key={category.id as string}
         selected={selectedCategory === category.id}
         onClick={handleCategoryClick(category)}
       >
         <SpaceBetweenDiv withmargin={false} style={{ width: '100%' }}>
-          <span className="item category-label">{category.name}</span>
-          <span className="item category-value">0</span>
+          <span className="item category-label">{category.categoryName}</span>
+          <span className="item category-value">{category.productCount}</span>
         </SpaceBetweenDiv>
       </StyledListItemButton>
     ));
@@ -60,7 +70,7 @@ const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProp
           disableElevation
           height={40}
           onClick={onManageCategoriesClick}
-          disabled={isFetching || categoryDummyData.length === 0}
+          disabled={isFetching}
         >
           Manage categories
         </ManageCategoriesBtn>

@@ -12,7 +12,7 @@ import CategoryList from './components/CategoryList';
 
 // Other variables
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem, IProductValue, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import {
@@ -21,7 +21,6 @@ import {
   setProductsSearchValue,
   setProductsSortValue,
 } from 'store/api/products/slice';
-import { productsDummyData } from './components/CategoryList/constants';
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -41,6 +40,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(productInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
+  const [selectedParent, setSelectedParent] = useState<string>('');
 
   const dispatch = useAppDispatch();
   const { filterItem, searchValue = '', sortValue } = useAppSelector(selectProducts);
@@ -50,15 +50,17 @@ const Products: FunctionComponent = (): JSX.Element => {
     filterItem,
     prevPageItems: pageSkip,
     pageSize,
+    parentCategory: selectedParent,
   });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
-    { searchString: searchValue },
+    { searchString: searchValue, parentCategory: selectedParent },
     { skip: !gridData.length },
   );
 
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
+    barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
@@ -74,15 +76,13 @@ const Products: FunctionComponent = (): JSX.Element => {
   }, [filterItem]);
 
   useEffect(() => {
-    if (searchValue === '') {
+    if (searchValue !== '' || selectedParent !== '') {
+      setRowCount(data?.['@odata.count'] ?? 0);
+      setGridData(data?.value ?? []);
+    } else {
       setGridData([]);
       setRowCount(0);
     }
-  }, [searchValue]);
-
-  useEffect(() => {
-    setRowCount(data?.['@odata.count'] ?? 0);
-    setGridData(data?.value ?? []);
   }, [data]);
 
   // Handlers
@@ -150,6 +150,10 @@ const Products: FunctionComponent = (): JSX.Element => {
     navigate('categories', { replace: false });
   };
 
+  const getSelectedParent = (category: IValue) => {
+    setSelectedParent(category?.id as string);
+  };
+
   return (
     <MainContent paddingSide={32} paddingTop={42}>
       <SpaceBetweenDiv>
@@ -180,7 +184,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         </RowAlignWrapper>
       </SpaceBetweenDiv>
       <RowAlignWrapper>
-        <CategoryList onManageCategoriesClick={handleOnMangeCategories} />
+        <CategoryList onManageCategoriesClick={handleOnMangeCategories} onRowClick={getSelectedParent} />
         <div style={{ height: 'fit-content', width: 'calc(100vw - 617px)' }}>
           <Grid
             data={gridData}
