@@ -6,6 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import moment, { Moment } from 'moment';
 
 import { useAppSelector } from 'store';
+import { useGetCategoryInfoQuery } from 'store/api/categories/api';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
 import { selectStores } from 'store/api/stores/slice';
@@ -30,6 +31,11 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
   const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
   const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
   const { selectedIds: selectedStoresIds } = useAppSelector(selectStores);
+
+  const { data: categoryInfoData, isFetching } = useGetCategoryInfoQuery(
+    { categoryId: String(selectedCategoriesIds?.[0]) ?? '' },
+    { skip: data?.template !== '1' },
+  );
 
   useEffect(() => {
     setCampaignInfo(data ?? {});
@@ -62,10 +68,15 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
 
   const getHeaderLabel = () => (campaignInfo?.template === '1' ? 'Category' : 'Products');
 
-  const getSelectedNumber = (value: number) => {
+  const getCategoryLabel = () => {
+    if (isFetching) return '...';
+    else return categoryInfoData?.value[0]?.categoryName;
+  };
+
+  const getSelectedNumber = (value: number, isCategory: boolean) => {
     return (
       <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
-        {value}
+        {isCategory ? getCategoryLabel() : value}
       </span>
     );
   };
@@ -149,6 +160,7 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
           </StyledCardTitle>
           {getSelectedNumber(
             (campaignInfo?.template === '1' ? selectedCategoriesIds?.length : selectedProductsIds?.length) ?? 0,
+            campaignInfo?.template === '1',
           )}
         </StyledCard>
       </RowAlignWrapper>
@@ -164,7 +176,7 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
               </RowAlignWrapper>
             </SpaceBetweenDiv>
           </StyledCardTitle>
-          {getSelectedNumber(selectedStoresIds?.length ?? 0)}
+          {getSelectedNumber(selectedStoresIds?.length ?? 0, false)}
         </StyledCard>
       </RowAlignWrapper>
       <RowAlignWrapper className="last-review">

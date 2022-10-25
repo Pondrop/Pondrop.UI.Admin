@@ -139,7 +139,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
       );
     } else
       return (
-        <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px' }}>
+        <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px 32px' }}>
           <StyleOutlinedBtn
             data-testid="step-3-back-btn"
             variant="outlined"
