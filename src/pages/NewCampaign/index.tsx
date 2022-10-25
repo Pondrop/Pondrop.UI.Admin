@@ -1,6 +1,6 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Tab } from '@mui/material';
+import { Tab } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 
 import { useAppSelector } from 'store';
@@ -20,6 +20,7 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
+import ReviewCardsInfo from './components/ReviewCards';
 import StepGrid from './components/StepGrid';
 import StoreGrid from './components/StoreGrid';
 import { CircleDiv, StyledBox, StyledSteps, TabLabelTypography } from './styles';
@@ -130,6 +131,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
             disableElevation
             height={40}
             disabled={isNextDisabled}
+            onClick={handleNextButton}
           >
             Next
           </StyledCategoryBtn>
@@ -137,8 +139,14 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
       );
     } else
       return (
-        <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px' }}>
-          <StyleOutlinedBtn data-testid="step-3-back-btn" variant="outlined" disableElevation height={40}>
+        <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px 32px' }}>
+          <StyleOutlinedBtn
+            data-testid="step-3-back-btn"
+            variant="outlined"
+            disableElevation
+            height={40}
+            onClick={handleBackButton}
+          >
             Back
           </StyleOutlinedBtn>
           <StyledCategoryBtn data-testid="step-3-publish-btn" variant="contained" disableElevation height={40}>
@@ -152,6 +160,17 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     if (state?.template === '1') return 'Select category';
     else return 'Select products';
   };
+
+  const renderGridCard = () => (
+    <StyledCard
+      style={{ margin: '24px 64px 34px' }}
+      className="focus-grid-card"
+      width="calc(100% - 160px)"
+      height="fit-content"
+    >
+      {currentStep === 0 ? <StepGrid stepType={getStepType()} /> : <StoreGrid />}
+    </StyledCard>
+  );
 
   const renderContent = () => (
     <div>
@@ -185,14 +204,8 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
           disabled
         />
       </StyledSteps>
-      <StyledCard
-        style={{ margin: '24px 64px 34px' }}
-        className="focus-grid-card"
-        width="calc(100% - 160px)"
-        height="fit-content"
-      >
-        {currentStep === 0 ? <StepGrid stepType={getStepType()} /> : <StoreGrid />}
-      </StyledCard>
+      {currentStep !== 2 && renderGridCard()}
+      {currentStep === 2 && <ReviewCardsInfo data={state} />}
       {renderButtons()}
     </div>
   );
