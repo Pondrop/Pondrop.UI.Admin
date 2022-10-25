@@ -45,3 +45,16 @@ export interface ISubmissionDetailsResponse {
   updatedBy: string;
   updatedUtc: string;
 }
+
+export interface ISubmissionTemplateResponse {
+  id: string;
+  title: string;
+  description: string;
+  iconCodePoint: number;
+  iconFontFamily: string;
+  createdBy: string;
+  updatedBy: string;
+  createdUtc: string;
+  updatedUtc: string;
+  steps: unknown[];
+}

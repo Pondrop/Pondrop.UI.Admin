@@ -26,18 +26,3 @@ export const campaignTypeData = [
     name: 'Orchestration campaign'
   }
 ];
-
-export const templateData = [
-  {
-    id: 1,
-    name: 'Category Products'
-  },
-  {
-    id: 2,
-    name: 'Shelf Stock Levels'
-  },
-  {
-    id: 3,
-    name: 'In-Store Products'
-  }
-];

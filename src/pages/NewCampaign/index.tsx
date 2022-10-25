@@ -7,7 +7,7 @@ import { useAppSelector } from 'store';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
 import { selectStores } from 'store/api/stores/slice';
-import { IModalState } from 'pages/types';
+import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
 import {
   ColAlignDiv,
   ContentDetails,
@@ -55,7 +55,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   };
 
   const getStepType = () => {
-    if (currentStep === 0) return state?.template === '1' ? 'category' : 'product';
+    if (currentStep === 0) return state?.template === CATEGORY_FOCUS_ID ? 'category' : 'product';
     else return 'store';
   };
 
@@ -97,7 +97,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   const renderButtons = () => {
     if (currentStep === 0) {
       const isNextDisabled =
-        state?.template === '1' ? selectedCategoriesIds?.length !== 1 : selectedProductsIds?.length === 0;
+        state?.template === CATEGORY_FOCUS_ID ? selectedCategoriesIds?.length !== 1 : selectedProductsIds?.length === 0;
       return (
         <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px', justifyContent: 'flex-end' }}>
           <StyledCategoryBtn
@@ -157,7 +157,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   };
 
   const getTabLabel = () => {
-    if (state?.template === '1') return 'Select category';
+    if (state?.template === CATEGORY_FOCUS_ID) return 'Select category';
     else return 'Select products';
   };
 

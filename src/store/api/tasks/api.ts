@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse, IFilterItem, ISortItem, IValue } from '../types';
-import { ISubmissionDetailsResponse } from './types';
+import { ISubmissionDetailsResponse, ISubmissionTemplateResponse } from './types';
 
 export const tasksApi = createApi({
   reducerPath: 'tasksApi',
@@ -69,8 +69,16 @@ export const submissionsMicroService = createApi({
         };
       },
     }),
+    getSubmissionTemplates: builder.query<ISubmissionTemplateResponse[], void>({
+      query: () => {
+        return {
+          url: `/SubmissionTemplate`,
+          method: 'GET',
+        };
+      },
+    }),
   }),
 });
 
 export const { useGetAllTaskFilterQuery, useGetTasksQuery } = tasksApi;
-export const { useGetSubmissionInfoQuery } = submissionsMicroService;
+export const { useGetSubmissionInfoQuery, useGetSubmissionTemplatesQuery } = submissionsMicroService;
