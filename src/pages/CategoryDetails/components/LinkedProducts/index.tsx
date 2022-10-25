@@ -37,6 +37,7 @@ const LinkedProducts = (): JSX.Element => {
 
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
+    barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
