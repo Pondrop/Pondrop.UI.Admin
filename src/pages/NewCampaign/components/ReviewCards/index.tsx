@@ -100,11 +100,16 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
             renderInput={(props) => <TextField {...props} />}
             value={endDate}
             onChange={(value) => setEndDate(value as Moment)}
-            minDateTime={moment().subtract(1, 'minutes')}
+            disablePast
             PaperProps={{
               sx: {
                 border: '1px solid rgba(0, 0, 0, 0.24) !important',
                 borderRadius: '8px !important',
+              },
+            }}
+            PopperProps={{
+              sx: {
+                inset: 'auto auto 0px 90px !important',
               },
             }}
           />
