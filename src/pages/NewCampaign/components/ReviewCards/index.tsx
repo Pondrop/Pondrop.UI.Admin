@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { TextField } from '@mui/material';
+import { TextField, Tooltip } from '@mui/material';
 import { Info } from '@mui/icons-material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -19,7 +19,7 @@ import {
   StyledTextInput,
 } from 'pages/styles';
 import { IModalState } from 'pages/types';
-import { campaignInfoTitles, campaignTypeId, campaignTemplateemplateId } from './constants';
+import { campaignInfoTitles, campaignTypeId, campaignTemplateemplateId, tooltipContent } from './constants';
 import { StyledDatePicker } from './styles';
 import { IReviewCardsInfo } from './types';
 
@@ -86,9 +86,11 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
       <ColAlignDiv>
         <RowAlignWrapper>
           <span className="row-label card-details">Completions per store</span>
-          <div className="info-icon" style={{ marginLeft: '8px' }}>
-            <Info />
-          </div>
+          <Tooltip title={tooltipContent.completion} placement="top">
+            <div className="info-icon" style={{ marginLeft: '8px' }}>
+              <Info />
+            </div>
+          </Tooltip>
         </RowAlignWrapper>
         <StyledTextInput
           id="store-completion-input"
@@ -102,9 +104,11 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
         />
         <RowAlignWrapper>
           <span className="row-label card-details">Campaign end date</span>
-          <div className="info-icon" style={{ marginLeft: '8px' }}>
-            <Info />
-          </div>
+          <Tooltip title={tooltipContent.endDate} placement="top">
+            <div className="info-icon" style={{ marginLeft: '8px' }}>
+              <Info />
+            </div>
+          </Tooltip>
         </RowAlignWrapper>
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <StyledDatePicker
@@ -137,9 +141,11 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
             <SpaceBetweenDiv withmargin={false}>
               <RowAlignWrapper>
                 Campaign
-                <div className="info-icon" style={{ marginLeft: '8px' }}>
-                  <Info />
-                </div>
+                <Tooltip title={tooltipContent.campaign} placement="top">
+                  <div className="info-icon" style={{ marginLeft: '8px' }}>
+                    <Info />
+                  </div>
+                </Tooltip>
               </RowAlignWrapper>
             </SpaceBetweenDiv>
           </StyledCardTitle>
@@ -152,9 +158,14 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
             <SpaceBetweenDiv withmargin={false}>
               <RowAlignWrapper>
                 {getHeaderLabel()}
-                <div className="info-icon" style={{ marginLeft: '8px' }}>
-                  <Info />
-                </div>
+                <Tooltip
+                  title={campaignInfo?.template === '1' ? tooltipContent.category : tooltipContent.product}
+                  placement="top"
+                >
+                  <div className="info-icon" style={{ marginLeft: '8px' }}>
+                    <Info />
+                  </div>
+                </Tooltip>
               </RowAlignWrapper>
             </SpaceBetweenDiv>
           </StyledCardTitle>
@@ -170,9 +181,11 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
             <SpaceBetweenDiv withmargin={false}>
               <RowAlignWrapper>
                 Stores
-                <div className="info-icon" style={{ marginLeft: '8px' }}>
-                  <Info />
-                </div>
+                <Tooltip title={tooltipContent.store} placement="top">
+                  <div className="info-icon" style={{ marginLeft: '8px' }}>
+                    <Info />
+                  </div>
+                </Tooltip>
               </RowAlignWrapper>
             </SpaceBetweenDiv>
           </StyledCardTitle>
@@ -183,12 +196,7 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
         <StyledCard width="100%">
           <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
             <SpaceBetweenDiv withmargin={false}>
-              <RowAlignWrapper>
-                Set conditions
-                <div className="info-icon" style={{ marginLeft: '8px' }}>
-                  <Info />
-                </div>
-              </RowAlignWrapper>
+              <RowAlignWrapper>Set conditions</RowAlignWrapper>
             </SpaceBetweenDiv>
           </StyledCardTitle>
           <div style={{ marginBottom: '24px', maxWidth: '100%' }}>
