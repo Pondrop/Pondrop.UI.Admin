@@ -18,11 +18,11 @@ export const campaignTitles = [
 
 export const campaignTypeData = [
   {
-    id: 1,
+    id: 'task',
     name: 'Task campaign'
   },
   {
-    id: 2,
+    id: 'orchestration',
     name: 'Orchestration campaign'
   }
 ];

@@ -1,12 +1,17 @@
-import { FunctionComponent, SyntheticEvent, useState } from 'react';
+import { FunctionComponent, SyntheticEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Tab } from '@mui/material';
+import moment, { Moment } from 'moment';
+import { CircularProgress, Tab } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 
 import { useAppSelector } from 'store';
+import { newCampaignInitialState } from 'store/api/campaigns/initialState';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
 import { selectStores } from 'store/api/stores/slice';
+import { useUpdateCampaignMutation } from 'store/api/tasks/api';
+import { IUpdateCampaignRequest } from 'store/api/tasks/types';
+import { CircularLoaderWrapper } from 'pages/styles';
 import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
 import {
   ColAlignDiv,
@@ -27,6 +32,7 @@ import { CircleDiv, StyledBox, StyledSteps, TabLabelTypography } from './styles'
 
 const NewCampaign: FunctionComponent = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [requestData, setRequestData] = useState<IUpdateCampaignRequest>(newCampaignInitialState);
 
   // React router dom values
   const location = useLocation();
@@ -39,16 +45,84 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
   const { selectedIds: selectedStoresIds } = useAppSelector(selectStores);
 
+  const [
+    updateCampaign,
+    { isSuccess: isUpdateCampaignSuccess, reset: resetUpdateCampaign, isLoading: isUpdateCampaignLoading },
+  ] = useUpdateCampaignMutation();
+
   // Handlers
-  const handleChange = (event: SyntheticEvent, newValue: number) => {
+  const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setCurrentStep(newValue);
   };
 
   const handlePrevious = () => navigate(-1);
 
-  const handleNextButton = () => {
+  const handleUpdateFocus = () => {
+    let focusIds;
+    let focusProperty;
+    if (state?.template === CATEGORY_FOCUS_ID) {
+      focusIds = selectedCategoriesIds?.slice();
+      focusProperty = 'campaignFocusCategoryIds';
+    } else {
+      focusIds = selectedProductsIds?.slice();
+      focusProperty = 'campaignFocusProductIds';
+    }
+
+    const requestBody = {
+      ...requestData,
+      [focusProperty]: focusIds as string[],
+    };
+
+    setRequestData(requestBody);
+    updateCampaign(requestBody);
     setCurrentStep((prevState) => prevState + 1);
   };
+
+  const handleUpdateStores = () => {
+    const requestBody = {
+      ...requestData,
+      storeIds: selectedStoresIds as string[],
+    };
+
+    setRequestData(requestBody);
+    updateCampaign(requestBody);
+    setCurrentStep((prevState) => prevState + 1);
+  };
+
+  const handleUpdateStoreCompletion = (value: number) => {
+    const requestBody = {
+      ...requestData,
+      requiredSubmissions: value,
+    };
+
+    setRequestData(requestBody);
+    updateCampaign(requestBody);
+  };
+
+  const handleUpdateEndDate = (value: Moment) => {
+    const requestBody = {
+      ...requestData,
+      campaignEndDate: String(moment(value).format('YYYY-MM-DDTHH:mm:ss.SSSZ')),
+    };
+
+    setRequestData(requestBody);
+    updateCampaign(requestBody);
+  };
+
+  useEffect(() => {
+    resetUpdateCampaign();
+  }, [isUpdateCampaignSuccess]);
+
+  useEffect(() => {
+    setRequestData((oldValue) => ({
+      ...oldValue,
+      id: state?.id,
+      name: state?.campaignTitle,
+      campaignType: state?.campaignType,
+      selectedTemplateIds: [state?.template],
+      campaignEndDate: null,
+    }));
+  }, []);
 
   const handleBackButton = () => {
     setCurrentStep((prevState) => prevState - 1);
@@ -59,6 +133,12 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     else return 'store';
   };
 
+  const renderLoader = (height: number) => (
+    <CircularLoaderWrapper height={`${height}px`}>
+      <CircularProgress size={height / 2} thickness={6} />
+    </CircularLoaderWrapper>
+  );
+
   const renderHeader = () => {
     return (
       <>
@@ -68,7 +148,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
               {state?.campaignTitle}
             </StyledTitle>
             <StyledTitle className="main-header" variant="caption" style={{ padding: '0 64px' }}>
-              Draft auto-saved
+              {isUpdateCampaignLoading ? renderLoader(20) : 'Draft auto-saved'}
             </StyledTitle>
             <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={34}></StyledSubtitle>
           </ColAlignDiv>
@@ -106,7 +186,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
             disableElevation
             height={40}
             disabled={isNextDisabled}
-            onClick={handleNextButton}
+            onClick={handleUpdateFocus}
           >
             Next
           </StyledCategoryBtn>
@@ -131,7 +211,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
             disableElevation
             height={40}
             disabled={isNextDisabled}
-            onClick={handleNextButton}
+            onClick={handleUpdateStores}
           >
             Next
           </StyledCategoryBtn>
@@ -181,7 +261,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
         <StyledTypography color="text.primary">New campaign</StyledTypography>
       </StyledBreadcrumbs>
       {renderHeader()}
-      <StyledSteps value={currentStep} onChange={handleChange}>
+      <StyledSteps value={currentStep} onChange={handleTabChange}>
         <Tab
           label={<TabLabel count={1}>{getTabLabel()}</TabLabel>}
           id="tab-0"
@@ -205,7 +285,13 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
         />
       </StyledSteps>
       {currentStep !== 2 && renderGridCard()}
-      {currentStep === 2 && <ReviewCardsInfo data={state} />}
+      {currentStep === 2 && (
+        <ReviewCardsInfo
+          data={state}
+          onStoreCompletionChange={handleUpdateStoreCompletion}
+          onEndDateChange={handleUpdateEndDate}
+        />
+      )}
       {renderButtons()}
     </div>
   );

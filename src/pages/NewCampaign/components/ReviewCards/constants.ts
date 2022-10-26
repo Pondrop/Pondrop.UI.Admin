@@ -14,8 +14,8 @@ export const campaignInfoTitles = [
 ];
 
 export const campaignTypeId = {
-  '1': 'Task campaign',
-  '2': 'Orchestration campaign'
+  'task': 'Task Campaign',
+  'orchestration': 'Orchestration Campaign'
 };
 
 export const campaignTemplateId = {

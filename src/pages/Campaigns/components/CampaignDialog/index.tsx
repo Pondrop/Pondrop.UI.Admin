@@ -15,7 +15,7 @@ import { useAppDispatch } from 'store';
 import { setCategoriesSelectedIds } from 'store/api/categories/slice';
 import { setProductsSelectedIds } from 'store/api/products/slice';
 import { setStoresSelectedIds } from 'store/api/stores/slice';
-import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
+import { useCreateCampaignMutation, useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
 import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
 import { CATEGORY_FOCUS_ID } from 'pages/types';
 import { campaignTitles, campaignTypeData } from './constants';
@@ -42,6 +42,16 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   const [isTemplateSelectOpen, setIsTemplateSelectOpen] = useState<boolean>(false);
 
   const { data, isFetching } = useGetSubmissionTemplatesQuery();
+
+  const [
+    createCampaign,
+    {
+      data: createCampaignResponse,
+      isSuccess: isCreateCampaignSuccess,
+      reset: resetCreateCampaign,
+      isLoading: isCreateCampaignLoading,
+    },
+  ] = useCreateCampaignMutation();
 
   useEffect(() => {
     setTypePosition(
@@ -95,11 +105,37 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   };
 
   const handleModalSubmit = () => {
-    if (template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
-    else dispatch(setProductsSelectedIds([]));
-    dispatch(setStoresSelectedIds([]));
-    navigate('new', { replace: false, state: { campaignTitle, campaignType, template } });
+    createCampaign({
+      name: campaignTitle,
+      campaignType,
+      selectedTemplateIds: [template],
+      campaignStatus: 'draft',
+      publicationlifecycleId: '1',
+    });
+    if (isCreateCampaignSuccess) {
+      if (template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
+      else dispatch(setProductsSelectedIds([]));
+      dispatch(setStoresSelectedIds([]));
+      resetCreateCampaign();
+      navigate('new', {
+        replace: false,
+        state: { campaignTitle, campaignType, template, id: createCampaignResponse?.id },
+      });
+    }
   };
+
+  useEffect(() => {
+    if (isCreateCampaignSuccess) {
+      if (template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
+      else dispatch(setProductsSelectedIds([]));
+      dispatch(setStoresSelectedIds([]));
+      resetCreateCampaign();
+      navigate('new', {
+        replace: false,
+        state: { campaignTitle, campaignType, template, id: createCampaignResponse?.id },
+      });
+    }
+  }, [isCreateCampaignSuccess]);
 
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
@@ -272,9 +308,9 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
           disableElevation
           height={40}
           onClick={handleModalSubmit}
-          disabled={campaignTitle === '' || campaignType === '' || template === ''}
+          disabled={campaignTitle === '' || campaignType === '' || template === '' || isCreateCampaignLoading}
         >
-          Next
+          {isCreateCampaignLoading ? renderLoader(34) : 'Next'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );

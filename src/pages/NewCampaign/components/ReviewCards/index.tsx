@@ -23,7 +23,7 @@ import { campaignInfoTitles, campaignTypeId, campaignTemplateId, tooltipContent 
 import { StyledDatePicker } from './styles';
 import { IReviewCardsInfo } from './types';
 
-const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
+const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IReviewCardsInfo): JSX.Element => {
   const [campaignInfo, setCampaignInfo] = useState<IModalState>({} as IModalState);
   const [storeCompletion, setStoreCompletion] = useState<number>();
   const [endDate, setEndDate] = useState<Moment | null>(moment());
@@ -43,7 +43,17 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
 
   const handleCompletionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStoreCompletion(Number(e.target.value));
+    onStoreCompletionChange(Number(e.target.value));
   };
+
+  const handleEndDateChange = (value: unknown) => {
+    setEndDate(value as Moment);
+    onEndDateChange(value as Moment);
+  };
+
+  useEffect(() => {
+    handleEndDateChange(endDate);
+  }, []);
 
   const renderDetails = () => {
     const typeId = campaignInfo?.[campaignInfoTitles[1].field as keyof IModalState];
@@ -114,7 +124,7 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
           <StyledDatePicker
             renderInput={(props) => <TextField {...props} />}
             value={endDate}
-            onChange={(value) => setEndDate(value as Moment)}
+            onChange={handleEndDateChange}
             disablePast
             PaperProps={{
               sx: {
