@@ -112,16 +112,6 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
       campaignStatus: 'draft',
       publicationlifecycleId: '1',
     });
-    if (isCreateCampaignSuccess) {
-      if (template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
-      else dispatch(setProductsSelectedIds([]));
-      dispatch(setStoresSelectedIds([]));
-      resetCreateCampaign();
-      navigate('new', {
-        replace: false,
-        state: { campaignTitle, campaignType, template, id: createCampaignResponse?.id },
-      });
-    }
   };
 
   useEffect(() => {
