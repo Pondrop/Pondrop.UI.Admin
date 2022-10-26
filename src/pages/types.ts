@@ -25,4 +25,7 @@ export interface IModalState {
   campaignTitle: string;
   campaignType: string;
   template: string;
+  id: string;
 }
+
+export const CATEGORY_FOCUS_ID = '68a1ddc7-4d18-4cad-9fa9-23fde3dea96c';

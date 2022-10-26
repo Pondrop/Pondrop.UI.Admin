@@ -18,12 +18,12 @@ import {
   StyledCardTitle,
   StyledTextInput,
 } from 'pages/styles';
-import { IModalState } from 'pages/types';
-import { campaignInfoTitles, campaignTypeId, campaignTemplateemplateId, tooltipContent } from './constants';
+import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
+import { campaignInfoTitles, campaignTypeId, campaignTemplateId, tooltipContent } from './constants';
 import { StyledDatePicker } from './styles';
 import { IReviewCardsInfo } from './types';
 
-const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
+const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IReviewCardsInfo): JSX.Element => {
   const [campaignInfo, setCampaignInfo] = useState<IModalState>({} as IModalState);
   const [storeCompletion, setStoreCompletion] = useState<number>();
   const [endDate, setEndDate] = useState<Moment | null>(moment());
@@ -34,7 +34,7 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
 
   const { data: categoryInfoData, isFetching } = useGetCategoryInfoQuery(
     { categoryId: String(selectedCategoriesIds?.[0]) ?? '' },
-    { skip: data?.template !== '1' },
+    { skip: data?.template !== CATEGORY_FOCUS_ID },
   );
 
   useEffect(() => {
@@ -43,7 +43,17 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
 
   const handleCompletionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStoreCompletion(Number(e.target.value));
+    onStoreCompletionChange(Number(e.target.value));
   };
+
+  const handleEndDateChange = (value: unknown) => {
+    setEndDate(value as Moment);
+    onEndDateChange(value as Moment);
+  };
+
+  useEffect(() => {
+    handleEndDateChange(endDate);
+  }, []);
 
   const renderDetails = () => {
     const typeId = campaignInfo?.[campaignInfoTitles[1].field as keyof IModalState];
@@ -60,13 +70,13 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
         </span>
         <span className="row-label card-details">{campaignInfoTitles[2].label}</span>
         <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
-          {campaignTemplateemplateId[templateId as keyof typeof campaignTypeId]}
+          {campaignTemplateId[templateId as keyof typeof campaignTemplateId]}
         </span>
       </ColAlignDiv>
     );
   };
 
-  const getHeaderLabel = () => (campaignInfo?.template === '1' ? 'Category' : 'Products');
+  const getHeaderLabel = () => (campaignInfo?.template === CATEGORY_FOCUS_ID ? 'Category' : 'Products');
 
   const getCategoryLabel = () => {
     if (isFetching) return '...';
@@ -114,7 +124,7 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
           <StyledDatePicker
             renderInput={(props) => <TextField {...props} />}
             value={endDate}
-            onChange={(value) => setEndDate(value as Moment)}
+            onChange={handleEndDateChange}
             disablePast
             PaperProps={{
               sx: {
@@ -159,7 +169,9 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
               <RowAlignWrapper>
                 {getHeaderLabel()}
                 <Tooltip
-                  title={campaignInfo?.template === '1' ? tooltipContent.category : tooltipContent.product}
+                  title={
+                    campaignInfo?.template === CATEGORY_FOCUS_ID ? tooltipContent.category : tooltipContent.product
+                  }
                   placement="top"
                 >
                   <div className="info-icon" style={{ marginLeft: '8px' }}>
@@ -170,8 +182,10 @@ const ReviewCardsInfo = ({ data }: IReviewCardsInfo): JSX.Element => {
             </SpaceBetweenDiv>
           </StyledCardTitle>
           {getSelectedNumber(
-            (campaignInfo?.template === '1' ? selectedCategoriesIds?.length : selectedProductsIds?.length) ?? 0,
-            campaignInfo?.template === '1',
+            (campaignInfo?.template === CATEGORY_FOCUS_ID
+              ? selectedCategoriesIds?.length
+              : selectedProductsIds?.length) ?? 0,
+            campaignInfo?.template === CATEGORY_FOCUS_ID,
           )}
         </StyledCard>
       </RowAlignWrapper>

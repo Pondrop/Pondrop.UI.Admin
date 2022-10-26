@@ -18,26 +18,11 @@ export const campaignTitles = [
 
 export const campaignTypeData = [
   {
-    id: 1,
+    id: 'task',
     name: 'Task campaign'
   },
   {
-    id: 2,
+    id: 'orchestration',
     name: 'Orchestration campaign'
-  }
-];
-
-export const templateData = [
-  {
-    id: 1,
-    name: 'Category Products'
-  },
-  {
-    id: 2,
-    name: 'Shelf Stock Levels'
-  },
-  {
-    id: 3,
-    name: 'In-Store Products'
   }
 ];

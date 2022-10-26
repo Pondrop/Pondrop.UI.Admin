@@ -1,6 +1,5 @@
 import { FunctionComponent, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
 import { campaignsColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
@@ -29,11 +28,9 @@ import SearchField from 'components/SearchField';
 import CampaignDialog from './components/CampaignDialog';
 
 const Campaigns: FunctionComponent = (): JSX.Element => {
-  const navigate = useNavigate();
-
   // States
   const [campaignFilterItem, setCampaignFilterItem] = useState<IFilterItem>(initialState.filterItem);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
@@ -140,10 +137,6 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     setIsModalOpen(true);
   };
 
-  const handleOnRowClick = (params: GridRowParams) => {
-    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
-  };
-
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -191,7 +184,6 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
         menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
-        onRowClick={handleOnRowClick}
         isMenuLoading={isFilterOptionsFetching}
         searchValue={''}
       />

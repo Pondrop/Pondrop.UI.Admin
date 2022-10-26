@@ -45,3 +45,62 @@ export interface ISubmissionDetailsResponse {
   updatedBy: string;
   updatedUtc: string;
 }
+
+export interface ISubmissionTemplateResponse {
+  id: string;
+  title: string;
+  description: string;
+  iconCodePoint: number;
+  iconFontFamily: string;
+  createdBy: string;
+  updatedBy: string;
+  createdUtc: string;
+  updatedUtc: string;
+  steps: unknown[];
+}
+
+export interface ICampaign {
+  id: string;
+  name: string;
+  campaignType: string;
+  campaignTriggerIds: string[];
+  campaignFocusCategoryIds: string[];
+  campaignFocusProductIds: string[];
+  selectedTemplateIds: string[];
+  storeIds: string[];
+  requiredSubmissions: number;
+  rewardSchemeId: string | null;
+  campaignPublishedDate: string | null;
+  campaignEndDate: string | null;
+  campaignStatus: string;
+  publicationlifecycleId: string;
+  createdBy: string;
+  updatedBy: string;
+  createdUtc: string;
+  updatedUtc: string;
+}
+
+export interface ICreateCampaignRequest {
+  name: string;
+  campaignType: string;
+  selectedTemplateIds: string[];
+  campaignStatus: string;
+  publicationlifecycleId: string;
+}
+
+export interface IUpdateCampaignRequest {
+  id: string;
+  name: string;
+  campaignType: string;
+  campaignTriggerIds?: string[];
+  campaignFocusCategoryIds?: string[];
+  campaignFocusProductIds?: string[];
+  selectedTemplateIds?: string[];
+  storeIds?: string[];
+  requiredSubmissions?: number;
+  rewardSchemeId?: string | null;
+  campaignPublishedDate?: string | null;
+  campaignEndDate?: string | null;
+  campaignStatus: string;
+  publicationlifecycleId?: string;
+}

@@ -14,14 +14,13 @@ export const campaignInfoTitles = [
 ];
 
 export const campaignTypeId = {
-  '1': 'Task campaign',
-  '2': 'Orchestration campaign'
+  'task': 'Task Campaign',
+  'orchestration': 'Orchestration Campaign'
 };
 
-export const campaignTemplateemplateId = {
-  '1': 'Category Products',
-  '2': 'Shelf stock levels',
-  '3': 'In-store products',
+export const campaignTemplateId = {
+  '68a1ddc7-4d18-4cad-9fa9-23fde3dea96c': 'Category Products',
+  'b2a08e75-fb6a-4ad6-a0af-fe98f1f8de07': 'Shelf Stock Levels',
 };
 
 export const tooltipContent = {

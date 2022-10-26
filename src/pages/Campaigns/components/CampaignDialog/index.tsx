@@ -1,14 +1,24 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DialogActions, DialogContent, DialogTitle, IconButton, SelectChangeEvent } from '@mui/material';
+import {
+  CircularProgress,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  SelectChangeEvent,
+} from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 import { useAppDispatch } from 'store';
 import { setCategoriesSelectedIds } from 'store/api/categories/slice';
 import { setProductsSelectedIds } from 'store/api/products/slice';
 import { setStoresSelectedIds } from 'store/api/stores/slice';
-import { RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { campaignTitles, campaignTypeData, templateData } from './constants';
+import { useCreateCampaignMutation, useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
+import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { CATEGORY_FOCUS_ID } from 'pages/types';
+import { campaignTitles, campaignTypeData } from './constants';
 import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { INewCampaignProps } from './types';
 
@@ -31,7 +41,17 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   const [isTypeSelectOpen, setIsTypeSelectOpen] = useState<boolean>(false);
   const [isTemplateSelectOpen, setIsTemplateSelectOpen] = useState<boolean>(false);
 
-  //const { data, isFetching } = useGetParentCategoriesQuery();
+  const { data, isFetching } = useGetSubmissionTemplatesQuery();
+
+  const [
+    createCampaign,
+    {
+      data: createCampaignResponse,
+      isSuccess: isCreateCampaignSuccess,
+      reset: resetCreateCampaign,
+      isLoading: isCreateCampaignLoading,
+    },
+  ] = useCreateCampaignMutation();
 
   useEffect(() => {
     setTypePosition(
@@ -85,10 +105,58 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   };
 
   const handleModalSubmit = () => {
-    if (template === '1') dispatch(setCategoriesSelectedIds([]));
-    else dispatch(setProductsSelectedIds([]));
-    dispatch(setStoresSelectedIds([]));
-    navigate('new', { replace: false, state: { campaignTitle, campaignType, template } });
+    createCampaign({
+      name: campaignTitle,
+      campaignType,
+      selectedTemplateIds: [template],
+      campaignStatus: 'draft',
+      publicationlifecycleId: '1',
+    });
+    if (isCreateCampaignSuccess) {
+      if (template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
+      else dispatch(setProductsSelectedIds([]));
+      dispatch(setStoresSelectedIds([]));
+      resetCreateCampaign();
+      navigate('new', {
+        replace: false,
+        state: { campaignTitle, campaignType, template, id: createCampaignResponse?.id },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isCreateCampaignSuccess) {
+      if (template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
+      else dispatch(setProductsSelectedIds([]));
+      dispatch(setStoresSelectedIds([]));
+      resetCreateCampaign();
+      navigate('new', {
+        replace: false,
+        state: { campaignTitle, campaignType, template, id: createCampaignResponse?.id },
+      });
+    }
+  }, [isCreateCampaignSuccess]);
+
+  const renderLoader = (height: number) => (
+    <CircularLoaderWrapper height={`${height}px`}>
+      <CircularProgress size={height / 2} thickness={6} />
+    </CircularLoaderWrapper>
+  );
+
+  const renderStates = () => {
+    if (isFetching) {
+      return (
+        <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
+          {renderLoader(100)}
+        </MenuItem>
+      );
+    } else {
+      return (
+        <MenuItem>
+          <i style={{ color: '#72787e', fontSize: '12px' }}>No templates found.</i>
+        </MenuItem>
+      );
+    }
   };
 
   const renderFields = () => {
@@ -197,11 +265,13 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
             isOpen={isTemplateSelectOpen}
             displayEmpty
           >
-            {templateData.map((category) => (
-              <StyledMenuItem key={String(category.id)} value={String(category.id)}>
-                {category.name}
-              </StyledMenuItem>
-            ))}
+            {isFetching || data?.length === 0
+              ? renderStates()
+              : data?.map((template) => (
+                  <StyledMenuItem key={String(template.id)} value={String(template.id)}>
+                    {template.title}
+                  </StyledMenuItem>
+                ))}
           </StyledSelect>
         </div>
       </div>
@@ -238,9 +308,9 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
           disableElevation
           height={40}
           onClick={handleModalSubmit}
-          disabled={campaignTitle === '' || campaignType === '' || template === ''}
+          disabled={campaignTitle === '' || campaignType === '' || template === '' || isCreateCampaignLoading}
         >
-          Next
+          {isCreateCampaignLoading ? renderLoader(34) : 'Next'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );

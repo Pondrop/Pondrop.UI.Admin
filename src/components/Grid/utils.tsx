@@ -50,7 +50,7 @@ export const handleRenderCellFormat = (params: GridRenderCellParams) => {
 export const handleRenderCellDate = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
-  const cellValue = moment(params?.value).format('hh:mm:ss DD/MM/YYYY');
+  const cellValue = params?.value ? moment(params?.value).format('hh:mm:ss DD/MM/YYYY') : '';
 
   useEffect(() => {
     if (tooltipTextRef?.current) {

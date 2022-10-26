@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IApiResponse, IFilterItem, ISortItem, IValue } from '../types';
-import { ISubmissionDetailsResponse } from './types';
+import { IApiResponse, IFilterItem, ISortItem } from '../types';
+import { ICampaign, ICreateCampaignRequest, ISubmissionDetailsResponse, ISubmissionTemplateResponse, IUpdateCampaignRequest } from './types';
 
 export const tasksApi = createApi({
   reducerPath: 'tasksApi',
@@ -69,8 +69,34 @@ export const submissionsMicroService = createApi({
         };
       },
     }),
+    getSubmissionTemplates: builder.query<ISubmissionTemplateResponse[], void>({
+      query: () => {
+        return {
+          url: `/SubmissionTemplate`,
+          method: 'GET',
+        };
+      },
+    }),
+    createCampaign: builder.mutation<ICampaign, ICreateCampaignRequest>({
+      query: (arg) => {
+        return {
+          url: `/Campaign/create`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
+    updateCampaign: builder.mutation<ICampaign, IUpdateCampaignRequest>({
+      query: (arg) => {
+        return {
+          url: `/Campaign/update`,
+          method: 'PUT',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
   }),
 });
 
 export const { useGetAllTaskFilterQuery, useGetTasksQuery } = tasksApi;
-export const { useGetSubmissionInfoQuery } = submissionsMicroService;
+export const { useCreateCampaignMutation, useGetSubmissionInfoQuery, useGetSubmissionTemplatesQuery, useUpdateCampaignMutation } = submissionsMicroService;
