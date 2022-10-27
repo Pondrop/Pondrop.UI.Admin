@@ -173,8 +173,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
   };
 
   const handleOnRowClick = (params: GridRowParams) => {
-    // Uncomment when feature will be worked on
-    navigate(`${params.id}`, { replace: false, state: { rowData: params.row } });
+    navigate(`${params.row.lowerLevelCategoryId}`, { replace: false, state: { rowData: params.row } });
   };
 
   const handleCreateModalClose = () => {

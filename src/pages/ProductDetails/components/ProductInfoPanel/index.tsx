@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IconButton, Tooltip } from '@mui/material';
 import { EditOutlined, Info } from '@mui/icons-material';
 
@@ -14,17 +15,12 @@ import {
 } from 'pages/styles';
 import { ITabPanelProps } from 'pages/types';
 import { ICategories, IValue } from 'store/api/types';
-import {
-  attributesChips,
-  categoryChips,
-  organisationTestData,
-  packagingTestData,
-  productTestData,
-  tooltipContent,
-} from './constants';
+import { attributesChips, organisationTestData, packagingTestData, productTestData, tooltipContent } from './constants';
 
 const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [productInfo, setProductInfo] = useState<IValue>({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setProductInfo(data ?? {});
@@ -33,9 +29,13 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   const renderCategoriesChips = () => {
     return (
       <StyledChipWrapper>
-        {categoryChips.map((val: ICategories) => (
-          <Chips key={val.id} label={val.name} />
-        ))}
+        {(productInfo?.categories as unknown as ICategories[])?.map((val: ICategories, index: number) => {
+          const handleChipClick = () => {
+            navigate(`/products/categories/${val.id}`, { state: { rowData: val } });
+          };
+
+          return <Chips key={`${val.id}-${productInfo?.id}-${index}`} label={val.name} onChipClick={handleChipClick} />;
+        })}
       </StyledChipWrapper>
     );
   };

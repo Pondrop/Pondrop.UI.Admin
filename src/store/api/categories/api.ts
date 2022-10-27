@@ -40,7 +40,7 @@ export const categoriesApi = createApi({
       query: (arg) => {
         const { categoryId } = arg;
         return {
-          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview${`&$filter=id eq '${categoryId}'`}`,
+          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview${`&$filter=lowerLevelCategoryId eq '${categoryId}'`}`,
           method: 'GET',
         };
       },
