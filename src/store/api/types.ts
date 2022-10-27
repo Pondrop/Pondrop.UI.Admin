@@ -40,8 +40,9 @@ export interface IGridState {
 }
 
 export interface ICategories {
-  id: string | number;
+  id: string;
   name: string;
+  type?: string;
 }
 
 export interface IProductValue {

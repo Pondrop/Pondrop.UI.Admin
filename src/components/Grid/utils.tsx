@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Tooltip } from '@mui/material';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import moment from 'moment';
@@ -68,11 +69,17 @@ export const handleRenderCellDate = (params: GridRenderCellParams) => {
 };
 
 export const handleRenderChips = (params: GridRenderCellParams) => {
+  const navigate = useNavigate();
+
   return (
     <StyledChipWrapper>
-      {params?.value.map((val: ICategories) => (
-        <Chips key={val.id} label={val.name} />
-      ))}
+      {params?.row?.categories?.map((val: ICategories, index: number) => {
+        const handleChipClick = () => {
+          navigate(`categories/${val.id}`, { replace: false, state: { rowData: val } });
+        };
+
+        return <Chips key={`${val.id}-${params?.id}-${index}`} label={val.name} onChipClick={handleChipClick} />;
+      })}
     </StyledChipWrapper>
   );
 };

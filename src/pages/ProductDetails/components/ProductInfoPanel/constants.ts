@@ -29,17 +29,11 @@ export const productTitles = [
   }
 ];
 
-export const categoryChips = [
-  { id: 1, name: 'Dairy' },
-  { id: 2, name: 'Milk' },
-  { id: 3, name: 'Fullcream Milk' },
-];
-
 export const attributesChips = [
-  { id: 1, name: 'Organic' },
-  { id: 2, name: 'Reduced fat' },
-  { id: 3, name: 'Australian made' },
-  { id: 4, name: 'Lite' },
+  { id: '1', name: 'Organic' },
+  { id: '2', name: 'Reduced fat' },
+  { id: '3', name: 'Australian made' },
+  { id: '4', name: 'Lite' },
 ];
 
 export const productTestData = [

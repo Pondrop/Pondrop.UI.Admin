@@ -28,10 +28,13 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const { category_id } = useParams();
 
   // API values
-  const { data, isFetching } = useGetCategoryInfoQuery({ categoryId: category_id ?? '' }, { skip: !!location.state });
+  const { data, isFetching } = useGetCategoryInfoQuery(
+    { categoryId: category_id ?? String((location.state as IState)?.rowData?.id) ?? '' },
+    { skip: !!(location.state as IState)?.rowData?.['categoryName'] },
+  );
 
   const state = location?.state as IState;
-  const rowData = state?.rowData ?? data?.value[0];
+  const rowData = state?.rowData?.['categoryName'] ? state?.rowData : data?.value[0];
   const isLoading = state?.rowData ? false : isFetching;
 
   // Handlers
