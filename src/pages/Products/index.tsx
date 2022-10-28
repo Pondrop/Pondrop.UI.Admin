@@ -98,6 +98,13 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setProductsSelectedCategories([]));
+    dispatch(
+      setProductsFilter({
+        columnField: '',
+        value: [],
+        operatorValue: 'isAnyOf',
+      }),
+    );
   }, [selectedParent]);
 
   // Handlers
@@ -150,15 +157,15 @@ const Products: FunctionComponent = (): JSX.Element => {
 
     if (currColumn === 'categories') {
       dispatch(setProductsSelectedCategories(combinedValue));
-    } else {
-      dispatch(
-        setProductsFilter({
-          columnField: currColumn,
-          value: combinedValue,
-          operatorValue: 'isAnyOf',
-        }),
-      );
     }
+
+    dispatch(
+      setProductsFilter({
+        columnField: currColumn,
+        value: combinedValue,
+        operatorValue: 'isAnyOf',
+      }),
+    );
   };
 
   const handleOnRowClick = (params: GridRowParams) => {
@@ -208,7 +215,7 @@ const Products: FunctionComponent = (): JSX.Element => {
           <Grid
             data={gridData}
             columns={productColumns}
-            id="view-products-grid"
+            id={`view-products-grid-${selectedParent}`}
             isFetching={isFetching}
             onFilterModelChange={onFilterModelChange}
             filterItem={productsFilterItem}

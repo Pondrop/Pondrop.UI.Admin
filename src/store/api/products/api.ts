@@ -24,7 +24,7 @@ export const productsApi = createApi({
         if (parentCategory) {
           filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
         }
-        if (Array.isArray(filterItem.value) && filterItem.value.length > 0) {
+        if (Array.isArray(filterItem.value) && filterItem.value.length > 0 && !parentCategory) {
           filterItem.value.forEach((filter, index) => {
             if (index === 0 && parentCategory) filterQuery = filterQuery.concat(' and ');
             if (index !== 0) filterQuery = filterQuery.concat(' or ');

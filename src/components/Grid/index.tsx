@@ -67,7 +67,7 @@ const Grid: FunctionComponent<IGridProps> = ({
         />
       );
     },
-    [searchValue, isMenuLoading, localFilter],
+    [searchValue, isMenuLoading, localFilter, id],
   );
 
   const renderEmptyState = () => {
