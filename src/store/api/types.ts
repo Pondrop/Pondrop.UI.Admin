@@ -37,6 +37,7 @@ export interface IGridState {
   searchValue?: string;
   sortValue: ISortItem;
   selectedIds?: string[] | number[];
+  selectedCategories?: string[];
 }
 
 export interface ICategories {

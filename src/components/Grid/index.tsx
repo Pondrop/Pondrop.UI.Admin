@@ -123,7 +123,6 @@ const Grid: FunctionComponent<IGridProps> = ({
       sortingMode="server"
       onSortModelChange={onSortModelChange}
       onRowClick={onRowClick}
-      disableColumnMenu={!!!gridData?.length}
       withBorder={withBorder}
       hasClickEvent={!!onRowClick}
       onMenuOpen={handleMenuOpen}

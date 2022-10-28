@@ -6,5 +6,6 @@ export const productInitialState: IGridState = {
   sortValue: {
     field: 'name',
     sort: 'asc'
-  }
+  },
+  selectedCategories: []
 };
