@@ -13,17 +13,18 @@ export const productsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number, parentCategory?: string }>({
+    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number, parentCategory?: string, selectedCategories?: string[] }>({
       query: (arg) => {
-        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10, parentCategory } = arg;
+        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10, parentCategory, selectedCategories = [] } = arg;
 
         let filterQuery = '';
         let sortQuery = '';
+        let searchQuery = searchString ? `${encodeURIComponent(searchString)}*` : '';
 
         if (parentCategory) {
           filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
         }
-        if (Array.isArray(filterItem.value) && filterItem.value.length > 0) {
+        if (Array.isArray(filterItem.value) && filterItem.value.length > 0 && !parentCategory) {
           filterItem.value.forEach((filter, index) => {
             if (index === 0 && parentCategory) filterQuery = filterQuery.concat(' and ');
             if (index !== 0) filterQuery = filterQuery.concat(' or ');
@@ -33,8 +34,18 @@ export const productsApi = createApi({
 
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 
+        if (selectedCategories?.length > 0) {
+          if (searchString) searchQuery = searchQuery.concat(' ');
+          searchQuery = searchQuery.concat('categoryNames:(');
+          selectedCategories.forEach((categ, index) => {
+            searchQuery = searchQuery.concat(`"${categ}"`);
+            if (index !== selectedCategories?.length - 1) searchQuery = searchQuery.concat(' OR ');
+          });
+          searchQuery = searchQuery.concat(')');
+        }
+
         return {
-          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
+          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview${searchQuery && `&search=${searchQuery}`}${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}&searchMode=all&queryType=full`,
           method: 'GET',
         };
       },
