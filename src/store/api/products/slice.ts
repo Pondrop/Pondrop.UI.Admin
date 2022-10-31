@@ -11,6 +11,6 @@ export const productsSlice = createSlice({
 
 export const selectProducts = (state: RootState) => state.products;
 
-export const { setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSortValue } = productsSlice.actions;
+export const { setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue } = productsSlice.actions;
 
 export default productsSlice.reducer;

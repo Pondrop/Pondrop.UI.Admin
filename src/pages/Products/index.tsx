@@ -12,10 +12,9 @@ import CategoryList from './components/CategoryList';
 
 // Other variables
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+import { IFacetValue, IValue } from 'store/api/types';
 import { useGetCategoriesUnderParentCategoryQuery } from 'store/api/categories/api';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
-import { productInitialState } from 'store/api/products/initialState';
 import {
   selectProducts,
   setProductsFilter,
@@ -39,13 +38,18 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   // States
   const [gridData, setGridData] = useState<IValue[]>([]);
-  const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(productInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
-  const [selectedParent, setSelectedParent] = useState<string>('');
+  const [page, setPage] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '', selectedCategories = [], sortValue } = useAppSelector(selectProducts);
+  const {
+    filterItem,
+    searchValue = '',
+    selectedCategories = [],
+    selectedParent,
+    sortValue,
+  } = useAppSelector(selectProducts);
   const { data, isFetching } = useGetProductsQuery({
     searchString: searchValue,
     sortValue,
@@ -83,10 +87,6 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setProductsFilterItem(filterItem);
-  }, [filterItem]);
-
-  useEffect(() => {
     if (searchValue !== '' || selectedParent !== '') {
       setRowCount(data?.['@odata.count'] ?? 0);
       setGridData(data?.value ?? []);
@@ -95,17 +95,6 @@ const Products: FunctionComponent = (): JSX.Element => {
       setRowCount(0);
     }
   }, [data]);
-
-  useEffect(() => {
-    dispatch(setProductsSelectedCategories([]));
-    dispatch(
-      setProductsFilter({
-        columnField: '',
-        value: [],
-        operatorValue: 'isAnyOf',
-      }),
-    );
-  }, [selectedParent]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -141,6 +130,7 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const onPageChange = (page: number) => {
     setPageSkip(page * pageSize);
+    setPage(page);
   };
 
   const onPageSizeChange = (pageSize: number) => {
@@ -159,6 +149,8 @@ const Products: FunctionComponent = (): JSX.Element => {
       dispatch(setProductsSelectedCategories(combinedValue));
     }
 
+    setPageSkip(0);
+    setPage(0);
     dispatch(
       setProductsFilter({
         columnField: currColumn,
@@ -176,8 +168,17 @@ const Products: FunctionComponent = (): JSX.Element => {
     navigate('categories', { replace: false });
   };
 
-  const getSelectedParent = (category: IValue) => {
-    setSelectedParent(category?.id as string);
+  const handleParentCategoryChange = () => {
+    setPageSkip(0);
+    setPage(0);
+    dispatch(setProductsSelectedCategories([]));
+    dispatch(
+      setProductsFilter({
+        columnField: '',
+        value: [],
+        operatorValue: 'isAnyOf',
+      }),
+    );
   };
 
   return (
@@ -210,7 +211,10 @@ const Products: FunctionComponent = (): JSX.Element => {
         </RowAlignWrapper>
       </SpaceBetweenDiv>
       <RowAlignWrapper>
-        <CategoryList onManageCategoriesClick={handleOnMangeCategories} onRowClick={getSelectedParent} />
+        <CategoryList
+          onManageCategoriesClick={handleOnMangeCategories}
+          onParentCategoryChange={handleParentCategoryChange}
+        />
         <div style={{ height: 'fit-content', width: 'calc(100vw - 617px)' }}>
           <Grid
             data={gridData}
@@ -218,7 +222,7 @@ const Products: FunctionComponent = (): JSX.Element => {
             id={`view-products-grid-${selectedParent}`}
             isFetching={isFetching}
             onFilterModelChange={onFilterModelChange}
-            filterItem={productsFilterItem}
+            filterItem={filterItem}
             handleOnFilterClick={handleOnFilterClick}
             rowCount={rowCount}
             onPageChange={onPageChange}
@@ -228,6 +232,7 @@ const Products: FunctionComponent = (): JSX.Element => {
             initialState={initialGridState}
             onRowClick={handleOnRowClick}
             isMenuLoading={isFilterOptionsFetching || isCategoryFetching}
+            page={page}
           />
         </div>
       </RowAlignWrapper>
