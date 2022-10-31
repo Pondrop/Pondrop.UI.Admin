@@ -28,4 +28,5 @@ export interface IGridProps {
   onSelectionModelChange?: (selectionModel: GridSelectionModel) => void;
   selectionModel?: GridInputSelectionModel;
   hideFooterSelectedRowCount?: boolean;
+  page?: number;
 }

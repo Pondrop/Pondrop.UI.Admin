@@ -42,6 +42,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem>(productInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
   const [selectedParent, setSelectedParent] = useState<string>('');
 
   const dispatch = useAppDispatch();
@@ -97,6 +98,8 @@ const Products: FunctionComponent = (): JSX.Element => {
   }, [data]);
 
   useEffect(() => {
+    setPageSkip(0);
+    setPage(0);
     dispatch(setProductsSelectedCategories([]));
     dispatch(
       setProductsFilter({
@@ -141,6 +144,7 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const onPageChange = (page: number) => {
     setPageSkip(page * pageSize);
+    setPage(page);
   };
 
   const onPageSizeChange = (pageSize: number) => {
@@ -228,6 +232,7 @@ const Products: FunctionComponent = (): JSX.Element => {
             initialState={initialGridState}
             onRowClick={handleOnRowClick}
             isMenuLoading={isFilterOptionsFetching || isCategoryFetching}
+            page={page}
           />
         </div>
       </RowAlignWrapper>
