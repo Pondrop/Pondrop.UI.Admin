@@ -3,16 +3,19 @@ import { CircularProgress } from '@mui/material';
 
 import CustomEmptyState from 'components/EmptyState';
 import { CircularLoaderWrapper, SpaceBetweenDiv } from 'pages/styles';
+import { useAppDispatch, useAppSelector } from 'store';
 import { useGetParentCategoriesQuery } from 'store/api/products/api';
+import { selectProducts, setProductsSelectedParent } from 'store/api/products/slice';
 import { IValue } from 'store/api/types';
 import { BtnWrapper, DivWrapper, ManageCategoriesBtn, StyledList, StyledListItemButton } from './styles';
 import { ICategoryListProps } from './types';
 
-const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProps) => {
+const CategoryList = ({ onManageCategoriesClick, onParentCategoryChange }: ICategoryListProps) => {
+  const dispatch = useAppDispatch();
+  const { selectedParent } = useAppSelector(selectProducts);
+
   // API call
   const { data, isFetching } = useGetParentCategoriesQuery();
-
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [parentCategoryData, setParentCategoryData] = useState<IValue[]>(data ?? []);
 
   useEffect(() => {
@@ -26,8 +29,8 @@ const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProp
   }, [data]);
 
   const handleCategoryClick = (category: IValue) => () => {
-    setSelectedCategory(category?.id as string);
-    if (typeof onRowClick === 'function') onRowClick(category);
+    dispatch(setProductsSelectedParent(String(category?.id)));
+    if (typeof onParentCategoryChange === 'function') onParentCategoryChange();
   };
 
   const renderLoader = () => (
@@ -45,7 +48,7 @@ const CategoryList = ({ onManageCategoriesClick, onRowClick }: ICategoryListProp
     return parentCategoryData?.map((category) => (
       <StyledListItemButton
         key={category.id as string}
-        selected={selectedCategory === category.id}
+        selected={selectedParent === category.id}
         onClick={handleCategoryClick(category)}
       >
         <SpaceBetweenDiv withmargin={false} style={{ width: '100%' }}>

@@ -40,6 +40,10 @@ export interface IGridState {
   selectedCategories?: string[];
 }
 
+export interface IProductState extends IGridState {
+  selectedParent: string;
+}
+
 export interface ICategories {
   id: string;
   name: string;

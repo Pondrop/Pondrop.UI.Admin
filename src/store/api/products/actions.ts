@@ -1,8 +1,8 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { IFilterItem, IGridState, ISortItem } from "../types";
+import { IFilterItem, IProductState, ISortItem } from "../types";
 
-const setProductsFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
+const setProductsFilter = (state: IProductState, action: PayloadAction<IFilterItem>) => {
   return {
     ...state,
     filterItem: {
@@ -13,14 +13,14 @@ const setProductsFilter = (state: IGridState, action: PayloadAction<IFilterItem>
   };
 };
 
-const setProductsSearchValue = (state: IGridState, action: PayloadAction<string>) => {
+const setProductsSearchValue = (state: IProductState, action: PayloadAction<string>) => {
   return {
     ...state,
     searchValue: action.payload
   };
 };
 
-const setProductsSortValue = (state: IGridState, action: PayloadAction<ISortItem>) => {
+const setProductsSortValue = (state: IProductState, action: PayloadAction<ISortItem>) => {
   return {
     ...state,
     sortValue: {
@@ -30,18 +30,25 @@ const setProductsSortValue = (state: IGridState, action: PayloadAction<ISortItem
   };
 };
 
-const setProductsSelectedIds = (state: IGridState, action: PayloadAction<string[]>) => {
+const setProductsSelectedIds = (state: IProductState, action: PayloadAction<string[]>) => {
   return {
     ...state,
     selectedIds: action.payload
   };
 };
 
-const setProductsSelectedCategories = (state: IGridState, action: PayloadAction<string[]>) => {
+const setProductsSelectedCategories = (state: IProductState, action: PayloadAction<string[]>) => {
   return {
     ...state,
     selectedCategories: action.payload
   };
 };
 
-export const actions = { setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSortValue };
+const setProductsSelectedParent = (state: IProductState, action: PayloadAction<string>) => {
+  return {
+    ...state,
+    selectedParent: action.payload
+  };
+};
+
+export const actions = { setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue };
