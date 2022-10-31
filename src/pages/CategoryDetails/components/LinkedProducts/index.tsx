@@ -40,6 +40,7 @@ const LinkedProducts = ({
     prevPageItems: pageSkip,
     pageSize,
     selectedCategories,
+    parentCategory,
   });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
