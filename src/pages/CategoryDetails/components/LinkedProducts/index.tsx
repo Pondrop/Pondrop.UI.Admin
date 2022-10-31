@@ -3,22 +3,33 @@ import { Info, PlaylistAdd } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
+// Components
 import Grid from 'components/Grid';
-import { productColumns } from 'components/Grid/constants';
+import { linkedProductsColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+
+// Other variables / values
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+import { useGetCategoriesUnderParentCategoryQuery } from 'store/api/categories/api';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
-import { IFacetValue, IFilterItem, ISortItem, IProductValue, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 import { tooltipContent } from '../CategoryInfoPanel/constants';
 
-const LinkedProducts = (): JSX.Element => {
+const LinkedProducts = ({
+  categoryName,
+  parentCategory,
+}: {
+  categoryName: string;
+  parentCategory: string;
+}): JSX.Element => {
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [searchVal, setSearchVal] = useState<string>('');
   const [filterVal, setFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
   const [sortVal, setSortVal] = useState<ISortItem>(productInitialState.sortValue);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([categoryName]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
@@ -28,16 +39,22 @@ const LinkedProducts = (): JSX.Element => {
     filterItem: filterVal,
     prevPageItems: pageSkip,
     pageSize,
+    selectedCategories,
   });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
-    { searchString: searchVal },
+    { searchString: searchVal, parentCategory },
     { skip: !gridData.length },
   );
+
+  const { data: categoryData, isFetching: isCategoryFetching } = useGetCategoriesUnderParentCategoryQuery({
+    parentCategory,
+  });
 
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
     barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
+    categories: categoryData?.['@search.facets']?.categoryName,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
@@ -47,17 +64,19 @@ const LinkedProducts = (): JSX.Element => {
     sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
 
+  // Use Effects
   useEffect(() => {
     setRowCount(data?.['@odata.count'] ?? 0);
     setGridData(data?.value ?? []);
   }, [data]);
 
+  useEffect(() => {
+    setSelectedCategories([categoryName]);
+  }, [categoryName]);
+
+  // Handlers
   const handleSearchDispatch = (searchValue: string) => {
     setSearchVal(searchValue);
-    if (searchValue === '') {
-      setGridData([]);
-      setRowCount(0);
-    }
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
@@ -76,6 +95,8 @@ const LinkedProducts = (): JSX.Element => {
       filters.field === currColumn && Array.isArray(filters.value)
         ? handleFilterStateChange(value, filters.value)
         : [value];
+
+    if (currColumn === 'categories') setSelectedCategories([categoryName, ...combinedValue]);
 
     setFilterVal({
       columnField: currColumn,
@@ -132,7 +153,7 @@ const LinkedProducts = (): JSX.Element => {
       </SpaceBetweenDiv>
       <Grid
         data={gridData}
-        columns={productColumns}
+        columns={linkedProductsColumns}
         id="view-products-mini-grid"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
@@ -145,7 +166,7 @@ const LinkedProducts = (): JSX.Element => {
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
         withBorder={false}
-        isMenuLoading={isFilterOptionsFetching}
+        isMenuLoading={isFilterOptionsFetching || isCategoryFetching}
         withPadding={false}
         withCheckboxSelection={true}
       />

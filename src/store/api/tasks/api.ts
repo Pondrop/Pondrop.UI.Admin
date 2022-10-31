@@ -40,7 +40,7 @@ export const tasksApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/cosmosdb-index-submission/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}&$count=true&facet=taskType,count:0,sort:value&facet=submittedUtc,count:0,sort:value&facet=retailerName,count:0,sort:value&facet=storeName,count:0,sort:value`,
+          url: `/indexes/cosmosdb-index-submission/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*&$count=true&facet=taskType,count:0,sort:value&facet=submittedUtc,count:0,sort:value&facet=retailerName,count:0,sort:value&facet=storeName,count:0,sort:value`,
           method: 'GET',
         };
       },

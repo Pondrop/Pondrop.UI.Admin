@@ -10,7 +10,7 @@ import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import CategoryList from './components/CategoryList';
 
-// Other variables
+// Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IValue } from 'store/api/types';
 import { useGetCategoriesUnderParentCategoryQuery } from 'store/api/categories/api';

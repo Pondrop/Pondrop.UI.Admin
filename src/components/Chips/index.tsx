@@ -8,6 +8,7 @@ const Chips = ({ label, onChipClick }: IChipsProps) => {
     event.stopPropagation();
     if (typeof onChipClick === 'function') onChipClick();
   };
+
   return (
     <StyledChip
       className="chip-component"

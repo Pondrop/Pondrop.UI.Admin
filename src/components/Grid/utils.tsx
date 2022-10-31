@@ -68,7 +68,7 @@ export const handleRenderCellDate = (params: GridRenderCellParams) => {
   );
 };
 
-export const handleRenderChips = (params: GridRenderCellParams) => {
+export const handleRenderChips = (params: GridRenderCellParams, isClickable: boolean) => {
   const navigate = useNavigate();
 
   return (
@@ -78,7 +78,13 @@ export const handleRenderChips = (params: GridRenderCellParams) => {
           navigate(`categories/${val.id}`, { replace: false, state: { rowData: val } });
         };
 
-        return <Chips key={`${val.id}-${params?.id}-${index}`} label={val.name} onChipClick={handleChipClick} />;
+        return (
+          <Chips
+            key={`${val.id}-${params?.id}-${index}`}
+            label={val.name}
+            onChipClick={isClickable ? handleChipClick : undefined}
+          />
+        );
       })}
     </StyledChipWrapper>
   );
