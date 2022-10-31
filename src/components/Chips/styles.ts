@@ -7,13 +7,15 @@ export const StyledChip = styled(Chip)`
   font-weight: 400;
   width: fit-content;
 
-  &:hover {
-    background-color: rgba(201, 222, 243, 0.92);
-  }
+  ${({ clickable }) => clickable && `
+    &:hover {
+      background-color: rgba(201, 222, 243, 0.92);
+    }
 
-  &:active {
-    background-color: rgba(180, 200, 220, 0.8);
-  }
+    &:active {
+      background-color: rgba(180, 200, 220, 0.8);
+    }
+  `}
 
   & span {
     color: #000000 !important;

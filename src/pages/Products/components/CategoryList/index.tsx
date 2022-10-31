@@ -39,7 +39,6 @@ const CategoryList = ({ onManageCategoriesClick, onParentCategoryChange }: ICate
     </CircularLoaderWrapper>
   );
 
-  // Uncomment once CORS issue is resolved
   const generateData = () => {
     if (isFetching) return renderLoader();
     else if (parentCategoryData?.length === 0)

@@ -59,7 +59,10 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
       </RowAlignWrapper>
       <RowAlignWrapper className="right-margin">
         <StyledCard className="grid-card" width="100%" height="fit-content">
-          <LinkedProducts />
+          <LinkedProducts
+            categoryName={categoryInfo?.categoryName as string}
+            parentCategory={categoryInfo?.parentCategory as string}
+          />
         </StyledCard>
       </RowAlignWrapper>
     </StyledTabContent>
