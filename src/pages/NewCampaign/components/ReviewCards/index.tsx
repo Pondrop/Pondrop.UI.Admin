@@ -33,7 +33,7 @@ const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IRe
   const { selectedIds: selectedStoresIds } = useAppSelector(selectStores);
 
   const { data: categoryInfoData, isFetching } = useGetCategoryInfoQuery(
-    { categoryId: String(selectedCategoriesIds?.[0]) ?? '' },
+    { categoryField: 'id', categoryId: String(selectedCategoriesIds?.[0]) ?? '' },
     { skip: data?.template !== CATEGORY_FOCUS_ID },
   );
 

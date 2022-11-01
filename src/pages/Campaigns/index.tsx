@@ -1,4 +1,5 @@
 import { FunctionComponent, useState, useEffect } from 'react';
+import { Alert, Snackbar } from '@mui/material';
 import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
 
 import { campaignsColumns } from 'components/Grid/constants';
@@ -11,6 +12,7 @@ import {
   setCampaignsSearchValue,
   setCampaignsSortValue,
 } from 'store/api/campaigns/slice';
+import { useUpdateCampaignMutation } from 'store/api/tasks/api';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { initialState } from 'store/api/constants';
 import {
@@ -32,6 +34,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
   const [campaignFilterItem, setCampaignFilterItem] = useState<IFilterItem>(initialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   const { filterItem, searchValue = '', sortValue } = useAppSelector(selectCampaigns);
@@ -48,6 +51,10 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     { searchString: searchValue },
     { skip: !gridData.length },
   );
+
+  const [, { isSuccess: isUpdateCampaignSuccess, reset: resetUpdateCampaign }] = useUpdateCampaignMutation({
+    fixedCacheKey: 'new-campaign-mutation',
+  });
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -75,6 +82,10 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setRowCount(data?.['@odata.count'] ?? 0);
   }, [data]);
+
+  useEffect(() => {
+    setIsSnackbarOpen(isUpdateCampaignSuccess);
+  }, [isUpdateCampaignSuccess]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -141,6 +152,11 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     setIsModalOpen(false);
   };
 
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    resetUpdateCampaign();
+  };
+
   return (
     <MainContent paddingSide={92} paddingTop={16}>
       <RowAlignDiv>
@@ -187,11 +203,17 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
         isMenuLoading={isFilterOptionsFetching}
         searchValue={''}
       />
-      <CampaignDialog
-        isOpen={isModalOpen}
-        handleClose={handleModalClose}
-        // handleSubmit={handleCreateModalSubmit}
-      />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Campaign published successfully
+        </Alert>
+      </Snackbar>
+      <CampaignDialog isOpen={isModalOpen} handleClose={handleModalClose} />
     </MainContent>
   );
 };

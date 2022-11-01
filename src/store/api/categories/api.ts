@@ -36,11 +36,11 @@ export const categoriesApi = createApi({
         };
       },
     }),
-    getCategoryInfo: builder.query<IApiResponse, { categoryId: string }>({
+    getCategoryInfo: builder.query<IApiResponse, { categoryField: string, categoryId: string }>({
       query: (arg) => {
-        const { categoryId } = arg;
+        const { categoryField, categoryId } = arg;
         return {
-          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview${`&$filter=lowerLevelCategoryId eq '${categoryId}'`}`,
+          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview${`&$filter=${categoryField} eq '${categoryId}'`}`,
           method: 'GET',
         };
       },

@@ -29,7 +29,10 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
 
   // API values
   const { data, isFetching } = useGetCategoryInfoQuery(
-    { categoryId: category_id ?? String((location.state as IState)?.rowData?.id) ?? '' },
+    {
+      categoryField: 'lowerLevelCategoryId',
+      categoryId: category_id ?? String((location.state as IState)?.rowData?.id) ?? '',
+    },
     { skip: !!(location.state as IState)?.rowData?.['categoryName'] },
   );
 
