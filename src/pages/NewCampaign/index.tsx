@@ -231,7 +231,8 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
           </StyledCategoryBtn>
         </SpaceBetweenDiv>
       );
-    } else
+    } else {
+      const isPublishDisabled = requestData?.requiredSubmissions === 0;
       return (
         <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px 32px' }}>
           <StyleOutlinedBtn
@@ -249,11 +250,13 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
             disableElevation
             height={40}
             onClick={handlePublishCampaign}
+            disabled={isPublishDisabled}
           >
             {isUpdateCampaignLoading && isPublish ? renderLoader(34) : 'Publish'}
           </StyledCategoryBtn>
         </SpaceBetweenDiv>
       );
+    }
   };
 
   const getTabLabel = () => {
