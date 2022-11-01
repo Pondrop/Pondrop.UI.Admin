@@ -33,6 +33,7 @@ import { CircleDiv, StyledBox, StyledSteps, TabLabelTypography } from './styles'
 const NewCampaign: FunctionComponent = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [requestData, setRequestData] = useState<IUpdateCampaignRequest>(newCampaignInitialState);
+  const [isPublish, setIsPublish] = useState<boolean>(false);
 
   // React router dom values
   const location = useLocation();
@@ -48,7 +49,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   const [
     updateCampaign,
     { isSuccess: isUpdateCampaignSuccess, reset: resetUpdateCampaign, isLoading: isUpdateCampaignLoading },
-  ] = useUpdateCampaignMutation();
+  ] = useUpdateCampaignMutation({ fixedCacheKey: 'new-campaign-mutation' });
 
   // Handlers
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
@@ -109,8 +110,25 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     updateCampaign(requestBody);
   };
 
+  const handlePublishCampaign = () => {
+    const requestBody = {
+      ...requestData,
+      campaignStatus: 'live',
+    };
+
+    setIsPublish(true);
+    updateCampaign(requestBody);
+  };
+
+  const handleBackButton = () => {
+    setCurrentStep((prevState) => prevState - 1);
+  };
+
   useEffect(() => {
-    resetUpdateCampaign();
+    if (isUpdateCampaignSuccess) {
+      if (isPublish) navigate(-1);
+      else resetUpdateCampaign();
+    }
   }, [isUpdateCampaignSuccess]);
 
   useEffect(() => {
@@ -123,10 +141,6 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
       campaignEndDate: null,
     }));
   }, []);
-
-  const handleBackButton = () => {
-    setCurrentStep((prevState) => prevState - 1);
-  };
 
   const getStepType = () => {
     if (currentStep === 0) return state?.template === CATEGORY_FOCUS_ID ? 'category' : 'product';
@@ -229,8 +243,14 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
           >
             Back
           </StyleOutlinedBtn>
-          <StyledCategoryBtn data-testid="step-3-publish-btn" variant="contained" disableElevation height={40}>
-            Publish
+          <StyledCategoryBtn
+            data-testid="step-3-publish-btn"
+            variant="contained"
+            disableElevation
+            height={40}
+            onClick={handlePublishCampaign}
+          >
+            {isUpdateCampaignLoading && isPublish ? renderLoader(34) : 'Publish'}
           </StyledCategoryBtn>
         </SpaceBetweenDiv>
       );
