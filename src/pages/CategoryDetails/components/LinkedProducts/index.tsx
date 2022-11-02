@@ -12,7 +12,6 @@ import SearchField from 'components/SearchField';
 
 // Other variables / values
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
-import { useGetCategoriesUnderParentCategoryQuery } from 'store/api/categories/api';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
@@ -29,7 +28,7 @@ const LinkedProducts = ({
   const [searchVal, setSearchVal] = useState<string>('');
   const [filterVal, setFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
   const [sortVal, setSortVal] = useState<ISortItem>(productInitialState.sortValue);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([categoryName]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
@@ -41,21 +40,18 @@ const LinkedProducts = ({
     pageSize,
     selectedCategories,
     parentCategory,
+    baseCategory: categoryName,
   });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
-    { searchString: searchVal, parentCategory },
+    { searchString: searchVal, parentCategory, selectedCategory: categoryName },
     { skip: !gridData.length },
   );
-
-  const { data: categoryData, isFetching: isCategoryFetching } = useGetCategoriesUnderParentCategoryQuery({
-    parentCategory,
-  });
 
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
     barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
-    categories: categoryData?.['@search.facets']?.categoryName,
+    categories: filterOptionsData?.['@search.facets']?.['categories/name'],
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
@@ -72,7 +68,7 @@ const LinkedProducts = ({
   }, [data]);
 
   useEffect(() => {
-    setSelectedCategories([categoryName]);
+    setSelectedCategories([]);
   }, [categoryName]);
 
   // Handlers
@@ -97,7 +93,7 @@ const LinkedProducts = ({
         ? handleFilterStateChange(value, filters.value)
         : [value];
 
-    if (currColumn === 'categories') setSelectedCategories([categoryName, ...combinedValue]);
+    if (currColumn === 'categories') setSelectedCategories([...combinedValue]);
 
     setFilterVal({
       columnField: currColumn,
@@ -167,7 +163,7 @@ const LinkedProducts = ({
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
         withBorder={false}
-        isMenuLoading={isFilterOptionsFetching || isCategoryFetching}
+        isMenuLoading={isFilterOptionsFetching}
         withPadding={false}
         withCheckboxSelection={true}
       />

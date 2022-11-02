@@ -23,7 +23,7 @@ export const campaignStoreColumns: GridColDef[] = [
 export const productColumns: GridColDef[] = [
   { field: 'name', headerName: 'Product name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'barcodeNumber', headerName: 'GTIN', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
-  { field: 'categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: (params) => handleRenderChips(params, true) },
+  { field: 'categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: (params) => handleRenderChips(params, true), sortable: false },
 ];
 
 export const categoriesColumns: GridColDef[] = [
@@ -34,7 +34,7 @@ export const categoriesColumns: GridColDef[] = [
 export const linkedProductsColumns: GridColDef[] = [
   { field: 'name', headerName: 'Product name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'barcodeNumber', headerName: 'GTIN', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
-  { field: 'categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: (params) => handleRenderChips(params, false) },
+  { field: 'categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: (params) => handleRenderChips(params, false), sortable: false },
 ];
 
 export const tasksColumns: GridColDef[] = [

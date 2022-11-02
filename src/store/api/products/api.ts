@@ -13,17 +13,30 @@ export const productsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number, parentCategory?: string, selectedCategories?: string[] }>({
+    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number, parentCategory?: string, selectedCategories?: string[], baseCategory?: string }>({
       query: (arg) => {
-        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10, parentCategory, selectedCategories = [] } = arg;
+        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10, parentCategory, selectedCategories = [], baseCategory } = arg;
 
         let filterQuery = '';
         let sortQuery = '';
-        let searchQuery = searchString ? `${encodeURIComponent(searchString)}*` : '';
 
         if (parentCategory) {
           filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
         }
+
+        if (baseCategory) {
+          if (parentCategory) filterQuery = filterQuery.concat(' and ');
+          filterQuery = filterQuery.concat(`categories/any(t: t/name eq '${baseCategory}')`);
+        }
+
+        if (selectedCategories?.length > 0) {
+          if (parentCategory || baseCategory) filterQuery = filterQuery.concat(' and ');
+          selectedCategories.forEach((categ, index) => {
+            filterQuery = filterQuery.concat(`categories/any(t: t/name eq '${categ}')`);
+            if (index !== selectedCategories?.length - 1) filterQuery = filterQuery.concat(' or ');
+          });
+        }
+
         if (Array.isArray(filterItem.value) && filterItem.value.length > 0 && !parentCategory) {
           filterItem.value.forEach((filter, index) => {
             if (index === 0 && parentCategory) filterQuery = filterQuery.concat(' and ');
@@ -34,18 +47,8 @@ export const productsApi = createApi({
 
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 
-        if (selectedCategories?.length > 0) {
-          if (searchString) searchQuery = searchQuery.concat(' ');
-          searchQuery = searchQuery.concat('categoryNames:(');
-          selectedCategories.forEach((categ, index) => {
-            searchQuery = searchQuery.concat(`"${categ}"`);
-            if (index !== selectedCategories?.length - 1) searchQuery = searchQuery.concat(' OR ');
-          });
-          searchQuery = searchQuery.concat(')');
-        }
-
         return {
-          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview${searchQuery && `&search=${searchQuery}`}${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}&searchMode=all&queryType=full`,
+          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}&searchMode=all&queryType=full`,
           method: 'GET',
         };
       },
@@ -59,18 +62,19 @@ export const productsApi = createApi({
         };
       },
     }),
-    getAllProductFilter: builder.query<IApiResponse, { searchString: string, parentCategory?: string }>({
+    getAllProductFilter: builder.query<IApiResponse, { searchString: string, parentCategory?: string, selectedCategory?: string }>({
       query: (arg) => {
-        const { searchString, parentCategory } = arg;
+        const { searchString, parentCategory, selectedCategory } = arg;
 
         let filterQuery = '';
 
         if (parentCategory) {
           filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
+          if (selectedCategory) filterQuery = filterQuery.concat(` and categories/any(t: t/name eq '${selectedCategory}')`);
         }
 
         return {
-          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&facet=name,count:0,sort:value&facet=barcodeNumber,count:0,sort:value`,
+          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&facet=name,count:0,sort:value&facet=barcodeNumber,count:0,sort:value&facet=categories/name,count:0,sort:value`,
           method: 'GET',
         };
       },

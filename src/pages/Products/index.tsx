@@ -13,7 +13,6 @@ import CategoryList from './components/CategoryList';
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IValue } from 'store/api/types';
-import { useGetCategoriesUnderParentCategoryQuery } from 'store/api/categories/api';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import {
   selectProducts,
@@ -65,17 +64,10 @@ const Products: FunctionComponent = (): JSX.Element => {
     { skip: !gridData.length },
   );
 
-  const { data: categoryData, isFetching: isCategoryFetching } = useGetCategoriesUnderParentCategoryQuery(
-    {
-      parentCategory: selectedParent,
-    },
-    { skip: selectedParent === '' },
-  );
-
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
     barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
-    categories: categoryData?.['@search.facets']?.categoryName,
+    categories: filterOptionsData?.['@search.facets']?.['categories/name'],
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
@@ -231,7 +223,7 @@ const Products: FunctionComponent = (): JSX.Element => {
             onSortModelChange={handleSortModelChange}
             initialState={initialGridState}
             onRowClick={handleOnRowClick}
-            isMenuLoading={isFilterOptionsFetching || isCategoryFetching}
+            isMenuLoading={isFilterOptionsFetching}
             page={page}
           />
         </div>
