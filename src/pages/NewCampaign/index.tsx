@@ -114,6 +114,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     const requestBody = {
       ...requestData,
       campaignStatus: 'live',
+      campaignPublishedDate: String(moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ')),
     };
 
     setIsPublish(true);

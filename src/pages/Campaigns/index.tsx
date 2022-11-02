@@ -1,6 +1,6 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { Alert, Snackbar } from '@mui/material';
-import { GridFilterModel, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import { campaignsColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
@@ -72,6 +72,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
 
   const initialGridState = {
     pagination: { pageSize: 20 },
+    sorting: { sortModel: [{ field: 'campaignPublishedDate', sort: 'desc' as GridSortDirection }] },
   };
 
   // Use Effects
