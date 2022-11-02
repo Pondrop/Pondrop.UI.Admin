@@ -62,15 +62,6 @@ export const categoriesApi = createApi({
         };
       },
     }),
-    getCategoriesUnderParentCategory: builder.query<IApiResponse, { parentCategory: string }>({
-      query: (arg) => {
-        const { parentCategory } = arg;
-        return {
-          url: `/indexes/cosmosdb-index-categorygroup/docs?api-version=2021-04-30-Preview&$count=true${`&$filter=higherLevelCategoryId eq '${parentCategory}'`}&facet=categoryName,count:0,sort:value`,
-          method: 'GET',
-        };
-      },
-    }),
   }),
 });
 
@@ -106,5 +97,5 @@ export const categoriesMicroService = createApi({
   }),
 });
 
-export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoriesUnderParentCategoryQuery, useGetCategoryInfoQuery, useGetParentCategoriesQuery } = categoriesApi;
+export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery, useGetParentCategoriesQuery } = categoriesApi;
 export const { useCreateCategoryMutation, useCreateCategoryGroupingMutation } = categoriesMicroService;
