@@ -5,7 +5,7 @@ export const campaignInitialState: IGridState = {
   ...initialState,
   sortValue: {
     field: 'campaignPublishedDate',
-    sort: 'asc'
+    sort: 'desc'
   }
 };
 
