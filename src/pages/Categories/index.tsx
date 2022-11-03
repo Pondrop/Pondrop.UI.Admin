@@ -219,7 +219,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {
         refetch();
-      }, 3000);
+      }, 5000);
     }
   }, [isRefreshFetching, isRefreshSuccess]);
 
