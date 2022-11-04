@@ -94,8 +94,16 @@ export const categoriesMicroService = createApi({
         };
       },
     }),
+    refreshCategories: builder.query<void, void>({
+      query: () => {
+        return {
+          url: `/CategoryGrouping/indexer/run`,
+          method: 'GET',
+        };
+      },
+    }),
   }),
 });
 
 export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery, useGetParentCategoriesQuery } = categoriesApi;
-export const { useCreateCategoryMutation, useCreateCategoryGroupingMutation } = categoriesMicroService;
+export const { useCreateCategoryMutation, useCreateCategoryGroupingMutation, useLazyRefreshCategoriesQuery } = categoriesMicroService;

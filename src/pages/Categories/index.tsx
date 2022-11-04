@@ -10,10 +10,12 @@ import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
+  categoriesApi,
   useCreateCategoryMutation,
   useCreateCategoryGroupingMutation,
   useGetAllCategoriesFilterQuery,
   useGetCategoriesQuery,
+  useLazyRefreshCategoriesQuery,
 } from 'store/api/categories/api';
 import { categoryInitialState } from 'store/api/categories/initialState';
 import {
@@ -23,7 +25,7 @@ import {
   setCategoriesSortValue,
 } from 'store/api/categories/slice';
 import { ICategory, ICategoryDialogData } from 'store/api/categories/types';
-import { IFacetValue, IFilterItem } from 'store/api/types';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -41,13 +43,14 @@ const Categories: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
+  const [gridData, setGridData] = useState<IValue[]>([]);
   const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(categoryInitialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
   const { filterItem, searchValue = '', sortValue } = useAppSelector(selectCategories);
-  const { data, isFetching } = useGetCategoriesQuery({
+  const { data, isFetching, refetch } = useGetCategoriesQuery({
     searchString: searchValue,
     sortValue,
     filterItem,
@@ -55,11 +58,13 @@ const Categories: FunctionComponent = (): JSX.Element => {
     pageSize,
   });
 
-  const gridData = data?.value ?? [];
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllCategoriesFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
   );
+
+  const [refreshCategories, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
+    useLazyRefreshCategoriesQuery();
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
@@ -103,6 +108,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   useEffect(() => {
     setRowCount(data?.['@odata.count'] ?? 0);
+    setGridData(data?.value ?? []);
   }, [data]);
 
   // Handlers
@@ -202,7 +208,17 @@ const Categories: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     handleCreateModalClose();
     setIsSnackbarOpen(isCreateCategGroupingSuccess);
+    if (isCreateCategGroupingSuccess) refreshCategories();
   }, [isCreateCategGroupingSuccess]);
+
+  useEffect(() => {
+    if (!isRefreshFetching && isRefreshSuccess) {
+      setTimeout(() => {
+        dispatch(categoriesApi.util.resetApiState());
+        refetch();
+      }, 5000);
+    }
+  }, [isRefreshFetching, isRefreshSuccess]);
 
   useEffect(() => {
     if (createCategError && 'data' in createCategError) setErrMsg(String(createCategError?.data));
@@ -244,7 +260,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
         </RowAlignWrapper>
       </RowAlignDiv>
       <Grid
-        data={data?.value}
+        data={gridData}
         columns={categoriesColumns}
         id="view-categories-grid"
         isFetching={isFetching}
