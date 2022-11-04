@@ -26,3 +26,9 @@ export const campaignTypeData = [
     name: 'Orchestration campaign'
   }
 ];
+
+export const initialModalData = {
+  name: '',
+  campaignType: '',
+  template: ''
+};

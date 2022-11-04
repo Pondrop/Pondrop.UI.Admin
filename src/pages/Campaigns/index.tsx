@@ -1,9 +1,11 @@
 import { FunctionComponent, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Alert, Snackbar } from '@mui/material';
 import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 import { campaignsColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
+import { CATEGORY_FOCUS_ID } from 'pages/types';
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllCampaignFilterQuery, useGetCampaignsQuery } from 'store/api/campaigns/api';
 import {
@@ -11,8 +13,17 @@ import {
   setCampaignsFilter,
   setCampaignsSearchValue,
   setCampaignsSortValue,
+  setDidCreateCampaign,
 } from 'store/api/campaigns/slice';
-import { submissionsMicroService, useLazyRefreshCampaignsQuery, useUpdateCampaignMutation } from 'store/api/tasks/api';
+import { setCategoriesSelectedIds } from 'store/api/categories/slice';
+import { setProductsSelectedIds } from 'store/api/products/slice';
+import { setStoresSelectedIds } from 'store/api/stores/slice';
+import {
+  submissionsMicroService,
+  useCreateCampaignMutation,
+  useLazyRefreshCampaignsQuery,
+  useUpdateCampaignMutation,
+} from 'store/api/tasks/api';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { initialState } from 'store/api/constants';
 import {
@@ -28,6 +39,8 @@ import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import CampaignDialog from './components/CampaignDialog';
+import { initialModalData } from './components/CampaignDialog/constants';
+import { ICreateCampaignModalData, IModalData } from './components/CampaignDialog/types';
 
 const Campaigns: FunctionComponent = (): JSX.Element => {
   // States
@@ -36,9 +49,11 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [newCampaignData, setNewCampaignData] = useState<IModalData>(initialModalData);
 
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectCampaigns);
+  const { didCreateCampaign, filterItem, searchValue = '', sortValue } = useAppSelector(selectCampaigns);
   const { data, isFetching, refetch } = useGetCampaignsQuery({
     searchString: searchValue,
     sortValue,
@@ -51,6 +66,16 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     { searchString: searchValue },
     { skip: !gridData.length },
   );
+
+  const [
+    createCampaign,
+    {
+      data: createCampaignResponse,
+      isSuccess: isCreateCampaignSuccess,
+      reset: resetCreateCampaign,
+      isLoading: isCreateCampaignLoading,
+    },
+  ] = useCreateCampaignMutation();
 
   const [, { isSuccess: isUpdateCampaignSuccess, reset: resetUpdateCampaign }] = useUpdateCampaignMutation({
     fixedCacheKey: 'new-campaign-mutation',
@@ -94,13 +119,30 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
   }, [isUpdateCampaignSuccess]);
 
   useEffect(() => {
-    if (!isRefreshFetching && isRefreshSuccess) {
+    if ((!isRefreshFetching && isRefreshSuccess) || didCreateCampaign) {
       setTimeout(() => {
         dispatch(submissionsMicroService.util.resetApiState());
         refetch();
+        dispatch(setDidCreateCampaign(false));
       }, 7000);
     }
   }, [isRefreshFetching, isRefreshSuccess]);
+
+  useEffect(() => {
+    if (isCreateCampaignSuccess) {
+      refreshCampaigns();
+      dispatch(setDidCreateCampaign(true));
+      if (newCampaignData?.template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
+      else dispatch(setProductsSelectedIds([]));
+      dispatch(setStoresSelectedIds([]));
+      resetCreateCampaign();
+
+      navigate('new', {
+        replace: false,
+        state: { ...newCampaignData, id: createCampaignResponse?.id },
+      });
+    }
+  }, [isCreateCampaignSuccess]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -167,9 +209,23 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     setIsModalOpen(false);
   };
 
+  const handleModalSubmit = (campaignModalData: ICreateCampaignModalData) => {
+    setNewCampaignData({
+      name: campaignModalData.name,
+      campaignType: campaignModalData.campaignType,
+      template: campaignModalData.selectedTemplateIds[0],
+    });
+    createCampaign({
+      ...campaignModalData,
+      campaignStatus: 'draft',
+      publicationlifecycleId: '1',
+    });
+  };
+
   const handleSnackbarClose = () => {
     setIsSnackbarOpen(false);
     resetUpdateCampaign();
+    dispatch(setDidCreateCampaign(false));
   };
 
   return (
@@ -228,7 +284,12 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
           Campaign published successfully
         </Alert>
       </Snackbar>
-      <CampaignDialog isOpen={isModalOpen} handleClose={handleModalClose} />
+      <CampaignDialog
+        isOpen={isModalOpen}
+        handleClose={handleModalClose}
+        handleSubmit={handleModalSubmit}
+        isCreateCampaignLoading={isCreateCampaignLoading}
+      />
     </MainContent>
   );
 };

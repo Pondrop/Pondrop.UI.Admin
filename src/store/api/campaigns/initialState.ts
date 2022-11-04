@@ -1,12 +1,17 @@
 import { initialState } from '../constants';
 import { IGridState } from "../types";
 
-export const campaignInitialState: IGridState = {
+export interface ICampaignState extends IGridState {
+  didCreateCampaign?: boolean;
+}
+
+export const campaignInitialState: ICampaignState = {
   ...initialState,
   sortValue: {
     field: 'campaignPublishedDate',
     sort: 'desc'
-  }
+  },
+  didCreateCampaign: false
 };
 
 export const newCampaignInitialState = {

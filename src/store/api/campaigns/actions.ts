@@ -1,8 +1,9 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { IFilterItem, IGridState, ISortItem } from "../types";
+import { ICampaignState } from "./initialState";
+import { IFilterItem, ISortItem } from "../types";
 
-const setCampaignsFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
+const setCampaignsFilter = (state: ICampaignState, action: PayloadAction<IFilterItem>) => {
   return {
     ...state,
     filterItem: {
@@ -13,14 +14,14 @@ const setCampaignsFilter = (state: IGridState, action: PayloadAction<IFilterItem
   };
 };
 
-const setCampaignsSearchValue = (state: IGridState, action: PayloadAction<string>) => {
+const setCampaignsSearchValue = (state: ICampaignState, action: PayloadAction<string>) => {
   return {
     ...state,
     searchValue: action.payload
   };
 };
 
-const setCampaignsSortValue = (state: IGridState, action: PayloadAction<ISortItem>) => {
+const setCampaignsSortValue = (state: ICampaignState, action: PayloadAction<ISortItem>) => {
   return {
     ...state,
     sortValue: {
@@ -30,4 +31,11 @@ const setCampaignsSortValue = (state: IGridState, action: PayloadAction<ISortIte
   };
 };
 
-export const actions = { setCampaignsFilter, setCampaignsSearchValue, setCampaignsSortValue };
+const setDidCreateCampaign = (state: ICampaignState, action: PayloadAction<boolean>) => {
+  return {
+    ...state,
+    didCreateCampaign: action.payload
+  };
+};
+
+export const actions = { setCampaignsFilter, setCampaignsSearchValue, setCampaignsSortValue, setDidCreateCampaign };
