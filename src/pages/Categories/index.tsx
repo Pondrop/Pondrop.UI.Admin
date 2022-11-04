@@ -208,16 +208,13 @@ const Categories: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     handleCreateModalClose();
     setIsSnackbarOpen(isCreateCategGroupingSuccess);
-    if (isCreateCategGroupingSuccess) {
-      refreshCategories();
-      dispatch(categoriesApi.util.resetApiState());
-      refetch();
-    }
+    if (isCreateCategGroupingSuccess) refreshCategories();
   }, [isCreateCategGroupingSuccess]);
 
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {
+        dispatch(categoriesApi.util.resetApiState());
         refetch();
       }, 5000);
     }
