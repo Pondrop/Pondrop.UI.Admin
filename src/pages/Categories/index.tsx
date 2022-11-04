@@ -216,7 +216,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
       setTimeout(() => {
         dispatch(categoriesApi.util.resetApiState());
         refetch();
-      }, 5000);
+      }, 7000);
     }
   }, [isRefreshFetching, isRefreshSuccess]);
 

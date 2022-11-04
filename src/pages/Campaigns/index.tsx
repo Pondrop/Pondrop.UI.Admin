@@ -12,8 +12,8 @@ import {
   setCampaignsSearchValue,
   setCampaignsSortValue,
 } from 'store/api/campaigns/slice';
-import { useUpdateCampaignMutation } from 'store/api/tasks/api';
-import { IFacetValue, IFilterItem } from 'store/api/types';
+import { submissionsMicroService, useLazyRefreshCampaignsQuery, useUpdateCampaignMutation } from 'store/api/tasks/api';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { initialState } from 'store/api/constants';
 import {
   CategoryBtnWrapper,
@@ -31,6 +31,7 @@ import CampaignDialog from './components/CampaignDialog';
 
 const Campaigns: FunctionComponent = (): JSX.Element => {
   // States
+  const [gridData, setGridData] = useState<IValue[]>([]);
   const [campaignFilterItem, setCampaignFilterItem] = useState<IFilterItem>(initialState.filterItem);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
@@ -38,7 +39,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const { filterItem, searchValue = '', sortValue } = useAppSelector(selectCampaigns);
-  const { data, isFetching } = useGetCampaignsQuery({
+  const { data, isFetching, refetch } = useGetCampaignsQuery({
     searchString: searchValue,
     sortValue,
     filterItem,
@@ -46,7 +47,6 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     pageSize,
   });
 
-  const gridData = data?.value ?? [];
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllCampaignFilterQuery(
     { searchString: searchValue },
     { skip: !gridData.length },
@@ -55,6 +55,9 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
   const [, { isSuccess: isUpdateCampaignSuccess, reset: resetUpdateCampaign }] = useUpdateCampaignMutation({
     fixedCacheKey: 'new-campaign-mutation',
   });
+
+  const [refreshCampaigns, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
+    useLazyRefreshCampaignsQuery();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -82,11 +85,22 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
 
   useEffect(() => {
     setRowCount(data?.['@odata.count'] ?? 0);
+    setGridData(data?.value ?? []);
   }, [data]);
 
   useEffect(() => {
     setIsSnackbarOpen(isUpdateCampaignSuccess);
+    if (isUpdateCampaignSuccess) refreshCampaigns();
   }, [isUpdateCampaignSuccess]);
+
+  useEffect(() => {
+    if (!isRefreshFetching && isRefreshSuccess) {
+      setTimeout(() => {
+        dispatch(submissionsMicroService.util.resetApiState());
+        refetch();
+      }, 7000);
+    }
+  }, [isRefreshFetching, isRefreshSuccess]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -188,7 +202,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
         </RowAlignWrapper>
       </RowAlignDiv>
       <Grid
-        data={data?.value}
+        data={gridData}
         columns={campaignsColumns}
         id="view-campaigns-grid"
         isFetching={isFetching}

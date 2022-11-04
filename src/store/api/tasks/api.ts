@@ -95,8 +95,16 @@ export const submissionsMicroService = createApi({
         };
       },
     }),
+    refreshCampaigns: builder.query<void, void>({
+      query: () => {
+        return {
+          url: `/Campaign/indexer/run`,
+          method: 'GET',
+        };
+      },
+    }),
   }),
 });
 
 export const { useGetAllTaskFilterQuery, useGetTasksQuery } = tasksApi;
-export const { useCreateCampaignMutation, useGetSubmissionInfoQuery, useGetSubmissionTemplatesQuery, useUpdateCampaignMutation } = submissionsMicroService;
+export const { useCreateCampaignMutation, useGetSubmissionInfoQuery, useGetSubmissionTemplatesQuery, useLazyRefreshCampaignsQuery, useUpdateCampaignMutation } = submissionsMicroService;
