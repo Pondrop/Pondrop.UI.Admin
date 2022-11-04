@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IValue } from 'store/api/types';
 import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import {
+  resetToInitialState,
   selectProducts,
   setProductsFilter,
   setProductsSearchValue,
@@ -163,14 +164,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   const handleParentCategoryChange = () => {
     setPageSkip(0);
     setPage(0);
-    dispatch(setProductsSelectedCategories([]));
-    dispatch(
-      setProductsFilter({
-        columnField: '',
-        value: [],
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(resetToInitialState());
   };
 
   return (

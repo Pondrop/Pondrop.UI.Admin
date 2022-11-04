@@ -37,7 +37,7 @@ export const productsApi = createApi({
           });
         }
 
-        if (Array.isArray(filterItem.value) && filterItem.value.length > 0 && !parentCategory) {
+        if (Array.isArray(filterItem.value) && filterItem.value.length > 0 && (!parentCategory || filterItem.columnField !== 'categories')) {
           filterItem.value.forEach((filter, index) => {
             if (index === 0 && parentCategory) filterQuery = filterQuery.concat(' and ');
             if (index !== 0) filterQuery = filterQuery.concat(' or ');
