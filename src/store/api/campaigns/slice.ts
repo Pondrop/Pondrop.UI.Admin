@@ -11,6 +11,6 @@ export const campaignsSlice = createSlice({
 
 export const selectCampaigns = (state: RootState) => state.campaigns;
 
-export const { setCampaignsFilter, setCampaignsSearchValue, setCampaignsSortValue } = campaignsSlice.actions;
+export const { setCampaignsFilter, setCampaignsSearchValue, setCampaignsSortValue, setDidCreateCampaign } = campaignsSlice.actions;
 
 export default campaignsSlice.reducer;

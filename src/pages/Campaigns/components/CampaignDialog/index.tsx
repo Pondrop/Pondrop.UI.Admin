@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   CircularProgress,
   DialogActions,
@@ -11,21 +10,18 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-import { useAppDispatch } from 'store';
-import { setCategoriesSelectedIds } from 'store/api/categories/slice';
-import { setProductsSelectedIds } from 'store/api/products/slice';
-import { setStoresSelectedIds } from 'store/api/stores/slice';
-import { useCreateCampaignMutation, useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
+import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
 import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { CATEGORY_FOCUS_ID } from 'pages/types';
 import { campaignTitles, campaignTypeData } from './constants';
 import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { INewCampaignProps } from './types';
 
-const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
+const CampaignDialog = ({
+  isOpen,
+  handleClose,
+  handleSubmit,
+  isCreateCampaignLoading,
+}: INewCampaignProps): JSX.Element => {
   // Refs and select component positions
   const typeSelectComponent = useRef<HTMLInputElement>(null);
   const templateSelectComponent = useRef<HTMLInputElement>(null);
@@ -42,16 +38,6 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   const [isTemplateSelectOpen, setIsTemplateSelectOpen] = useState<boolean>(false);
 
   const { data, isFetching } = useGetSubmissionTemplatesQuery();
-
-  const [
-    createCampaign,
-    {
-      data: createCampaignResponse,
-      isSuccess: isCreateCampaignSuccess,
-      reset: resetCreateCampaign,
-      isLoading: isCreateCampaignLoading,
-    },
-  ] = useCreateCampaignMutation();
 
   useEffect(() => {
     setTypePosition(
@@ -105,27 +91,12 @@ const CampaignDialog = ({ isOpen, handleClose }: INewCampaignProps): JSX.Element
   };
 
   const handleModalSubmit = () => {
-    createCampaign({
+    handleSubmit({
       name: campaignTitle,
       campaignType,
       selectedTemplateIds: [template],
-      campaignStatus: 'draft',
-      publicationlifecycleId: '1',
     });
   };
-
-  useEffect(() => {
-    if (isCreateCampaignSuccess) {
-      if (template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
-      else dispatch(setProductsSelectedIds([]));
-      dispatch(setStoresSelectedIds([]));
-      resetCreateCampaign();
-      navigate('new', {
-        replace: false,
-        state: { campaignTitle, campaignType, template, id: createCampaignResponse?.id },
-      });
-    }
-  }, [isCreateCampaignSuccess]);
 
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
