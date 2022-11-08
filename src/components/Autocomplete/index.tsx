@@ -1,16 +1,17 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { Autocomplete, InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
+import moment from 'moment';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 
 import { useAppDispatch } from 'store';
 import { categoriesApi, useGetCategoriesQuery } from 'store/api/categories/api';
 import { IValue } from 'store/api/types';
-import { StyledPopper, StyledTextField } from './styles';
+import { StyledPaper, StyledPopper, StyledTextField } from './styles';
 import { IAutocompleteProps } from './types';
 
-const TextAutocomplete = ({ onOptionSelect }: IAutocompleteProps) => {
+const TextAutocomplete = ({ onOptionSelect, isModalOpen }: IAutocompleteProps) => {
   const [options, setOptions] = useState<IValue[]>([]);
   const [selectedValue, setSelectedValue] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -31,6 +32,16 @@ const TextAutocomplete = ({ onOptionSelect }: IAutocompleteProps) => {
   useEffect(() => {
     if (searchValue.length < 3) setOptions([]);
   }, [searchValue]);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      // Reset search value, selected value, and api
+      // Selected value set to epoch moment so component rerenders and is set to default value
+      setSearchValue('');
+      setSelectedValue(String(moment().valueOf()));
+      dispatch(categoriesApi.util.resetApiState());
+    }
+  }, [isModalOpen]);
 
   const handleSearchValueChange = (e: SyntheticEvent, value: string) => {
     setSearchValue(value);
@@ -56,11 +67,12 @@ const TextAutocomplete = ({ onOptionSelect }: IAutocompleteProps) => {
           const parts = parse(String(option?.categoryName), matches);
 
           return (
-            <li {...props}>
+            <li style={{ height: '40px' }} {...props}>
               {parts.map((part, index) => (
                 <span
                   key={index}
                   style={{
+                    fontSize: '14px',
                     fontWeight: part.highlight ? 700 : 400,
                     backgroundColor: part.highlight ? '#fffb96' : 'transparent',
                     whiteSpace: 'pre',
@@ -98,9 +110,12 @@ const TextAutocomplete = ({ onOptionSelect }: IAutocompleteProps) => {
           <StyledPopper {...params} modifiers={[{ name: 'offset', options: { offset: [0, 6] } }]} />
         )}
         noOptionsText={
-          <i>{searchValue.length < 3 ? 'Please search with more than 3 characters' : 'No categories found'}</i>
+          <i style={{ fontSize: '14px' }}>
+            {searchValue.length < 3 ? 'Please search with more than 3 characters' : 'No categories found'}
+          </i>
         }
         popupIcon={null}
+        PaperComponent={(params) => <StyledPaper {...params} />}
       />
     </div>
   );

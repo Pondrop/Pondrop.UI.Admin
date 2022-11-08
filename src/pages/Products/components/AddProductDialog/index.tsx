@@ -19,7 +19,7 @@ const AddProductDialog = ({
   isLoading,
 }: IAddProductProps): JSX.Element => {
   const [productName, setProductName] = useState<string>('');
-  const [barcode, setBarcode] = useState<number>();
+  const [barcode, setBarcode] = useState<number | string>('');
   const [description, setDescription] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
   const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
@@ -27,7 +27,7 @@ const AddProductDialog = ({
   useEffect(() => {
     if (!isOpen) {
       setProductName('');
-      setBarcode(undefined);
+      setBarcode('');
       setDescription('');
       setCategories([]);
       setCategoryChips([]);
@@ -54,7 +54,7 @@ const AddProductDialog = ({
 
   const handleModalClose = () => {
     setProductName('');
-    setBarcode(undefined);
+    setBarcode('');
     setDescription('');
     setCategories([]);
     setCategoryChips([]);
@@ -120,6 +120,7 @@ const AddProductDialog = ({
             onChange={handleBarcodeOnChange}
             placeholder={productTitles[1].placeholder}
             sx={{ marginBottom: '12px' }}
+            type="number"
           />
         </div>
         <div>
@@ -142,7 +143,7 @@ const AddProductDialog = ({
           <div className="label-div">
             <span className="row-label">{productTitles[3].label}</span>
           </div>
-          <TextAutocomplete onOptionSelect={handleCategoryOnChange} />
+          <TextAutocomplete onOptionSelect={handleCategoryOnChange} isModalOpen={isOpen} />
         </div>
         {categories.length > 0 && (
           <div style={{ marginTop: '12px' }}>
