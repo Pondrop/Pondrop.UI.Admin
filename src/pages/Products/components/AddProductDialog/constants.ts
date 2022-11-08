@@ -19,4 +19,9 @@ export const productTitles = [
     label: 'Product categories',
     placeholder: 'Search'
   },
+  {
+    field: 'categoryChips',
+    label: 'Categories',
+    placeholder: 'categories'
+  },
 ];

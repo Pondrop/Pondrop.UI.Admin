@@ -26,9 +26,4 @@ export const StyledPopper = styled(Popper)`
   border: 1px solid rgba(114, 120, 126, 0.5);
   border-radius: 12px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-  margin: 6px 0 !important;
-
-  .highlight-text {
-    background-color: #fffb96;
-  }
 `;

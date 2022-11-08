@@ -3,7 +3,10 @@ import { CircularProgress, DialogActions, DialogContent, DialogTitle, IconButton
 import { Close, Info } from '@mui/icons-material';
 
 import { useGetCategoriesQuery } from 'store/api/categories/api';
+import { IValue } from 'store/api/types';
 import TextAutocomplete from 'components/Autocomplete';
+import Chips from 'components/Chips';
+import { StyledChipWrapper } from 'components/Grid/styles';
 import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
 import { productTitles } from './constants';
 import { StyledDialog, StyledTextInput } from './styles';
@@ -19,11 +22,8 @@ const AddProductDialog = ({
   const [productName, setProductName] = useState<string>('');
   const [barcode, setBarcode] = useState<number>();
   const [description, setDescription] = useState<string>('');
-  const [categorySearch, setCategorySearch] = useState<string>('');
-
-  const { data, isFetching } = useGetCategoriesQuery({
-    searchString: categorySearch,
-  });
+  const [categories, setCategories] = useState<string[]>([]);
+  const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
 
   const handleNameOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProductName(e.target.value);
@@ -38,8 +38,9 @@ const AddProductDialog = ({
     setDescription(e.target.value);
   };
 
-  const handleSearchOnChange = (searchValue: string) => {
-    setCategorySearch(searchValue);
+  const handleCategoryOnChange = (option: IValue) => {
+    setCategories((oldValue) => [...oldValue, String(option?.id)]);
+    setCategoryChips((oldValue) => [...oldValue, option]);
   };
 
   const handleModalClose = () => {
@@ -47,6 +48,20 @@ const AddProductDialog = ({
     setBarcode(undefined);
     setDescription('');
     handleClose();
+  };
+
+  const renderCategoriesChips = () => {
+    return (
+      <StyledChipWrapper>
+        {categoryChips.map((val: IValue, index: number) => {
+          const handleDeleteChip = () => {
+            setCategories((oldValue) => oldValue.filter((value) => value !== val.id));
+            setCategoryChips((oldValue) => oldValue.filter((value) => value.id !== val.id));
+          };
+          return <Chips key={`${val.id}-${index}`} label={String(val.categoryName)} onChipDelete={handleDeleteChip} />;
+        })}
+      </StyledChipWrapper>
+    );
   };
 
   const handleModalSubmit = () => {
@@ -80,7 +95,6 @@ const AddProductDialog = ({
         <div>
           <div className="label-div">
             <span className="row-label">{productTitles[1].label}</span>
-            <span className="req-icon"> *</span>
           </div>
           <StyledTextInput
             id={`${productTitles[1].field}-input`}
@@ -95,7 +109,6 @@ const AddProductDialog = ({
         <div>
           <div className="label-div">
             <span className="row-label">{productTitles[2].label}</span>
-            <span className="req-icon"> *</span>
           </div>
           <StyledTextInput
             id={`${productTitles[2].field}-input`}
@@ -106,16 +119,23 @@ const AddProductDialog = ({
             placeholder={productTitles[2].placeholder}
             multiline
             rows={5}
-            sx={{ marginBottom: '12px' }}
+            sx={{ marginBottom: '24px' }}
           />
         </div>
         <div>
           <div className="label-div">
             <span className="row-label">{productTitles[3].label}</span>
-            <span className="req-icon"> *</span>
           </div>
-          <TextAutocomplete />
+          <TextAutocomplete onOptionSelect={handleCategoryOnChange} />
         </div>
+        {categories.length > 0 && (
+          <div style={{ marginTop: '12px' }}>
+            <div className="label-div">
+              <span className="row-label">{productTitles[4].label}</span>
+            </div>
+            {renderCategoriesChips()}
+          </div>
+        )}
       </div>
     );
   };
