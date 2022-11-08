@@ -209,7 +209,7 @@ const CategoryDialog = ({
   return (
     <StyledDialog
       open={isOpen}
-      onClose={handleClose}
+      onClose={handleModalClose}
       maxWidth="sm"
       fullWidth={true}
       transitionDuration={300}

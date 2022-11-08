@@ -1,5 +1,6 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Alert, Snackbar } from '@mui/material';
 import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 // Components
@@ -14,7 +15,7 @@ import AddProductDialog from './components/AddProductDialog';
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IValue } from 'store/api/types';
-import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
+import { useAddProductMutation, useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
 import {
   resetToInitialState,
   selectProducts,
@@ -23,6 +24,7 @@ import {
   setProductsSelectedCategories,
   setProductsSortValue,
 } from 'store/api/products/slice';
+import { IProductDialogData } from 'store/api/products/types';
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -68,6 +70,11 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string>('');
+  const [
+    addProduct,
+    { isSuccess: isAddProductSuccess, error: addProductError, reset: resetAddProduct, isLoading: isAddProductLoading },
+  ] = useAddProductMutation();
 
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
@@ -81,17 +88,6 @@ const Products: FunctionComponent = (): JSX.Element => {
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
-
-  // Use Effects
-  useEffect(() => {
-    if (searchValue !== '' || selectedParent !== '') {
-      setRowCount(data?.['@odata.count'] ?? 0);
-      setGridData(data?.value ?? []);
-    } else {
-      setGridData([]);
-      setRowCount(0);
-    }
-  }, [data]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -177,7 +173,37 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const handleAddModalClose = () => {
     setIsAddModalOpen(false);
+    setErrMsg('');
   };
+
+  const handleAddProductSubmit = (productData: IProductDialogData) => {
+    addProduct({ ...productData, publicationLifecycleId: '1' });
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    resetAddProduct();
+  };
+
+  // Use Effects
+  useEffect(() => {
+    if (searchValue !== '' || selectedParent !== '') {
+      setRowCount(data?.['@odata.count'] ?? 0);
+      setGridData(data?.value ?? []);
+    } else {
+      setGridData([]);
+      setRowCount(0);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    setIsSnackbarOpen(isAddProductSuccess);
+    if (isAddProductSuccess) handleAddModalClose();
+  }, [isAddProductSuccess]);
+
+  useEffect(() => {
+    if (addProductError && 'data' in addProductError) setErrMsg(String(addProductError?.data));
+  }, [addProductError]);
 
   return (
     <MainContent paddingSide={32} paddingTop={42}>
@@ -235,7 +261,23 @@ const Products: FunctionComponent = (): JSX.Element => {
           />
         </div>
       </RowAlignWrapper>
-      <AddProductDialog isOpen={isAddModalOpen} handleClose={handleAddModalClose} />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Product has been successfully created
+        </Alert>
+      </Snackbar>
+      <AddProductDialog
+        isOpen={isAddModalOpen}
+        handleClose={handleAddModalClose}
+        handleSubmit={handleAddProductSubmit}
+        errorMessage={errMsg}
+        isLoading={isAddProductLoading}
+      />
     </MainContent>
   );
 };

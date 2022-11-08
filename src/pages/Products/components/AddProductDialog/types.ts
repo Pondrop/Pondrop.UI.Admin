@@ -1,9 +1,9 @@
-import { ICategoryDialogData } from "store/api/categories/types";
+import { IProductDialogData } from "store/api/products/types";
 
 export interface IAddProductProps {
   isOpen: boolean;
   handleClose: () => void;
-  handleSubmit?: (createData: ICategoryDialogData) => void;
+  handleSubmit: (productData: IProductDialogData) => void;
   errorMessage?: string;
   isLoading?: boolean;
 }

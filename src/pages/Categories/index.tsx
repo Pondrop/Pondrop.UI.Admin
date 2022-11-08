@@ -206,9 +206,11 @@ const Categories: FunctionComponent = (): JSX.Element => {
   }, [isCreateCategSuccess]);
 
   useEffect(() => {
-    handleCreateModalClose();
     setIsSnackbarOpen(isCreateCategGroupingSuccess);
-    if (isCreateCategGroupingSuccess) refreshCategories();
+    if (isCreateCategGroupingSuccess) {
+      handleCreateModalClose();
+      refreshCategories();
+    }
   }, [isCreateCategGroupingSuccess]);
 
   useEffect(() => {

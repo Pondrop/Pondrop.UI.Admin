@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse, IFilterItem, IParentCategAPI, ISortItem } from '../types';
+import { ICreateProduct, ICreateProductRequest } from './types';
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
@@ -101,8 +102,17 @@ export const productsMicroService = createApi({
         };
       },
     }),
+    addProduct: builder.mutation<ICreateProduct, ICreateProductRequest>({
+      query: (arg) => {
+        return {
+          url: `/Product/createFull`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
   })
 });
 
 export const { useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery } = productsApi;
-export const { useGetParentCategoriesQuery } = productsMicroService;
+export const { useGetParentCategoriesQuery, useAddProductMutation } = productsMicroService;

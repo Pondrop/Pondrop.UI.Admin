@@ -1,8 +1,7 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { CircularProgress, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { useGetCategoriesQuery } from 'store/api/categories/api';
 import { IValue } from 'store/api/types';
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
@@ -24,6 +23,16 @@ const AddProductDialog = ({
   const [description, setDescription] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
   const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setProductName('');
+      setBarcode(undefined);
+      setDescription('');
+      setCategories([]);
+      setCategoryChips([]);
+    }
+  }, [isOpen]);
 
   const handleNameOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProductName(e.target.value);
@@ -47,6 +56,8 @@ const AddProductDialog = ({
     setProductName('');
     setBarcode(undefined);
     setDescription('');
+    setCategories([]);
+    setCategoryChips([]);
     handleClose();
   };
 
@@ -65,7 +76,12 @@ const AddProductDialog = ({
   };
 
   const handleModalSubmit = () => {
-    //handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
+    handleSubmit({
+      name: productName,
+      barcodeNumber: String(barcode),
+      shortDescription: description,
+      categoryIds: categories,
+    });
   };
 
   const renderLoader = (height: number) => (
@@ -170,18 +186,18 @@ const AddProductDialog = ({
           disableElevation
           height={40}
           onClick={handleModalSubmit}
-          disabled={productName === ''}
+          disabled={productName === '' || isLoading}
         >
           {isLoading ? renderLoader(34) : 'Create'}
         </StyledCategoryBtn>
-        {/* {errorMessage !== '' && !isLoading && (
+        {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">
             <div className="info-icon" style={{ margin: '0 4px 0 8px' }}>
               <Info />
             </div>
             {errorMessage}
           </MessageWrapper>
-        )} */}
+        )}
       </RowAlignWrapper>
     );
   };
@@ -189,7 +205,7 @@ const AddProductDialog = ({
   return (
     <StyledDialog
       open={isOpen}
-      onClose={handleClose}
+      onClose={handleModalClose}
       maxWidth="sm"
       fullWidth={true}
       transitionDuration={300}
