@@ -56,3 +56,10 @@ export interface IProductValue {
   GTIN: string;
   Categories: ICategories[];
 }
+
+export interface IParentCategAPI {
+  items: IValue[];
+  count: number;
+  limit: number;
+  offset: number;
+}

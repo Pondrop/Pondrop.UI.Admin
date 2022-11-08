@@ -15,6 +15,7 @@ const SearchField = ({
   padding,
   variant = 'standard',
   placeholder = 'Search',
+  onClick,
 }: ISearchFieldProps): JSX.Element => {
   const [searchValueString, setSearchValueString] = useState<string>(value);
 
@@ -52,6 +53,7 @@ const SearchField = ({
       isfullsize={isfullsize}
       width={width}
       padding={padding}
+      onClick={onClick}
     />
   );
 };

@@ -16,10 +16,10 @@ const CategoryList = ({ onManageCategoriesClick, onParentCategoryChange }: ICate
 
   // API call
   const { data, isFetching } = useGetParentCategoriesQuery();
-  const [parentCategoryData, setParentCategoryData] = useState<IValue[]>(data ?? []);
+  const [parentCategoryData, setParentCategoryData] = useState<IValue[]>(data?.items ?? []);
 
   useEffect(() => {
-    const sortedData = data?.slice();
+    const sortedData = data?.items?.slice() ?? [];
     sortedData?.sort((a, b) => {
       if (a.categoryName < b.categoryName) return -1;
       if (a.categoryName > b.categoryName) return 1;

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IApiResponse, IFilterItem, ISortItem, IValue } from '../types';
+import { IApiResponse, IFilterItem, IParentCategAPI, ISortItem } from '../types';
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
@@ -93,10 +93,10 @@ export const productsMicroService = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getParentCategories: builder.query<IValue[], void>({
+    getParentCategories: builder.query<IParentCategAPI, void>({
       query: () => {
         return {
-          url: '/ParentCategories',
+          url: '/ParentCategories?limit=-1',
           method: 'GET',
         };
       },

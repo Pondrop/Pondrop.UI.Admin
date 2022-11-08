@@ -9,6 +9,7 @@ import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import CategoryList from './components/CategoryList';
+import AddProductDialog from './components/AddProductDialog';
 
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
@@ -64,6 +65,9 @@ const Products: FunctionComponent = (): JSX.Element => {
     { searchString: searchValue, parentCategory: selectedParent },
     { skip: !gridData.length },
   );
+
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
@@ -167,6 +171,14 @@ const Products: FunctionComponent = (): JSX.Element => {
     dispatch(resetToInitialState());
   };
 
+  const handleAddProduct = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const handleAddModalClose = () => {
+    setIsAddModalOpen(false);
+  };
+
   return (
     <MainContent paddingSide={32} paddingTop={42}>
       <SpaceBetweenDiv>
@@ -184,8 +196,9 @@ const Products: FunctionComponent = (): JSX.Element => {
               variant="contained"
               disableElevation
               height={40}
+              onClick={handleAddProduct}
             >
-              + Add products
+              + Add product
             </StyledCategoryBtn>
           </CategoryBtnWrapper>
           <SearchField
@@ -222,6 +235,7 @@ const Products: FunctionComponent = (): JSX.Element => {
           />
         </div>
       </RowAlignWrapper>
+      <AddProductDialog isOpen={isAddModalOpen} handleClose={handleAddModalClose} />
     </MainContent>
   );
 };
