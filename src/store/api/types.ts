@@ -57,7 +57,7 @@ export interface IProductValue {
   Categories: ICategories[];
 }
 
-export interface IParentCategAPI {
+export interface IViewResponse {
   items: IValue[];
   count: number;
   limit: number;
