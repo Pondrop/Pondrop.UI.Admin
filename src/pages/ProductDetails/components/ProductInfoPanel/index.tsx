@@ -15,15 +15,31 @@ import {
 } from 'pages/styles';
 import { ITabPanelProps } from 'pages/types';
 import { ICategories, IValue } from 'store/api/types';
+import UpdateCategoriesDialog from '../UpdateCategoriesDialog';
 import { attributesChips, organisationTestData, packagingTestData, productTestData, tooltipContent } from './constants';
 
 const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [productInfo, setProductInfo] = useState<IValue>({});
+  const [isUpdateCategoryModalOpen, setIsUpdateCategoryModalOpen] = useState<boolean>(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     setProductInfo(data ?? {});
+    const categoriesData = data?.categories as unknown as IValue[];
+    if (categoriesData.length > 0) {
+      const categoryIds: string[] = [];
+      const categoryChips: IValue[] = [];
+
+      categoriesData.forEach((category) => {
+        categoryIds.push(String(category.id));
+        categoryChips.push(category);
+      });
+      setCategories(categoryIds);
+      setCategoryChips(categoryChips);
+    }
   }, [data]);
 
   const renderCategoriesChips = () => {
@@ -104,6 +120,14 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
     ));
   };
 
+  const handleUpdateCategoryOpen = () => {
+    setIsUpdateCategoryModalOpen(true);
+  };
+
+  const handleUpdateCategoryClose = () => {
+    setIsUpdateCategoryModalOpen(false);
+  };
+
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="product-detail-0" aria-labelledby="tab-0">
       <RowAlignWrapper className="right-margin">
@@ -118,7 +142,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
                   </div>
                 </Tooltip>
               </RowAlignWrapper>
-              <IconButton aria-label="edit" size="small">
+              <IconButton aria-label="edit" size="small" onClick={handleUpdateCategoryOpen}>
                 <EditOutlined fontSize="inherit" />
               </IconButton>
             </SpaceBetweenDiv>
@@ -200,6 +224,12 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
           {renderOrganisationDetails()}
         </StyledCard>
       </RowAlignWrapper>
+      <UpdateCategoriesDialog
+        isOpen={isUpdateCategoryModalOpen}
+        handleClose={handleUpdateCategoryClose}
+        categories={categories}
+        categoryChips={categoryChips}
+      />
     </StyledTabContent>
   );
 };

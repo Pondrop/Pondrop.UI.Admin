@@ -210,7 +210,7 @@ const AddProductDialog = ({
       maxWidth="sm"
       fullWidth={true}
       transitionDuration={300}
-      data-testid="add-category-modal"
+      data-testid="add-product-modal"
       keepMounted
     >
       {renderDialogTitle()}
