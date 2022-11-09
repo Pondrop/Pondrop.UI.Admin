@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconButton, Tooltip } from '@mui/material';
+import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
 import { EditOutlined, Info } from '@mui/icons-material';
 
 import Chips from 'components/Chips';
@@ -14,33 +14,32 @@ import {
   StyledTabContent,
 } from 'pages/styles';
 import { ITabPanelProps } from 'pages/types';
+import {
+  useGetUpdatedProductInfoQuery,
+  useLazyGetProductInfoQuery,
+  useUpdateLinkedCategoriesMutation,
+} from 'store/api/products/api';
 import { ICategories, IValue } from 'store/api/types';
 import UpdateCategoriesDialog from '../UpdateCategoriesDialog';
 import { attributesChips, organisationTestData, packagingTestData, productTestData, tooltipContent } from './constants';
 
 const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [productInfo, setProductInfo] = useState<IValue>({});
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isUpdateCategoryModalOpen, setIsUpdateCategoryModalOpen] = useState<boolean>(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setProductInfo(data ?? {});
-    const categoriesData = data?.categories as unknown as IValue[];
-    if (categoriesData.length > 0) {
-      const categoryIds: string[] = [];
-      const categoryChips: IValue[] = [];
+  console.log('data ', data);
 
-      categoriesData.forEach((category) => {
-        categoryIds.push(String(category.id));
-        categoryChips.push(category);
-      });
-      setCategories(categoryIds);
-      setCategoryChips(categoryChips);
-    }
-  }, [data]);
+  //const [getProductInfo, { data: newProductData }] = useLazyGetProductInfoQuery();
+
+  const [
+    updateLinkedCategories,
+    { isSuccess: isUpdateCategoriesSuccess, reset: resetUpdateCategories, isLoading: isUpdateCategoriesLoading },
+  ] = useUpdateLinkedCategoriesMutation();
 
   const renderCategoriesChips = () => {
     return (
@@ -127,6 +126,43 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   const handleUpdateCategoryClose = () => {
     setIsUpdateCategoryModalOpen(false);
   };
+
+  const handleUpdateCategories = (newCategories: string[]) => {
+    updateLinkedCategories({
+      productId: String(productInfo?.id),
+      categoryIds: [...newCategories],
+      publicationLifecycleId: '1',
+    });
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    resetUpdateCategories();
+  };
+
+  useEffect(() => {
+    setProductInfo(data ?? {});
+    const categoriesData = data?.categories as unknown as IValue[];
+    if (categoriesData.length > 0) {
+      const categoryIds: string[] = [];
+      const categoryChips: IValue[] = [];
+
+      categoriesData.forEach((category) => {
+        categoryIds.push(String(category.id));
+        categoryChips.push(category);
+      });
+      setCategories(categoryIds);
+      setCategoryChips(categoryChips);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    setIsSnackbarOpen(isUpdateCategoriesSuccess);
+    if (isUpdateCategoriesSuccess) {
+      handleUpdateCategoryClose();
+      //getProductInfo({ productId: String(data?.id) });
+    }
+  }, [isUpdateCategoriesSuccess]);
 
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="product-detail-0" aria-labelledby="tab-0">
@@ -224,11 +260,23 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
           {renderOrganisationDetails()}
         </StyledCard>
       </RowAlignWrapper>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Changes saved successfully
+        </Alert>
+      </Snackbar>
       <UpdateCategoriesDialog
         isOpen={isUpdateCategoryModalOpen}
+        handleSubmit={handleUpdateCategories}
         handleClose={handleUpdateCategoryClose}
         categories={categories}
         categoryChips={categoryChips}
+        isLoading={isUpdateCategoriesLoading}
       />
     </StyledTabContent>
   );

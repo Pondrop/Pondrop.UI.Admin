@@ -13,6 +13,7 @@ import { IUpdateProductProps } from './types';
 const UpdateCategoriesDialog = ({
   isOpen,
   handleClose,
+  handleSubmit,
   errorMessage,
   isLoading,
   categories,
@@ -54,13 +55,7 @@ const UpdateCategoriesDialog = ({
   };
 
   const handleModalSubmit = () => {
-    // handleSubmit({
-    //   name: productName,
-    //   barcodeNumber: String(barcode),
-    //   shortDescription: description,
-    //   categoryIds: categories,
-    // });
-    handleClose();
+    handleSubmit(currCategories);
   };
 
   const renderCategoriesChips = () => {
@@ -136,8 +131,7 @@ const UpdateCategoriesDialog = ({
           onClick={handleModalSubmit}
           disabled={currCategories.length === 0}
         >
-          {/* {isLoading ? renderLoader(34) : 'Create'} */}
-          Done
+          {isLoading ? renderLoader(34) : 'Done'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );

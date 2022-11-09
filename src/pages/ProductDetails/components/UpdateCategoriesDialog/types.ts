@@ -1,10 +1,9 @@
-//import { IProductDialogData } from "store/api/products/types";
 import { IValue } from "store/api/types";
 
 export interface IUpdateProductProps {
   isOpen: boolean;
   handleClose: () => void;
-  //handleSubmit: (productData: IProductDialogData) => void;
+  handleSubmit: (newCategories: string[]) => void;
   errorMessage?: string;
   isLoading?: boolean;
   categories: string[];
