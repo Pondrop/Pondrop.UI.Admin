@@ -8,7 +8,7 @@ export const StyledTextField = styled(TextField, {
   
   & input {
     height: 24px;
-    padding: ${({ padding }) => padding};
+    padding: ${({ padding }) => padding} !important;
   }
 
   ${({ isfullsize }) => isfullsize && 

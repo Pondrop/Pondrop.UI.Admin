@@ -80,7 +80,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
 
   const renderPackagingDetails = () => {
     return packagingTestData.map((row) => (
-      <SpaceBetweenDiv style={{ marginBottom: '12px' }}>
+      <SpaceBetweenDiv style={{ marginBottom: '12px' }} key={row.field}>
         <span className="row-label card-details" style={{ lineHeight: '20px' }}>
           {row.label}
         </span>
@@ -93,7 +93,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
 
   const renderOrganisationDetails = () => {
     return organisationTestData.map((row) => (
-      <SpaceBetweenDiv style={{ marginBottom: '12px' }}>
+      <SpaceBetweenDiv style={{ marginBottom: '12px' }} key={row.field}>
         <span className="row-label card-details" style={{ lineHeight: '20px' }}>
           {row.label}
         </span>

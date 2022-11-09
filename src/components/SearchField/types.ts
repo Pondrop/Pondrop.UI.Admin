@@ -1,3 +1,5 @@
+import { FocusEvent, MouseEvent } from "react";
+
 export interface ISearchFieldProps {
   onEnterPress?: (searchValue: string) => void;
   value: string;
@@ -8,4 +10,5 @@ export interface ISearchFieldProps {
   variant?: "standard" | "outlined" | "filled";
   padding: string;
   placeholder?: string;
+  onClick?: (e: MouseEvent<HTMLInputElement>) => void;
 }

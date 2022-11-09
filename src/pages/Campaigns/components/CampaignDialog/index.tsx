@@ -226,9 +226,9 @@ const CampaignDialog = ({
             isOpen={isTemplateSelectOpen}
             displayEmpty
           >
-            {isFetching || data?.length === 0
+            {isFetching || data?.items?.length === 0
               ? renderStates()
-              : data?.map((template) => (
+              : data?.items?.map((template) => (
                   <StyledMenuItem key={String(template.id)} value={String(template.id)}>
                     {template.title}
                   </StyledMenuItem>

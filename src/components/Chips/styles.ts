@@ -20,4 +20,8 @@ export const StyledChip = styled(Chip)`
   & span {
     color: #000000 !important;
   }
+
+  svg {
+    fill: #1c1b1f;
+  }
 `;
