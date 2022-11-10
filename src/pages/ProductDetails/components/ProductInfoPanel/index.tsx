@@ -164,7 +164,7 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
       setTimeout(() => {
         dispatch(productsMicroService.util.resetApiState());
         refetch();
-      }, 15000);
+      }, 17000);
     }
   }, [isUpdateCategoriesSuccess]);
 
