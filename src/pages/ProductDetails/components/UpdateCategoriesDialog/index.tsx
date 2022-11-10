@@ -14,7 +14,6 @@ const UpdateCategoriesDialog = ({
   isOpen,
   handleClose,
   handleSubmit,
-  errorMessage,
   isLoading,
   categories,
   categoryChips,
@@ -38,10 +37,10 @@ const UpdateCategoriesDialog = ({
   }, [categoryChips]);
 
   const handleCategoryOnChange = (option: IValue) => {
-    setCurrCategories((oldValue) => [...oldValue, String(option?.id)]);
+    setCurrCategories((oldValue) => [...oldValue, String(option?.lowerLevelCategoryId)]);
 
     const categFormat = {
-      id: option.id,
+      id: option.lowerLevelCategoryId,
       name: option.categoryName,
       type: 'category',
     };

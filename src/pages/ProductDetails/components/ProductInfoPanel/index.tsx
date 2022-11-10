@@ -13,28 +13,29 @@ import {
   StyledCardTitle,
   StyledTabContent,
 } from 'pages/styles';
-import { ITabPanelProps } from 'pages/types';
+import { useAppDispatch } from 'store';
 import {
-  useGetUpdatedProductInfoQuery,
-  useLazyGetProductInfoQuery,
+  productsMicroService,
+  useGetFullProductInfoQuery,
   useUpdateLinkedCategoriesMutation,
 } from 'store/api/products/api';
+import { IFullProductInfo } from 'store/api/products/types';
 import { ICategories, IValue } from 'store/api/types';
+import { IProductDetailTabProps } from '../types';
 import UpdateCategoriesDialog from '../UpdateCategoriesDialog';
-import { attributesChips, organisationTestData, packagingTestData, productTestData, tooltipContent } from './constants';
+import { attributesChips, organisationTitles, packagingTitles, productDescTitles, tooltipContent } from './constants';
 
-const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
-  const [productInfo, setProductInfo] = useState<IValue>({});
+const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.Element => {
+  const [productInfo, setProductInfo] = useState<IFullProductInfo>({} as IFullProductInfo);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isUpdateCategoryModalOpen, setIsUpdateCategoryModalOpen] = useState<boolean>(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  console.log('data ', data);
-
-  //const [getProductInfo, { data: newProductData }] = useLazyGetProductInfoQuery();
+  const { refetch } = useGetFullProductInfoQuery({ productId: data?.id ?? '' });
 
   const [
     updateLinkedCategories,
@@ -68,13 +69,13 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   const renderProductInfo = () => {
     return (
       <ColAlignDiv>
-        <span className="row-label card-details">{productTestData[0].label}</span>
+        <span className="row-label card-details">{productDescTitles[0].label}</span>
         <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
           {productInfo?.name}
         </span>
-        <span className="row-label card-details">{productTestData[1].label}</span>
+        <span className="row-label card-details">{productDescTitles[1].label}</span>
         <span className="row-value multiline card-details" style={{ maxWidth: '100%' }}>
-          {productInfo?.shortDescription}
+          {productInfo?.shortDescription ?? 'N/A'}
         </span>
         {/* <ul style={{ paddingInlineStart: '16px' }}>
           <li className="row-value card-details">Rich in calcium</li>
@@ -94,26 +95,26 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   };
 
   const renderPackagingDetails = () => {
-    return packagingTestData.map((row) => (
+    return packagingTitles.map((row) => (
       <SpaceBetweenDiv style={{ marginBottom: '12px' }} key={row.field}>
         <span className="row-label card-details" style={{ lineHeight: '20px' }}>
           {row.label}
         </span>
         <span className="row-value singleline card-details" style={{ lineHeight: '20px' }}>
-          {productInfo?.[row.field] ?? '-'}
+          {productInfo?.[row.field as keyof IFullProductInfo] ?? '-'}
         </span>
       </SpaceBetweenDiv>
     ));
   };
 
   const renderOrganisationDetails = () => {
-    return organisationTestData.map((row) => (
+    return organisationTitles.map((row) => (
       <SpaceBetweenDiv style={{ marginBottom: '12px' }} key={row.field}>
         <span className="row-label card-details" style={{ lineHeight: '20px' }}>
           {row.label}
         </span>
         <span className="row-value singleline card-details" style={{ lineHeight: '20px' }}>
-          {productInfo?.[row.field] ?? '-'}
+          {productInfo?.[row.field as keyof IFullProductInfo] ?? '-'}
         </span>
       </SpaceBetweenDiv>
     ));
@@ -141,7 +142,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   };
 
   useEffect(() => {
-    setProductInfo(data ?? {});
+    setProductInfo(data ?? ({} as IFullProductInfo));
     const categoriesData = data?.categories as unknown as IValue[];
     if (categoriesData.length > 0) {
       const categoryIds: string[] = [];
@@ -160,7 +161,10 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
     setIsSnackbarOpen(isUpdateCategoriesSuccess);
     if (isUpdateCategoriesSuccess) {
       handleUpdateCategoryClose();
-      //getProductInfo({ productId: String(data?.id) });
+      setTimeout(() => {
+        dispatch(productsMicroService.util.resetApiState());
+        refetch();
+      }, 15000);
     }
   }, [isUpdateCategoriesSuccess]);
 

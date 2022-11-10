@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse, IFilterItem, ISortItem, IViewResponse } from '../types';
-import { ICreateProduct, ICreateProductRequest, ISetCategories, ISetCategoriesRequest } from './types';
+import { ICreateProduct, ICreateProductRequest, IFullProductInfo, ISetCategories, ISetCategoriesRequest } from './types';
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
@@ -49,7 +49,7 @@ export const productsApi = createApi({
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 
         return {
-          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}&searchMode=all&queryType=full`,
+          url: `/indexes/cosmosdb-index-allproduct/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}&searchMode=all&queryType=full`,
           method: 'GET',
         };
       },
@@ -58,7 +58,7 @@ export const productsApi = createApi({
       query: (arg) => {
         const { productId } = arg;
         return {
-          url: `/indexes/cosmosdb-index-product/docs?api-version=2021-04-30-Preview${`&$filter=id eq '${productId}'`}`,
+          url: `/indexes/cosmosdb-index-allproduct/docs?api-version=2021-04-30-Preview${`&$filter=id eq '${productId}'`}`,
           method: 'GET',
         };
       },
@@ -75,16 +75,7 @@ export const productsApi = createApi({
         }
 
         return {
-          url: `/indexes/cosmosdb-index-parentprodcat/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&facet=name,count:0,sort:value&facet=barcodeNumber,count:0,sort:value&facet=categories/name,count:0,sort:value`,
-          method: 'GET',
-        };
-      },
-    }),
-    getUpdatedProductInfo: builder.query<IApiResponse, { productId: string }>({
-      query: (arg) => {
-        const { productId } = arg;
-        return {
-          url: `/indexes/cosmosdb-index-allproduct/docs?api-version=2021-04-30-Preview${`&$filter=id eq '${productId}'`}`,
+          url: `/indexes/cosmosdb-index-allproduct/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&facet=name,count:0,sort:value&facet=barcodeNumber,count:0,sort:value&facet=categories/name,count:0,sort:value`,
           method: 'GET',
         };
       },
@@ -111,6 +102,15 @@ export const productsMicroService = createApi({
         };
       },
     }),
+    getFullProductInfo: builder.query<IFullProductInfo, { productId: string }>({
+      query: (arg) => {
+        const { productId } = arg;
+        return {
+          url: `/Product/${productId}/full`,
+          method: 'GET',
+        };
+      },
+    }),
     addProduct: builder.mutation<ICreateProduct, ICreateProductRequest>({
       query: (arg) => {
         return {
@@ -120,7 +120,7 @@ export const productsMicroService = createApi({
         };
       },
     }),
-    updateLinkedCategories: builder.mutation<ISetCategories, ISetCategoriesRequest>({
+    updateLinkedCategories: builder.mutation<ISetCategories[], ISetCategoriesRequest>({
       query: (arg) => {
         return {
           url: `/ProductCategory/setcategories`,
@@ -132,5 +132,5 @@ export const productsMicroService = createApi({
   })
 });
 
-export const { useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useGetUpdatedProductInfoQuery, useLazyGetProductInfoQuery } = productsApi;
-export const { useGetParentCategoriesQuery, useAddProductMutation, useUpdateLinkedCategoriesMutation } = productsMicroService;
+export const { useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
+export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useUpdateLinkedCategoriesMutation } = productsMicroService;
