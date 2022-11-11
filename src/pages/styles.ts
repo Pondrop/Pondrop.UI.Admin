@@ -334,12 +334,12 @@ export const CategoryBtnWrapper = styled.div<{ rightmargin: number }>`
   margin-right: ${({ rightmargin }) => rightmargin}px;
 `;
 
-export const MessageWrapper = styled.div<{ color: string }>`
+export const MessageWrapper = styled.div<{ color: string, withMargin?: boolean }>`
   display: flex;
   flex-direction: row;
   font-size: 12px;
   color: ${({ color }) => color};
-  margin-left: 8px;
+  ${({ withMargin = true }) => withMargin &&'margin-left: 8px;'}
   align-items: center;
 
   .info-icon {

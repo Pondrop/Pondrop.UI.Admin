@@ -1,4 +1,4 @@
-export const productTitles = [
+export const addProductTitles = [
   {
     field: 'name',
     label: 'Product name',

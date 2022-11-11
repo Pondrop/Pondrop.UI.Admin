@@ -38,7 +38,7 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen }: IAutocompleteProps) =
       // Reset search value, selected value, and api
       // Selected value set to epoch moment so component rerenders and is set to default value
       setSearchValue('');
-      setSelectedValue(String(moment().valueOf()));
+      setSelectedValue(String(moment().unix()));
       dispatch(categoriesApi.util.resetApiState());
     }
   }, [isModalOpen]);
@@ -51,7 +51,7 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen }: IAutocompleteProps) =
     if (value) {
       if (typeof onOptionSelect === 'function') onOptionSelect(value);
       setSearchValue('');
-      setSelectedValue(String(value?.id));
+      setSelectedValue(`${String(value?.id)}-${String(moment().unix())}`);
       dispatch(categoriesApi.util.resetApiState());
     }
   };

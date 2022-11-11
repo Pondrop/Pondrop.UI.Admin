@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconButton, Tooltip } from '@mui/material';
+import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
 import { EditOutlined, Info } from '@mui/icons-material';
 
 import Chips from 'components/Chips';
@@ -13,18 +13,34 @@ import {
   StyledCardTitle,
   StyledTabContent,
 } from 'pages/styles';
-import { ITabPanelProps } from 'pages/types';
+import { useAppDispatch } from 'store';
+import {
+  productsMicroService,
+  useGetFullProductInfoQuery,
+  useUpdateLinkedCategoriesMutation,
+} from 'store/api/products/api';
+import { IFullProductInfo } from 'store/api/products/types';
 import { ICategories, IValue } from 'store/api/types';
-import { attributesChips, organisationTestData, packagingTestData, productTestData, tooltipContent } from './constants';
+import { IProductDetailTabProps } from '../types';
+import UpdateCategoriesDialog from '../UpdateCategoriesDialog';
+import { attributesChips, organisationTitles, packagingTitles, productDescTitles, tooltipContent } from './constants';
 
-const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
-  const [productInfo, setProductInfo] = useState<IValue>({});
+const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.Element => {
+  const [productInfo, setProductInfo] = useState<IFullProductInfo>({} as IFullProductInfo);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isUpdateCategoryModalOpen, setIsUpdateCategoryModalOpen] = useState<boolean>(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    setProductInfo(data ?? {});
-  }, [data]);
+  const { refetch } = useGetFullProductInfoQuery({ productId: data?.id ?? '' });
+
+  const [
+    updateLinkedCategories,
+    { isSuccess: isUpdateCategoriesSuccess, reset: resetUpdateCategories, isLoading: isUpdateCategoriesLoading },
+  ] = useUpdateLinkedCategoriesMutation();
 
   const renderCategoriesChips = () => {
     return (
@@ -53,13 +69,13 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   const renderProductInfo = () => {
     return (
       <ColAlignDiv>
-        <span className="row-label card-details">{productTestData[0].label}</span>
+        <span className="row-label card-details">{productDescTitles[0].label}</span>
         <span className="row-value singleline card-details" style={{ marginBottom: '12px', maxWidth: '100%' }}>
           {productInfo?.name}
         </span>
-        <span className="row-label card-details">{productTestData[1].label}</span>
+        <span className="row-label card-details">{productDescTitles[1].label}</span>
         <span className="row-value multiline card-details" style={{ maxWidth: '100%' }}>
-          {productInfo?.shortDescription}
+          {productInfo?.shortDescription ?? 'N/A'}
         </span>
         {/* <ul style={{ paddingInlineStart: '16px' }}>
           <li className="row-value card-details">Rich in calcium</li>
@@ -79,30 +95,78 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
   };
 
   const renderPackagingDetails = () => {
-    return packagingTestData.map((row) => (
+    return packagingTitles.map((row) => (
       <SpaceBetweenDiv style={{ marginBottom: '12px' }} key={row.field}>
         <span className="row-label card-details" style={{ lineHeight: '20px' }}>
           {row.label}
         </span>
         <span className="row-value singleline card-details" style={{ lineHeight: '20px' }}>
-          {productInfo?.[row.field] ?? '-'}
+          {productInfo?.[row.field as keyof IFullProductInfo] ?? '-'}
         </span>
       </SpaceBetweenDiv>
     ));
   };
 
   const renderOrganisationDetails = () => {
-    return organisationTestData.map((row) => (
+    return organisationTitles.map((row) => (
       <SpaceBetweenDiv style={{ marginBottom: '12px' }} key={row.field}>
         <span className="row-label card-details" style={{ lineHeight: '20px' }}>
           {row.label}
         </span>
         <span className="row-value singleline card-details" style={{ lineHeight: '20px' }}>
-          {productInfo?.[row.field] ?? '-'}
+          {productInfo?.[row.field as keyof IFullProductInfo] ?? '-'}
         </span>
       </SpaceBetweenDiv>
     ));
   };
+
+  const handleUpdateCategoryOpen = () => {
+    setIsUpdateCategoryModalOpen(true);
+  };
+
+  const handleUpdateCategoryClose = () => {
+    setIsUpdateCategoryModalOpen(false);
+  };
+
+  const handleUpdateCategories = (newCategories: string[]) => {
+    updateLinkedCategories({
+      productId: String(productInfo?.id),
+      categoryIds: [...newCategories],
+      publicationLifecycleId: '1',
+    });
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    resetUpdateCategories();
+  };
+
+  useEffect(() => {
+    setProductInfo(data ?? ({} as IFullProductInfo));
+    const categoriesData = data?.categories as unknown as IValue[];
+    if (categoriesData.length > 0) {
+      const categoryIds: string[] = [];
+      const categoryChips: IValue[] = [];
+
+      categoriesData.forEach((category) => {
+        categoryIds.push(String(category.id));
+        categoryChips.push(category);
+      });
+      setCategories(categoryIds);
+      setCategoryChips(categoryChips);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    setIsSnackbarOpen(isUpdateCategoriesSuccess);
+    if (isUpdateCategoriesSuccess) {
+      handleUpdateCategoryClose();
+      setTimeout(() => {
+        dispatch(productsMicroService.util.resetApiState());
+        refetch();
+      }, 17000);
+    }
+  }, [isUpdateCategoriesSuccess]);
 
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="product-detail-0" aria-labelledby="tab-0">
@@ -118,7 +182,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
                   </div>
                 </Tooltip>
               </RowAlignWrapper>
-              <IconButton aria-label="edit" size="small">
+              <IconButton aria-label="edit" size="small" onClick={handleUpdateCategoryOpen}>
                 <EditOutlined fontSize="inherit" />
               </IconButton>
             </SpaceBetweenDiv>
@@ -200,6 +264,24 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
           {renderOrganisationDetails()}
         </StyledCard>
       </RowAlignWrapper>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Changes saved successfully
+        </Alert>
+      </Snackbar>
+      <UpdateCategoriesDialog
+        isOpen={isUpdateCategoryModalOpen}
+        handleSubmit={handleUpdateCategories}
+        handleClose={handleUpdateCategoryClose}
+        categories={categories}
+        categoryChips={categoryChips}
+        isLoading={isUpdateCategoriesLoading}
+      />
     </StyledTabContent>
   );
 };

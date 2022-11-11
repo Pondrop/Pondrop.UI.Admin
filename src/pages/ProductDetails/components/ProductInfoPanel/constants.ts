@@ -1,34 +1,3 @@
-export const productTitles = [
-  {
-    field: 'Product',
-    label: 'Product name'
-  },
-  {
-    field: 'GTIN',
-    label: 'GTIN'
-  },
-  {
-    field: 'GLN',
-    label: 'GLN'
-  },
-  {
-    field: 'Company_Name',
-    label: 'Company name'
-  },
-  {
-    field: 'Brand',
-    label: 'Brand'
-  },
-  {
-    field: 'Net_Content',
-    label: 'Net Content'
-  },
-  {
-    field: 'Net_Content_UOM',
-    label: 'Net Content UOM' 
-  }
-];
-
 export const attributesChips = [
   { id: '1', name: 'Organic' },
   { id: '2', name: 'Reduced fat' },
@@ -36,7 +5,7 @@ export const attributesChips = [
   { id: '4', name: 'Lite' },
 ];
 
-export const productTestData = [
+export const productDescTitles = [
   {
     label: 'Product name',
     value: 'Dairy Farmers Lite White Reduced Fat Milk'
@@ -47,54 +16,45 @@ export const productTestData = [
   },
 ];
 
-export const packagingTestData = [
+export const packagingTitles = [
   {
     label: 'Net contents',
     field: 'netContent',
-    value: '2'
   },
   {
     label: 'Net content UOM',
     field: 'netContentUom',
-    value: 'Litres'
   },
   {
     label: 'Multipack',
     field: 'multipack',
-    value: 'No'
   },
   {
     label: 'Quantity of children',
     field: 'quantity',
-    value: '0'
   }
 ];
 
-export const organisationTestData = [
+export const organisationTitles = [
   {
     label: 'Company name',
     field: 'companyName',
-    value: 'Dairy Farmers PTY LTD'
   },
   {
     label: 'Brand',
     field: 'brand',
-    value: 'Dairy Farmers Milk'
   },
   {
     label: 'External reference ID',
     field: 'externalReferenceId',
-    value: 'ABC1234567'
   },
   {
     label: 'GTIN',
-    field: 'GTIN',
-    value: '9429000038225'
+    field: 'barcodeNumber',
   },
   {
     label: 'GLN',
     field: 'GLN',
-    value: '9429000038225'
   }
 ];
 

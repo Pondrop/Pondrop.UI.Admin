@@ -28,3 +28,46 @@ export interface IProductDialogData {
   shortDescription?: string;
   categoryIds?: string[];
 }
+
+export interface ISetCategoriesRequest {
+  productId: string;
+  categoryIds: string[];
+  publicationLifecycleId?: string;
+}
+
+export interface ISetCategories {
+  id: string;
+  categoryId: string;
+  productId: string;
+  publicationLifecycleId?: string;
+  createdBy: string;
+  updatedBy: string;
+  createdUtc: string;
+  updatedUtc: string;
+}
+
+export interface ICategoryType {
+  id: string;
+  name: string;
+  type: string;
+}
+
+export interface IFullProductInfo {
+  id: string;
+  parentCategoryId: string;
+  name: string;
+  brandId: string;
+  externalReferenceId: string;
+  variant: string;
+  altName: string;
+  shortDescription: string;
+  netContent: number;
+  netContentUom: string;
+  possibleCategories: string;
+  publicationLifecycleId: string;
+  childProductId: string[];
+  barcodeNumber: string;
+  categoryNames: string;
+  parentCategory: ICategoryType;
+  categories: ICategoryType[];
+}

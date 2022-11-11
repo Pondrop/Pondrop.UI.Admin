@@ -7,7 +7,7 @@ import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
 import { StyledChipWrapper } from 'components/Grid/styles';
 import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { productTitles } from './constants';
+import { addProductTitles } from './constants';
 import { StyledDialog, StyledTextInput } from './styles';
 import { IAddProductProps } from './types';
 
@@ -95,45 +95,45 @@ const AddProductDialog = ({
       <div>
         <div>
           <div className="label-div">
-            <span className="row-label">{productTitles[0].label}</span>
+            <span className="row-label">{addProductTitles[0].label}</span>
             <span className="req-icon"> *</span>
           </div>
           <StyledTextInput
-            id={`${productTitles[0].field}-input`}
+            id={`${addProductTitles[0].field}-input`}
             margin="none"
             variant="outlined"
             value={productName}
             onChange={handleNameOnChange}
-            placeholder={productTitles[0].placeholder}
+            placeholder={addProductTitles[0].placeholder}
             sx={{ marginBottom: '12px' }}
           />
         </div>
         <div>
           <div className="label-div">
-            <span className="row-label">{productTitles[1].label}</span>
+            <span className="row-label">{addProductTitles[1].label}</span>
           </div>
           <StyledTextInput
-            id={`${productTitles[1].field}-input`}
+            id={`${addProductTitles[1].field}-input`}
             margin="none"
             variant="outlined"
             value={barcode}
             onChange={handleBarcodeOnChange}
-            placeholder={productTitles[1].placeholder}
+            placeholder={addProductTitles[1].placeholder}
             sx={{ marginBottom: '12px' }}
             type="number"
           />
         </div>
         <div>
           <div className="label-div">
-            <span className="row-label">{productTitles[2].label}</span>
+            <span className="row-label">{addProductTitles[2].label}</span>
           </div>
           <StyledTextInput
-            id={`${productTitles[2].field}-input`}
+            id={`${addProductTitles[2].field}-input`}
             margin="none"
             variant="outlined"
             value={description}
             onChange={handleDescriptionOnChange}
-            placeholder={productTitles[2].placeholder}
+            placeholder={addProductTitles[2].placeholder}
             multiline
             rows={5}
             sx={{ marginBottom: '24px' }}
@@ -141,14 +141,14 @@ const AddProductDialog = ({
         </div>
         <div>
           <div className="label-div">
-            <span className="row-label">{productTitles[3].label}</span>
+            <span className="row-label">{addProductTitles[3].label}</span>
           </div>
           <TextAutocomplete onOptionSelect={handleCategoryOnChange} isModalOpen={isOpen} />
         </div>
         {categories.length > 0 && (
           <div style={{ marginTop: '12px' }}>
             <div className="label-div">
-              <span className="row-label">{productTitles[4].label}</span>
+              <span className="row-label">{addProductTitles[4].label}</span>
             </div>
             {renderCategoriesChips()}
           </div>
@@ -210,7 +210,7 @@ const AddProductDialog = ({
       maxWidth="sm"
       fullWidth={true}
       transitionDuration={300}
-      data-testid="add-category-modal"
+      data-testid="add-product-modal"
       keepMounted
     >
       {renderDialogTitle()}
