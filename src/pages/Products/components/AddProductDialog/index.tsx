@@ -48,7 +48,7 @@ const AddProductDialog = ({
   };
 
   const handleCategoryOnChange = (option: IValue) => {
-    setCategories((oldValue) => [...oldValue, String(option?.id)]);
+    setCategories((oldValue) => [...oldValue, String(option?.lowerLevelCategoryId)]);
     setCategoryChips((oldValue) => [...oldValue, option]);
   };
 
@@ -66,7 +66,7 @@ const AddProductDialog = ({
       <StyledChipWrapper>
         {categoryChips.map((val: IValue, index: number) => {
           const handleDeleteChip = () => {
-            setCategories((oldValue) => oldValue.filter((value) => value !== val.id));
+            setCategories((oldValue) => oldValue.filter((value) => value !== val.lowerLevelCategoryId));
             setCategoryChips((oldValue) => oldValue.filter((value) => value.id !== val.id));
           };
           return <Chips key={`${val.id}-${index}`} label={String(val.categoryName)} onChipDelete={handleDeleteChip} />;

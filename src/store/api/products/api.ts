@@ -129,8 +129,16 @@ export const productsMicroService = createApi({
         };
       },
     }),
+    refreshProducts: builder.query<void, void>({
+      query: () => {
+        return {
+          url: `/Product/indexer/run`,
+          method: 'GET',
+        };
+      },
+    }),
   })
 });
 
 export const { useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
-export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useUpdateLinkedCategoriesMutation } = productsMicroService;
+export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useLazyRefreshProductsQuery, useUpdateLinkedCategoriesMutation } = productsMicroService;
