@@ -62,7 +62,7 @@ const UpdateCategoriesDialog = ({
       <StyledChipWrapper>
         {currCategoryChips.map((val: IValue, index: number) => {
           const handleDeleteChip = () => {
-            setCurrCategories((oldValue) => oldValue.filter((value) => value !== val.lowerLevelCategoryId));
+            setCurrCategories((oldValue) => oldValue.filter((value) => value !== val.id));
             setCurrCategoryChips((oldValue) => oldValue.filter((value) => value.id !== val.id));
           };
           return <Chips key={`${val.id}-${index}`} label={String(val.name)} onChipDelete={handleDeleteChip} />;
