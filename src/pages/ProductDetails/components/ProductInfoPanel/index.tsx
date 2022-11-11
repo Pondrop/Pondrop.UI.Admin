@@ -161,10 +161,8 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
     setIsSnackbarOpen(isUpdateCategoriesSuccess);
     if (isUpdateCategoriesSuccess) {
       handleUpdateCategoryClose();
-      setTimeout(() => {
-        dispatch(productsMicroService.util.resetApiState());
-        refetch();
-      }, 17000);
+      dispatch(productsMicroService.util.resetApiState());
+      refetch();
     }
   }, [isUpdateCategoriesSuccess]);
 
