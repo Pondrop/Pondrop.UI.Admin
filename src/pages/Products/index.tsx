@@ -15,7 +15,13 @@ import AddProductDialog from './components/AddProductDialog';
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IValue } from 'store/api/types';
-import { useAddProductMutation, useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
+import {
+  productsApi,
+  useAddProductMutation,
+  useGetAllProductFilterQuery,
+  useGetProductsQuery,
+  useLazyRefreshProductsQuery,
+} from 'store/api/products/api';
 import {
   resetToInitialState,
   selectProducts,
@@ -53,7 +59,7 @@ const Products: FunctionComponent = (): JSX.Element => {
     selectedParent,
     sortValue,
   } = useAppSelector(selectProducts);
-  const { data, isFetching } = useGetProductsQuery({
+  const { data, isFetching, refetch } = useGetProductsQuery({
     searchString: searchValue,
     sortValue,
     filterItem,
@@ -67,6 +73,9 @@ const Products: FunctionComponent = (): JSX.Element => {
     { searchString: searchValue, parentCategory: selectedParent },
     { skip: !gridData.length },
   );
+
+  const [refreshProducts, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
+    useLazyRefreshProductsQuery();
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
@@ -198,8 +207,20 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   useEffect(() => {
     setIsSnackbarOpen(isAddProductSuccess);
-    if (isAddProductSuccess) handleAddModalClose();
+    if (isAddProductSuccess) {
+      handleAddModalClose();
+      refreshProducts();
+    }
   }, [isAddProductSuccess]);
+
+  useEffect(() => {
+    if (!isRefreshFetching && isRefreshSuccess) {
+      setTimeout(() => {
+        dispatch(productsApi.util.resetApiState());
+        refetch();
+      }, 7000);
+    }
+  }, [isRefreshFetching, isRefreshSuccess]);
 
   useEffect(() => {
     if (addProductError && 'data' in addProductError) setErrMsg(String(addProductError?.data));
