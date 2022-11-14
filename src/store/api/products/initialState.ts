@@ -8,5 +8,5 @@ export const productInitialState: IProductState = {
     sort: 'asc'
   },
   selectedCategories: [],
-  selectedParent: ''
+  selectedParent: 'all'
 };

@@ -1,4 +1,7 @@
+import { IValue } from "store/api/types";
+
 export interface ICategoryListProps {
-  onParentCategoryChange?: () => void;
   onManageCategoriesClick?: () => void;
+  sortedData?: IValue[];
+  handleParentCategoryClick: (category: IValue) => void;
 }
