@@ -6,7 +6,7 @@ export const DivWrapper = styled.div`
   border: 1px solid #dde3ea;
   width: 248px;
   height: fit-content;
-  max-height: 695px;
+  max-height: 775px;
   padding: 8px 16px 16px;
   margin-right: 16px;
 

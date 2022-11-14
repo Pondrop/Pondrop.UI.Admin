@@ -21,17 +21,19 @@ export const productsApi = createApi({
         let filterQuery = '';
         let sortQuery = '';
 
-        if (parentCategory) {
+        if (parentCategory && parentCategory !== 'all' && parentCategory !== 'uncategorised') {
           filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
+        } else if (parentCategory && parentCategory === 'uncategorised') {
+          filterQuery = filterQuery.concat(`parentCategoryId eq null`);
         }
 
         if (baseCategory) {
-          if (parentCategory) filterQuery = filterQuery.concat(' and ');
+          if (parentCategory && parentCategory !== 'all') filterQuery = filterQuery.concat(' and ');
           filterQuery = filterQuery.concat(`categories/any(t: t/name eq '${baseCategory}')`);
         }
 
         if (selectedCategories?.length > 0) {
-          if (parentCategory || baseCategory) filterQuery = filterQuery.concat(' and ');
+          if ((parentCategory && parentCategory !== 'all') || baseCategory) filterQuery = filterQuery.concat(' and ');
           selectedCategories.forEach((categ, index) => {
             filterQuery = filterQuery.concat(`categories/any(t: t/name eq '${categ}')`);
             if (index !== selectedCategories?.length - 1) filterQuery = filterQuery.concat(' or ');
@@ -70,7 +72,8 @@ export const productsApi = createApi({
         let filterQuery = '';
 
         if (parentCategory) {
-          filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
+          if (parentCategory !== 'all' && parentCategory !== 'uncategorised') filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
+          if (parentCategory === 'uncategorised') filterQuery = filterQuery.concat(`parentCategoryId eq null`);
           if (selectedCategory) filterQuery = filterQuery.concat(` and categories/any(t: t/name eq '${selectedCategory}')`);
         }
 

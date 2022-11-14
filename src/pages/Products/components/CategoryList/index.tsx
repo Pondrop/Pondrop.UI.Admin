@@ -3,34 +3,26 @@ import { CircularProgress } from '@mui/material';
 
 import CustomEmptyState from 'components/EmptyState';
 import { CircularLoaderWrapper, SpaceBetweenDiv } from 'pages/styles';
-import { useAppDispatch, useAppSelector } from 'store';
+import { useAppSelector } from 'store';
 import { useGetParentCategoriesQuery } from 'store/api/products/api';
-import { selectProducts, setProductsSelectedParent } from 'store/api/products/slice';
+import { selectProducts } from 'store/api/products/slice';
 import { IValue } from 'store/api/types';
 import { BtnWrapper, DivWrapper, ManageCategoriesBtn, StyledList, StyledListItemButton } from './styles';
 import { ICategoryListProps } from './types';
 
-const CategoryList = ({ onManageCategoriesClick, onParentCategoryChange }: ICategoryListProps) => {
-  const dispatch = useAppDispatch();
+const CategoryList = ({ onManageCategoriesClick, sortedData, handleParentCategoryClick }: ICategoryListProps) => {
   const { selectedParent } = useAppSelector(selectProducts);
 
   // API call
-  const { data, isFetching } = useGetParentCategoriesQuery();
-  const [parentCategoryData, setParentCategoryData] = useState<IValue[]>(data?.items ?? []);
+  const { isFetching } = useGetParentCategoriesQuery();
+  const [parentCategoryData, setParentCategoryData] = useState<IValue[]>(sortedData ?? []);
 
   useEffect(() => {
-    const sortedData = data?.items?.slice() ?? [];
-    sortedData?.sort((a, b) => {
-      if (a.categoryName < b.categoryName) return -1;
-      if (a.categoryName > b.categoryName) return 1;
-      return 0;
-    });
     setParentCategoryData(sortedData ?? []);
-  }, [data]);
+  }, [sortedData]);
 
   const handleCategoryClick = (category: IValue) => () => {
-    dispatch(setProductsSelectedParent(String(category?.id)));
-    if (typeof onParentCategoryChange === 'function') onParentCategoryChange();
+    handleParentCategoryClick(category);
   };
 
   const renderLoader = () => (

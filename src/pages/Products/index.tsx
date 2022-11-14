@@ -19,6 +19,7 @@ import {
   productsApi,
   useAddProductMutation,
   useGetAllProductFilterQuery,
+  useGetParentCategoriesQuery,
   useGetProductsQuery,
   useLazyRefreshProductsQuery,
 } from 'store/api/products/api';
@@ -28,6 +29,7 @@ import {
   setProductsFilter,
   setProductsSearchValue,
   setProductsSelectedCategories,
+  setProductsSelectedParent,
   setProductsSortValue,
 } from 'store/api/products/slice';
 import { IProductDialogData } from 'store/api/products/types';
@@ -47,6 +49,7 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   // States
   const [gridData, setGridData] = useState<IValue[]>([]);
+  const [allProductCount, setAllProductCount] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
@@ -74,9 +77,12 @@ const Products: FunctionComponent = (): JSX.Element => {
     { skip: !gridData.length },
   );
 
+  const { data: parentCategories } = useGetParentCategoriesQuery();
+
   const [refreshProducts, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
     useLazyRefreshProductsQuery();
 
+  const [parentCategoryData, setParentCategoryData] = useState<IValue[]>(parentCategories?.items ?? []);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [errMsg, setErrMsg] = useState<string>('');
@@ -170,7 +176,8 @@ const Products: FunctionComponent = (): JSX.Element => {
     navigate('categories', { replace: false });
   };
 
-  const handleParentCategoryChange = () => {
+  const handleParentCategoryChange = (category: IValue) => {
+    dispatch(setProductsSelectedParent(String(category?.id)));
     setPageSkip(0);
     setPage(0);
     dispatch(resetToInitialState());
@@ -196,14 +203,47 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    if (searchValue !== '' || selectedParent !== '') {
+    if (
+      (selectedParent !== 'all' && selectedParent !== 'uncategorised') ||
+      (selectedParent === 'all' && searchValue.length > 3) ||
+      (selectedParent === 'uncategorised' && searchValue.length > 3)
+    ) {
       setRowCount(data?.['@odata.count'] ?? 0);
       setGridData(data?.value ?? []);
     } else {
+      if (selectedParent === 'all' && searchValue === '' && filterItem.value.length === 0)
+        setAllProductCount(data?.['@odata.count'] ?? 0);
       setGridData([]);
       setRowCount(0);
     }
   }, [data]);
+
+  useEffect(() => {
+    let sortedData = parentCategories?.items?.slice() ?? [];
+    sortedData?.sort((a, b) => {
+      if (a.categoryName < b.categoryName) return -1;
+      if (a.categoryName > b.categoryName) return 1;
+      return 0;
+    });
+
+    const categoryProductCount = sortedData.reduce((total, currValue) => total + Number(currValue.productCount), 0);
+
+    const allCategory = {
+      categoryName: 'All',
+      id: 'all',
+      productCount: allProductCount,
+    };
+
+    const uncategorisedCategory = {
+      categoryName: 'Uncategorised',
+      id: 'uncategorised',
+      productCount: allProductCount - categoryProductCount,
+    };
+
+    sortedData = [allCategory, ...sortedData, uncategorisedCategory];
+
+    setParentCategoryData(sortedData ?? []);
+  }, [allProductCount, parentCategories]);
 
   useEffect(() => {
     setIsSnackbarOpen(isAddProductSuccess);
@@ -259,7 +299,8 @@ const Products: FunctionComponent = (): JSX.Element => {
       <RowAlignWrapper>
         <CategoryList
           onManageCategoriesClick={handleOnMangeCategories}
-          onParentCategoryChange={handleParentCategoryChange}
+          sortedData={parentCategoryData}
+          handleParentCategoryClick={handleParentCategoryChange}
         />
         <div style={{ height: 'fit-content', width: 'calc(100vw - 617px)' }}>
           <Grid
