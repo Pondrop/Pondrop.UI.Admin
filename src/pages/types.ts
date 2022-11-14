@@ -22,7 +22,7 @@ export interface IState {
 }
 
 export interface IModalState {
-  campaignTitle: string;
+  name: string;
   campaignType: string;
   template: string;
   id: string;

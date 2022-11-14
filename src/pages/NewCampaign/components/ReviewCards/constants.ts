@@ -1,6 +1,6 @@
 export const campaignInfoTitles = [
   {
-    field: 'campaignTitle',
+    field: 'name',
     label: 'Campaign title'
   },
   {

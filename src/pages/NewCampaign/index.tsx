@@ -103,7 +103,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
   const handleUpdateEndDate = (value: Moment) => {
     const requestBody = {
       ...requestData,
-      campaignEndDate: String(moment(value).format('YYYY-MM-DDTHH:mm:ss.SSSZ')),
+      campaignEndDate: String(moment(value).format('YYYY-MM-DDTHH:mm:ssZ')),
     };
 
     setRequestData(requestBody);
@@ -114,7 +114,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     const requestBody = {
       ...requestData,
       campaignStatus: 'live',
-      campaignPublishedDate: String(moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ')),
+      campaignPublishedDate: String(moment().format('YYYY-MM-DDTHH:mm:ssZ')),
     };
 
     setIsPublish(true);
@@ -136,7 +136,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     setRequestData((oldValue) => ({
       ...oldValue,
       id: state?.id,
-      name: state?.campaignTitle,
+      name: state?.name,
       campaignType: state?.campaignType,
       selectedTemplateIds: [state?.template],
       campaignEndDate: null,
@@ -160,7 +160,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
         <SpaceBetweenDiv withmargin={false}>
           <ColAlignDiv>
             <StyledTitle variant="h5" style={{ margin: '0', padding: '0 64px' }}>
-              {state?.campaignTitle}
+              {state?.name}
             </StyledTitle>
             <StyledTitle className="main-header" variant="caption" style={{ padding: '0 64px' }}>
               {isUpdateCampaignLoading ? renderLoader(20) : 'Draft auto-saved'}
