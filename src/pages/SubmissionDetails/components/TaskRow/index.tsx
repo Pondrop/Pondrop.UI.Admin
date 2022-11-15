@@ -1,9 +1,9 @@
 import { FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
 
-import { ColAlignDiv, RowAlignWrapper, SpaceBetweenDiv } from 'pages/styles';
+import { ColAlignDiv, RowAlignWrapper } from 'pages/styles';
 import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
 import { ImgWrapper } from './styles';
-import { ITaskRowProps, IValueTypeFields } from './types';
+import { IFieldLabels, ITaskRowProps, IValueTypeFields } from './types';
 
 const TaskRow = ({ stepData }: ITaskRowProps) => {
   const renderImage = () => {
@@ -33,8 +33,21 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     return <i style={{ marginRight: '2px' }}>"{value}"</i>;
   };
 
-  const renderValues = (isComment: boolean, fieldValue: string | number | IItemValue | null) => {
-    if (!fieldValue || !isComment) {
+  const renderValues = (
+    isComment: boolean,
+    isArray: boolean,
+    fieldValue: string | number | IItemValue | IValueTypes[] | null,
+  ) => {
+    if (isArray) {
+      return (
+        <ul className="row-value" style={{ paddingInlineStart: '16px', width: '200px', fontSize: '14px' }}>
+          {Array.isArray(fieldValue) &&
+            fieldValue?.map(
+              (value) => value.itemValue?.itemName && <li className="row-value">{value.itemValue?.itemName}</li>,
+            )}
+        </ul>
+      );
+    } else if (!fieldValue || !isComment) {
       return (
         <span className="row-value singleline">{fieldValue ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}</span>
       );
@@ -51,18 +64,20 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     const isComment = step.type === 'multilineText';
     const isCurrency = step.type === 'currency';
     const isProduct = step.type === 'search';
+    const isFocus = step.type === 'focus';
+    const isArray = isProduct || isFocus;
 
-    let fieldValue =
-      step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
+    let fieldValue = isArray
+      ? step?.values
+      : step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
 
     if (isCurrency) fieldValue = '$ ' + Number(fieldValue).toFixed(2);
-    else if (isProduct) fieldValue = (fieldValue as IItemValue)?.itemName;
 
     return (
-      <SpaceBetweenDiv key={step.id} style={{ width: '400px' }}>
-        <span className="row-label">{step.label === 'Add a product' ? 'Product' : step.label}</span>
-        {renderValues(isComment, fieldValue)}
-      </SpaceBetweenDiv>
+      <RowAlignWrapper key={step.id} style={{ width: '400px', alignItems: 'center' }}>
+        <span className="row-label">{IFieldLabels[step?.templateFieldId as keyof typeof IFieldLabels]}</span>
+        {renderValues(isComment, isArray, fieldValue)}
+      </RowAlignWrapper>
     );
   };
 
@@ -76,7 +91,7 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
   };
 
   return (
-    <RowAlignWrapper style={{ borderTop: '1px solid rgba(224, 224, 224, 1)', padding: '10px 0' }}>
+    <RowAlignWrapper style={{ borderTop: '1px solid rgba(224, 224, 224, 1)', padding: '10px 0', alignItems: 'center' }}>
       {renderImage()}
       <ColAlignDiv style={{ alignSelf: 'center' }}>{renderData()}</ColAlignDiv>
     </RowAlignWrapper>
