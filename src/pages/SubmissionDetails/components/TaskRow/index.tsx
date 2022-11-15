@@ -1,4 +1,5 @@
 import { FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
+import moment from 'moment';
 
 import { ColAlignDiv, RowAlignWrapper } from 'pages/styles';
 import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
@@ -65,6 +66,7 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
   const renderField = (step: IFields) => {
     const isComment = step.type === 'multilineText';
     const isCurrency = step.type === 'currency';
+    const isDate = step.type === 'date';
     const isProduct = step.type === 'search';
     const isFocus = step.type === 'focus';
     const isArray = isProduct || isFocus;
@@ -74,6 +76,7 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
       : step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
 
     if (isCurrency) fieldValue = '$ ' + Number(fieldValue).toFixed(2);
+    if (isDate) fieldValue = fieldValue ? moment(String(fieldValue)).format('DD/MM/YYYY') : null;
 
     return (
       <RowAlignWrapper key={step.id} style={{ width: '400px', alignItems: 'center' }}>

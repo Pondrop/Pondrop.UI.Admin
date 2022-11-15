@@ -12,6 +12,7 @@ export enum IValueTypeFields {
   multilineText = "stringValue",
   barcode = "stringValue",
   search = "itemValue",
+  date = "dateTimeValue"
 }
 
 export enum IFieldLabels {
@@ -29,5 +30,10 @@ export enum IFieldLabels {
   "3995d781-e3c4-4407-a1ac-fe613b5c487d" = "Products",
   "88156d84-3bb4-4ca0-88c9-55895195f341" = "Price type",
   "1e73599f-b6a4-4cad-8726-7efc8b8b6eff" = "Label product name",
-  "350d971c-6287-49c2-b2d9-48415de5db33" = "Label barcode"
+  "350d971c-6287-49c2-b2d9-48415de5db33" = "Label barcode",
+  "92de4a21-a8b9-4edb-b00e-37099729d9cc" = "In-store shelf section",
+  "bda8238a-445b-47c2-b8c5-72f5dcf30389" = "Nearest use by date",
+  "9c534991-85bf-4bcb-9d9d-15ceb2d32f2a" = "Qty @ nearest use by date",
+  "2436688a-9b51-49b8-ad2e-013c23bb1bbe" = "Furthest use by date",
+  "827f99de-e0df-4cca-8912-35e097b07c84" = "Qty @ furthest use by date"
 }
