@@ -8,7 +8,9 @@ export enum IValueTypeFields {
   integer = "intValue",
   currency = "doubleValue",
   picker = "stringValue",
+  text = "stringValue",
   multilineText = "stringValue",
+  barcode = "stringValue",
   search = "itemValue",
 }
 

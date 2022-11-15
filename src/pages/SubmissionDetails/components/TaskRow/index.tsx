@@ -49,7 +49,9 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
       );
     } else if (!fieldValue || !isComment) {
       return (
-        <span className="row-value singleline">{fieldValue ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}</span>
+        <span className="row-value singleline" style={{ width: '200px' }}>
+          {fieldValue ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}
+        </span>
       );
     } else if (isComment) {
       return (
