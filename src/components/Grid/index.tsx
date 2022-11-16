@@ -16,6 +16,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   data,
   columns,
   id,
+  dataIdKey,
   isFetching,
   onFilterModelChange,
   filterItem,
@@ -113,7 +114,7 @@ const Grid: FunctionComponent<IGridProps> = ({
         pagination: { showFirstButton: true, showLastButton: true },
       }}
       loading={isFetching}
-      getRowId={(row) => row.Id ?? row.id}
+      getRowId={(row) => row[dataIdKey]}
       filterModel={getFilterModel()}
       onFilterModelChange={onFilterModelChange}
       paginationMode="server"

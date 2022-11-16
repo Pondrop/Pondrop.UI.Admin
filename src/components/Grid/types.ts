@@ -8,6 +8,7 @@ export interface IGridProps {
   data?: unknown[];
   columns: GridColDef[];
   id: string;
+  dataIdKey: string;
   isFetching: boolean;
   onFilterModelChange: (model: GridFilterModel) => void;
   filterItem: IFilterItem;

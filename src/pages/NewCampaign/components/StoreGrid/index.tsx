@@ -173,6 +173,7 @@ const StoreGrid = (): JSX.Element => {
         data={gridData}
         columns={campaignStoreColumns}
         id="view-store-mini-grid"
+        dataIdKey="Id"
         isFetching={isStoreFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={storeFilterItem}

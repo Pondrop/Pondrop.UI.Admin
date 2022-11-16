@@ -152,6 +152,7 @@ const LinkedProducts = ({
         data={gridData}
         columns={linkedProductsColumns}
         id="view-products-mini-grid"
+        dataIdKey="id"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={filterVal}

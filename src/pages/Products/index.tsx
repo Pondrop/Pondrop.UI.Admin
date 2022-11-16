@@ -307,6 +307,7 @@ const Products: FunctionComponent = (): JSX.Element => {
             data={gridData}
             columns={productColumns}
             id={`view-products-grid-${selectedParent}`}
+            dataIdKey="id"
             isFetching={isFetching}
             onFilterModelChange={onFilterModelChange}
             filterItem={filterItem}

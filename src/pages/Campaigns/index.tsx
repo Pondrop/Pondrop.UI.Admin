@@ -261,6 +261,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
         data={gridData}
         columns={campaignsColumns}
         id="view-campaigns-grid"
+        dataIdKey="id"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={campaignFilterItem}
