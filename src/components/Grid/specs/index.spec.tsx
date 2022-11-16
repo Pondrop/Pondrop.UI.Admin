@@ -21,6 +21,7 @@ describe('<Grid />', () => {
         data={gridMockData}
         columns={storeColumns}
         id="grid-test"
+        dataIdKey="Id"
         isFetching={false}
         onFilterModelChange={mockOnFilterModelChange}
         filterItem={initialState.filterItem}

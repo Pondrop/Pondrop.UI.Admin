@@ -265,6 +265,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
         data={gridData}
         columns={categoriesColumns}
         id="view-categories-grid"
+        dataIdKey="id"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={categoryFilterItem}

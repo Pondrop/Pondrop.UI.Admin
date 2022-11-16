@@ -140,6 +140,7 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
         data={data?.value}
         columns={tasksColumns}
         id="view-tasks-grid"
+        dataIdKey="id"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={taskFilterItem}

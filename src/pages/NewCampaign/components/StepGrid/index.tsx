@@ -179,6 +179,11 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
     else return categFilterItem;
   };
 
+  const getDataIdKey = () => {
+    if (stepType === 'product') return 'id';
+    else return 'lowerLevelCategoryId';
+  };
+
   const handleSearchDispatch = (searchValue: string) => {
     if (stepType === 'product') {
       dispatch(
@@ -343,6 +348,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
         data={gridData}
         columns={getColHeader()}
         id="view-focus-mini-grid"
+        dataIdKey={getDataIdKey()}
         isFetching={isProductFetching || isCategFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={getFilterValue()}

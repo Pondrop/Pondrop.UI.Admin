@@ -146,6 +146,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         data={data?.value}
         columns={storeColumns}
         id="view-stores-grid"
+        dataIdKey="Id"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={storeFilterItem}
