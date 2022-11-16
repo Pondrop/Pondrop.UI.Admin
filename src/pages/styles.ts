@@ -223,7 +223,7 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
 
   .row-label {
     font-weight: 600;
-    min-width: 100px;
+    width: 200px;
   }
 
   .capitalize {

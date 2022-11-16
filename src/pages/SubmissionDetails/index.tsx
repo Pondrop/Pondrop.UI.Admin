@@ -50,7 +50,7 @@ const SubmissionDetails: FunctionComponent = (): JSX.Element => {
         {data?.templateTitle}
       </StyledTitle>
       <StyledSubtitle variant="subtitle1" gutterBottom>
-        Submitted {moment(data?.submittedUtc).format('hh:mm:ss Do MMMM YYYY')}
+        Submitted {moment(data?.submittedUtc).format('hh:mm:ss a Do MMMM YYYY')}
       </StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Task information" id="tab-0" aria-controls="task-detail-0" disableRipple />

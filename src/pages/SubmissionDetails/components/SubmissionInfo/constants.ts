@@ -9,8 +9,4 @@ export const submissionTitles = [
     label: 'Store',
     value: 'Redfern'
   },
-  {
-    field: 'Product',
-    label: 'Product',
-  },
 ];
