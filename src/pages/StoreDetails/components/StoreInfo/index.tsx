@@ -64,7 +64,7 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
           {renderStoreDetails()}
           <RowAlignWrapper></RowAlignWrapper>
         </StyledCard>
-        <StyledCard width="309px">
+        <StyledCard width="350px">
           <StyledCardTitle variant="h6" gutterBottom>
             Opening Hours
           </StyledCardTitle>
