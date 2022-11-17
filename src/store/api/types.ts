@@ -38,6 +38,7 @@ export interface IGridState {
   sortValue: ISortItem;
   selectedIds?: string[] | number[];
   selectedCategories?: string[];
+  selectedProviders?: string[];
 }
 
 export interface IProductState extends IGridState {

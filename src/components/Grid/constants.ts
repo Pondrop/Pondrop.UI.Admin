@@ -1,15 +1,15 @@
 import { getGridStringOperators, GridColDef } from "@mui/x-data-grid";
-import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips } from "./utils";
+import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips, handleRenderProvider } from "./utils";
 
 // filterOperators to be updated to make way for ssr filters, disabled most operators for now
 
 export const storeColumns: GridColDef[] = [
-  { field: 'Provider', headerName: 'Provider', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'),width: 120, renderCell: handleRenderCell },
-  { field: 'Name', headerName: 'Store name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
-  { field: 'Street', headerName: 'Street', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 2, renderCell: handleRenderCell },
-  { field: 'City', headerName: 'City', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
-  { field: 'State', headerName: 'State', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 100, renderCell: handleRenderCell },
-  { field: 'Zip_Code', headerName: 'Post code', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+  { field: 'retailer', headerName: 'Provider', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'),width: 120, renderCell: handleRenderProvider, sortable: false },
+  { field: 'name', headerName: 'Store name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'addressLine1', headerName: 'Street', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 2, renderCell: handleRenderCell },
+  { field: 'suburb', headerName: 'City', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+  { field: 'state', headerName: 'State', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 100, renderCell: handleRenderCell },
+  { field: 'postcode', headerName: 'Post code', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
 ];
 
 export const campaignStoreColumns: GridColDef[] = [

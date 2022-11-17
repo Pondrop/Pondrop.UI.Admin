@@ -27,6 +27,25 @@ export const handleRenderCell = (params: GridRenderCellParams) => {
   );
 };
 
+export const handleRenderProvider = (params: GridRenderCellParams) => {
+  const tooltipTextRef = useRef<HTMLDivElement>(null);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (tooltipTextRef?.current) {
+      setShowTooltip(tooltipTextRef.current.clientWidth < tooltipTextRef.current.scrollWidth);
+    }
+  }, []);
+
+  return (
+    <Tooltip title={params.value.name ?? ''} placement="top" key={params.id} arrow disableHoverListener={!showTooltip}>
+      <StyledCellContent ref={tooltipTextRef} id={`styled-content-${params.id}-${params.field}`}>
+        {params.value.name}
+      </StyledCellContent>
+    </Tooltip>
+  );
+};
+
 export const handleRenderCellFormat = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
