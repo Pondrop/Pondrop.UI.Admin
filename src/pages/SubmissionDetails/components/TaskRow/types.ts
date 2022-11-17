@@ -12,6 +12,7 @@ export enum IValueTypeFields {
   multilineText = "stringValue",
   barcode = "stringValue",
   search = "itemValue",
+  focus = "itemValue",
   date = "dateTimeValue"
 }
 

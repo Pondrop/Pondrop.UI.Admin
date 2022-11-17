@@ -36,27 +36,32 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
 
   const renderValues = (
     isComment: boolean,
-    isArray: boolean,
-    fieldValue: string | number | IItemValue | IValueTypes[] | null,
+    isProduct: boolean,
+    fieldValue: string | number | IItemValue | IValueTypes[] | null | undefined,
   ) => {
-    if (isArray) {
+    if (isProduct) {
       return (
-        <ul className="row-value" style={{ paddingInlineStart: '16px', width: '200px', fontSize: '14px' }}>
+        <ul className="row-value" style={{ paddingInlineStart: '16px', width: '500px', fontSize: '14px' }}>
           {Array.isArray(fieldValue) &&
             fieldValue?.map(
-              (value) => value.itemValue?.itemName && <li className="row-value">{value.itemValue?.itemName}</li>,
+              (value) =>
+                value.itemValue?.itemName && (
+                  <li className="row-value" key={value.itemValue.itemId}>
+                    {value.itemValue?.itemName}
+                  </li>
+                ),
             )}
         </ul>
       );
     } else if (!fieldValue || !isComment) {
       return (
-        <span className="row-value singleline" style={{ width: '200px' }}>
+        <span className="row-value singleline" style={{ width: '500px' }}>
           {fieldValue ?? <i style={{ marginRight: '2px' }}>Not supplied</i>}
         </span>
       );
     } else if (isComment) {
       return (
-        <span className="row-value multiline" style={{ maxWidth: '300px', textAlign: 'right' }}>
+        <span className="row-value multiline" style={{ maxWidth: '498px' }}>
           {renderComment(fieldValue as string)}
         </span>
       );
@@ -69,19 +74,22 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     const isDate = step.type === 'date';
     const isProduct = step.type === 'search';
     const isFocus = step.type === 'focus';
-    const isArray = isProduct || isFocus;
 
-    let fieldValue = isArray
-      ? step?.values
-      : step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
+    let fieldValue;
+
+    if (isFocus) fieldValue = step?.values[0]?.itemValue?.itemName;
+    else if (isProduct) fieldValue = step?.values;
+    else
+      fieldValue =
+        step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
 
     if (isCurrency) fieldValue = '$ ' + Number(fieldValue).toFixed(2);
     if (isDate) fieldValue = fieldValue ? moment(String(fieldValue)).format('DD/MM/YYYY') : null;
 
     return (
-      <RowAlignWrapper key={step.id} style={{ width: '400px', alignItems: 'center' }}>
+      <RowAlignWrapper key={step.id} style={{ width: '700px', alignItems: 'center' }}>
         <span className="row-label">{IFieldLabels[step?.templateFieldId as keyof typeof IFieldLabels]}</span>
-        {renderValues(isComment, isArray, fieldValue)}
+        {renderValues(isComment, isProduct, fieldValue)}
       </RowAlignWrapper>
     );
   };
