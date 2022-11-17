@@ -46,7 +46,7 @@ export const storeApi = createApi({
       query: (arg) => {
         const { storeId } = arg;
         return {
-          url: `/indexes/cosmosdb-index-store/docs?api-version=2021-04-30-Preview${`&$filter=Id eq '${storeId}'`}`,
+          url: `/indexes/cosmosdb-index-store/docs?api-version=2021-04-30-Preview${`&$filter=id eq '${storeId}'`}`,
           method: 'GET',
         };
       },
