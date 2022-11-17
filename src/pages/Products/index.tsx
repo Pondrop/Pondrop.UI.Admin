@@ -153,9 +153,8 @@ const Products: FunctionComponent = (): JSX.Element => {
         ? handleFilterStateChange(value, filters.value)
         : [value];
 
-    if (currColumn === 'categories') {
-      dispatch(setProductsSelectedCategories(combinedValue));
-    }
+    if (currColumn === 'categories') dispatch(setProductsSelectedCategories(combinedValue));
+    else dispatch(setProductsSelectedCategories([]));
 
     setPageSkip(0);
     setPage(0);

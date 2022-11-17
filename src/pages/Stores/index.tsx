@@ -1,6 +1,6 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
 
 import { storeColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
@@ -8,7 +8,13 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
 import { storeInitialState } from 'store/api/stores/initialState';
-import { selectStores, setStoresFilter, setStoresSearchValue, setStoresSortValue } from 'store/api/stores/slice';
+import {
+  selectStores,
+  setStoresFilter,
+  setStoresSearchValue,
+  setStoresSelectedProviders,
+  setStoresSortValue,
+} from 'store/api/stores/slice';
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
 import Grid from 'components/Grid';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
@@ -23,13 +29,14 @@ const Stores: FunctionComponent = (): JSX.Element => {
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '', sortValue } = useAppSelector(selectStores);
+  const { filterItem, searchValue = '', selectedProviders = [], sortValue } = useAppSelector(selectStores);
   const { data, isFetching } = useGetStoresQuery({
     searchString: searchValue,
     sortValue,
     filterItem,
     prevPageItems: pageSkip,
     pageSize,
+    selectedProviders,
   });
 
   const gridData = data?.value ?? [];
@@ -39,19 +46,18 @@ const Stores: FunctionComponent = (): JSX.Element => {
   );
 
   const menuData = {
-    Provider: filterOptionsData?.['@search.facets']?.Provider,
-    Name: filterOptionsData?.['@search.facets']?.Name,
-    Street: filterOptionsData?.['@search.facets']?.Street,
-    City: filterOptionsData?.['@search.facets']?.City,
-    State: filterOptionsData?.['@search.facets']?.State,
-    Zip_Code: filterOptionsData?.['@search.facets']?.Zip_Code,
+    retailer: filterOptionsData?.['@search.facets']?.['retailer/name'],
+    name: filterOptionsData?.['@search.facets']?.name,
+    addressLine1: filterOptionsData?.['@search.facets']?.addressLine1,
+    suburb: filterOptionsData?.['@search.facets']?.suburb,
+    state: filterOptionsData?.['@search.facets']?.state,
+    postcode: filterOptionsData?.['@search.facets']?.postcode,
   };
 
   const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
     pagination: { pageSize },
-    sorting: { sortModel: [{ field: 'Provider', sort: 'asc' as GridSortDirection }] },
   };
 
   // Use Effects
@@ -111,6 +117,9 @@ const Stores: FunctionComponent = (): JSX.Element => {
         ? handleFilterStateChange(value, filters.value)
         : [value];
 
+    if (currColumn === 'retailer') dispatch(setStoresSelectedProviders(combinedValue));
+    else dispatch(setStoresSelectedProviders([]));
+
     dispatch(
       setStoresFilter({
         columnField: currColumn,
@@ -146,7 +155,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
         data={data?.value}
         columns={storeColumns}
         id="view-stores-grid"
-        dataIdKey="Id"
+        dataIdKey="id"
         isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={storeFilterItem}

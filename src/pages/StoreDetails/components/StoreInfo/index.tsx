@@ -13,16 +13,34 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
   }, [data]);
 
   const renderStoreDetails = () => {
-    return storeTitles.map((row, index) => (
-      <SpaceBetweenDiv key={`${storeInfo.Id}-details-${index}`}>
-        <span className="row-label">{row.label}</span>
-        <span className="row-value singleline">{storeInfo?.[row.field]}</span>
-      </SpaceBetweenDiv>
-    ));
+    return storeTitles.map((row, index) => {
+      if (index === 0) {
+        const retailer = storeInfo?.retailer as unknown as IValue;
+        return (
+          <SpaceBetweenDiv key={`${storeInfo.id}-details-${index}`}>
+            <span className="row-label">{row.label}</span>
+            <span className="row-value singleline">{retailer?.name}</span>
+          </SpaceBetweenDiv>
+        );
+      } else if (index === storeTitles.length - 1) {
+        return (
+          <SpaceBetweenDiv key={`${storeInfo.id}-details-${index}`}>
+            <span className="row-label">{row.label}</span>
+            <span className="row-value singleline">{`${storeInfo?.latitude}, ${storeInfo?.longitude}`}</span>
+          </SpaceBetweenDiv>
+        );
+      }
+      return (
+        <SpaceBetweenDiv key={`${storeInfo.id}-details-${index}`}>
+          <span className="row-label">{row.label}</span>
+          <span className="row-value singleline">{storeInfo?.[row.field]}</span>
+        </SpaceBetweenDiv>
+      );
+    });
   };
 
   const renderOpeningHours = () => {
-    const storeHoursArray = String(storeInfo?.OpenHours).split(' | ');
+    const storeHoursArray = String(storeInfo?.openHours).split(' | ');
 
     return storeHoursArray.map((row, index) => {
       const labelValue = row.split(':- ')[0];
@@ -46,7 +64,7 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
           {renderStoreDetails()}
           <RowAlignWrapper></RowAlignWrapper>
         </StyledCard>
-        <StyledCard width="309px">
+        <StyledCard width="350px">
           <StyledCardTitle variant="h6" gutterBottom>
             Opening Hours
           </StyledCardTitle>

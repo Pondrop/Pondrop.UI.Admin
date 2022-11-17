@@ -16,6 +16,7 @@ import {
   setStoresFilter,
   setStoresSearchValue,
   setStoresSelectedIds,
+  setStoresSelectedProviders,
   setStoresSortValue,
 } from 'store/api/stores/slice';
 import { IFacetValue, IValue } from 'store/api/types';
@@ -30,6 +31,7 @@ const StoreGrid = (): JSX.Element => {
     filterItem: storeFilterItem,
     searchValue: storeSearchValue = '',
     selectedIds: selectedStoresIds,
+    selectedProviders = [],
     sortValue: storeSortValue,
   } = useAppSelector(selectStores);
 
@@ -40,6 +42,7 @@ const StoreGrid = (): JSX.Element => {
     filterItem: storeFilterItem,
     prevPageItems: storePageSkip,
     pageSize: storePageSize,
+    selectedProviders,
   });
 
   // Store Filter Options
@@ -49,23 +52,24 @@ const StoreGrid = (): JSX.Element => {
   );
 
   const menuData = {
-    Name: storeOptionsData?.['@search.facets']?.Name,
-    Provider: storeOptionsData?.['@search.facets']?.Provider,
-    State: storeOptionsData?.['@search.facets']?.State,
-    City: storeOptionsData?.['@search.facets']?.City,
-    Zip_Code: storeOptionsData?.['@search.facets']?.Zip_Code,
+    retailer: storeOptionsData?.['@search.facets']?.['retailer/name'],
+    name: storeOptionsData?.['@search.facets']?.name,
+    addressLine1: storeOptionsData?.['@search.facets']?.addressLine1,
+    suburb: storeOptionsData?.['@search.facets']?.suburb,
+    state: storeOptionsData?.['@search.facets']?.state,
+    postcode: storeOptionsData?.['@search.facets']?.postcode,
   };
 
   const [storeRowCount, setStoreRowCount] = useState<number>(0);
 
   const initialGridState = {
     pagination: { pageSize: storePageSize },
-    sorting: { sortModel: [{ field: 'Provider', sort: 'asc' as GridSortDirection }] },
   };
 
   useEffect(() => {
     setStoreRowCount(storeData?.['@odata.count'] ?? 0);
     setGridData(storeData?.value ?? []);
+    dispatch(setStoresSelectedProviders([]));
   }, [storeData]);
 
   const handleSearchDispatch = (searchValue: string) => {
@@ -101,6 +105,9 @@ const StoreGrid = (): JSX.Element => {
       filters.field === currColumn && Array.isArray(filters.value)
         ? handleFilterStateChange(value, filters.value)
         : [value];
+
+    if (currColumn === 'retailer') dispatch(setStoresSelectedProviders(combinedValue));
+    else dispatch(setStoresSelectedProviders([]));
 
     dispatch(
       setStoresFilter({
@@ -173,7 +180,7 @@ const StoreGrid = (): JSX.Element => {
         data={gridData}
         columns={campaignStoreColumns}
         id="view-store-mini-grid"
-        dataIdKey="Id"
+        dataIdKey="id"
         isFetching={isStoreFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={storeFilterItem}

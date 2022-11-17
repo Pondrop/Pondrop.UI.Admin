@@ -11,6 +11,6 @@ export const storeSlice = createSlice({
 
 export const selectStores = (state: RootState) => state.store;
 
-export const { setStoresFilter, setStoresSearchValue, setStoresSelectedIds, setStoresSortValue } = storeSlice.actions;
+export const { setStoresFilter, setStoresSearchValue, setStoresSelectedIds, setStoresSortValue, setStoresSelectedProviders } = storeSlice.actions;
 
 export default storeSlice.reducer;

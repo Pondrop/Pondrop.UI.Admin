@@ -16,6 +16,7 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
+import { IValue } from 'store/api/types';
 
 const StoreDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -30,6 +31,7 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
   const state = location?.state as IState;
   const rowData = state?.rowData ?? data?.value[0];
   const isLoading = state?.rowData ? false : isFetching;
+  const retailer = rowData?.retailer as unknown as IValue;
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
@@ -49,13 +51,13 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
         <StyledTypography className="link" onClick={handlePrevious} data-testid="stores-link">
           Stores
         </StyledTypography>
-        <StyledTypography color="text.primary">{`${rowData?.['Provider']} ${rowData?.['Name']}`}</StyledTypography>
+        <StyledTypography color="text.primary">{`${retailer?.name} ${rowData?.name}`}</StyledTypography>
       </StyledBreadcrumbs>
       <StyledTitle variant="h5" gutterBottom>
-        {`${rowData?.['Provider']} ${rowData?.['Name']}`}
+        {`${retailer?.name} ${rowData?.name}`}
       </StyledTitle>
       <StyledSubtitle variant="subtitle1" gutterBottom>
-        {`${rowData?.['Street']}, ${rowData?.['City']} ${rowData?.['State']} ${rowData?.['Zip_Code']}`}
+        {`${rowData?.addressLine1}, ${rowData?.suburb} ${rowData?.state} ${rowData?.postcode}`}
       </StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>
         <StyledTab label="Store information" id="tab-0" aria-controls="store-detail-0" disableRipple />

@@ -1,30 +1,30 @@
 export const storeTitles = [
   {
-    field: 'Provider',
+    field: 'retailer',
     label: 'Provider'
   },
   {
-    field: 'Name',
+    field: 'name',
     label: 'Name'
   },
   {
-    field: 'Street',
+    field: 'addressLine1',
     label: 'Address'
   },
   {
-    field: 'City',
+    field: 'suburb',
     label: 'City'
   },
   {
-    field: 'State',
+    field: 'state',
     label: 'State'
   },
   {
-    field: 'Zip_Code',
+    field: 'postcode',
     label: 'Post Code'
   },
   {
-    field: 'Location',
+    field: 'location',
     label: 'Geolocation'
   }
 ];
