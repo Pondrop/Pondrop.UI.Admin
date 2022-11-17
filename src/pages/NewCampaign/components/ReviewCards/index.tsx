@@ -95,7 +95,9 @@ const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IRe
     return (
       <ColAlignDiv>
         <RowAlignWrapper>
-          <span className="row-label card-details">Completions per store</span>
+          <span className="card-details" style={{ fontWeight: 600 }}>
+            Completions per store
+          </span>
           <Tooltip title={tooltipContent.completion} placement="top">
             <div className="info-icon" style={{ marginLeft: '8px' }}>
               <Info />
@@ -113,7 +115,9 @@ const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IRe
           placeholder="Number of task completions per store"
         />
         <RowAlignWrapper>
-          <span className="row-label card-details">Campaign end date</span>
+          <span className="card-details" style={{ fontWeight: 600 }}>
+            Campaign end date
+          </span>
           <Tooltip title={tooltipContent.endDate} placement="top">
             <div className="info-icon" style={{ marginLeft: '8px' }}>
               <Info />

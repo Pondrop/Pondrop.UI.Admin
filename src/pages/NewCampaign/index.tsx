@@ -97,7 +97,6 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     };
 
     setRequestData(requestBody);
-    updateCampaign(requestBody);
   };
 
   const handleUpdateEndDate = (value: Moment) => {
@@ -107,7 +106,6 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     };
 
     setRequestData(requestBody);
-    updateCampaign(requestBody);
   };
 
   const handlePublishCampaign = () => {
