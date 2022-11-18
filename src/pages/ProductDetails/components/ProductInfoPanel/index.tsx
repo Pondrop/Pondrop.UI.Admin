@@ -194,10 +194,7 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
     if (isGetFullProductSuccess) refreshProducts();
   }, [isGetFullProductSuccess]);
 
-  console.log('here 1 ', isRefreshFetching, isRefreshSuccess);
-
   useEffect(() => {
-    console.log('here 2 ', isRefreshFetching, isRefreshSuccess);
     if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {
         dispatch(productsApi.util.resetApiState());
