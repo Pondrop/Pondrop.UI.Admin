@@ -19,7 +19,7 @@ const AddProductDialog = ({
   isLoading,
 }: IAddProductProps): JSX.Element => {
   const [productName, setProductName] = useState<string>('');
-  const [barcode, setBarcode] = useState<number | string>('');
+  const [barcode, setBarcode] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
   const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
@@ -40,7 +40,7 @@ const AddProductDialog = ({
 
   const handleBarcodeOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     // insert validation here
-    setBarcode(Number(e.target.value));
+    setBarcode(e.target.value);
   };
 
   const handleDescriptionOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +78,7 @@ const AddProductDialog = ({
   const handleModalSubmit = () => {
     handleSubmit({
       name: productName,
-      barcodeNumber: String(barcode),
+      barcodeNumber: barcode,
       shortDescription: description,
       categoryIds: categories,
     });
@@ -116,11 +116,14 @@ const AddProductDialog = ({
             id={`${addProductTitles[1].field}-input`}
             margin="none"
             variant="outlined"
-            value={barcode}
+            value={barcode ? Number(barcode) : ''}
             onChange={handleBarcodeOnChange}
             placeholder={addProductTitles[1].placeholder}
             sx={{ marginBottom: '12px' }}
             type="number"
+            inputProps={{
+              pattern: '[0-9]*',
+            }}
           />
         </div>
         <div>
