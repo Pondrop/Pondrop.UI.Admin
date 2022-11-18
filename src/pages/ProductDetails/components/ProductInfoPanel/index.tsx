@@ -13,12 +13,16 @@ import {
   StyledCardTitle,
   StyledTabContent,
 } from 'pages/styles';
-import { useAppDispatch } from 'store';
+import { useAppDispatch, useAppSelector } from 'store';
 import {
+  productsApi,
   productsMicroService,
   useGetFullProductInfoQuery,
+  useGetProductsQuery,
+  useLazyRefreshProductsQuery,
   useUpdateLinkedCategoriesMutation,
 } from 'store/api/products/api';
+import { selectProducts } from 'store/api/products/slice';
 import { IFullProductInfo } from 'store/api/products/types';
 import { ICategories, IValue } from 'store/api/types';
 import { IProductDetailTabProps } from '../types';
@@ -35,12 +39,32 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { refetch } = useGetFullProductInfoQuery({ productId: data?.id ?? '' });
+  const { refetch, isSuccess: isGetFullProductSuccess } = useGetFullProductInfoQuery({ productId: data?.id ?? '' });
 
   const [
     updateLinkedCategories,
     { isSuccess: isUpdateCategoriesSuccess, reset: resetUpdateCategories, isLoading: isUpdateCategoriesLoading },
-  ] = useUpdateLinkedCategoriesMutation();
+  ] = useUpdateLinkedCategoriesMutation({ fixedCacheKey: 'update-categories-mutation' });
+
+  const [refreshProducts, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
+    useLazyRefreshProductsQuery();
+
+  const {
+    filterItem,
+    searchValue = '',
+    selectedCategories = [],
+    selectedParent,
+    sortValue,
+  } = useAppSelector(selectProducts);
+  const { refetch: refetchProducts } = useGetProductsQuery({
+    searchString: searchValue,
+    sortValue,
+    filterItem,
+    prevPageItems: 0,
+    pageSize: 20,
+    parentCategory: selectedParent,
+    selectedCategories,
+  });
 
   const renderCategoriesChips = () => {
     return (
@@ -165,6 +189,22 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
       refetch();
     }
   }, [isUpdateCategoriesSuccess]);
+
+  useEffect(() => {
+    if (isGetFullProductSuccess) refreshProducts();
+  }, [isGetFullProductSuccess]);
+
+  console.log('here 1 ', isRefreshFetching, isRefreshSuccess);
+
+  useEffect(() => {
+    console.log('here 2 ', isRefreshFetching, isRefreshSuccess);
+    if (!isRefreshFetching && isRefreshSuccess) {
+      setTimeout(() => {
+        dispatch(productsApi.util.resetApiState());
+        refetchProducts();
+      }, 7000);
+    }
+  }, [isRefreshFetching, isRefreshSuccess]);
 
   return (
     <StyledTabContent role="tabpanel" hidden={value !== index} id="product-detail-0" aria-labelledby="tab-0">
