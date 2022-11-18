@@ -56,6 +56,14 @@ export const productsApi = createApi({
         };
       },
     }),
+    getAllProductCount: builder.query<IApiResponse, void>({
+      query: () => {
+        return {
+          url: `/indexes/cosmosdb-index-allproduct/docs?api-version=2021-04-30-Preview&search=*&$count=true&$skip=0`,
+          method: 'GET',
+        };
+      },
+    }),
     getProductInfo: builder.query<IApiResponse, { productId: string }>({
       query: (arg) => {
         const { productId } = arg;
@@ -143,5 +151,5 @@ export const productsMicroService = createApi({
   })
 });
 
-export const { useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
+export const { useGetAllProductCountQuery, useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
 export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useLazyRefreshProductsQuery, useUpdateLinkedCategoriesMutation } = productsMicroService;

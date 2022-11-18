@@ -18,6 +18,7 @@ import { IFacetValue, IValue } from 'store/api/types';
 import {
   productsApi,
   useAddProductMutation,
+  useGetAllProductCountQuery,
   useGetAllProductFilterQuery,
   useGetParentCategoriesQuery,
   useGetProductsQuery,
@@ -71,6 +72,8 @@ const Products: FunctionComponent = (): JSX.Element => {
     parentCategory: selectedParent,
     selectedCategories,
   });
+
+  const { data: allProductData } = useGetAllProductCountQuery();
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchValue, parentCategory: selectedParent },
@@ -210,12 +213,14 @@ const Products: FunctionComponent = (): JSX.Element => {
       setRowCount(data?.['@odata.count'] ?? 0);
       setGridData(data?.value ?? []);
     } else {
-      if (selectedParent === 'all' && searchValue === '' && filterItem.value.length === 0)
-        setAllProductCount(data?.['@odata.count'] ?? 0);
       setGridData([]);
       setRowCount(0);
     }
   }, [data]);
+
+  useEffect(() => {
+    setAllProductCount(allProductData?.['@odata.count'] ?? 0);
+  }, [allProductData]);
 
   useEffect(() => {
     let sortedData = parentCategories?.items?.slice() ?? [];
