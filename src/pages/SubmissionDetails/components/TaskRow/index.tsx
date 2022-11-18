@@ -46,8 +46,8 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
             fieldValue?.map(
               (value) =>
                 value.itemValue?.itemName && (
-                  <li className="row-value" key={value.itemValue.itemId}>
-                    {value.itemValue?.itemName}
+                  <li className="row-value" key={`${stepData?.id}-${value.itemValue?.itemId}`}>
+                    {`${value.itemValue?.itemName} ${value.itemValue?.itemId ? '' : '(Manual)'}`}
                   </li>
                 ),
             )}
