@@ -16,6 +16,7 @@ import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/prod
 import { productInitialState } from 'store/api/products/initialState';
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 import { tooltipContent } from '../CategoryInfoPanel/constants';
+import AddLinkedProductsDialog from '../AddLinkedProductsDialog';
 
 const LinkedProducts = ({
   categoryName,
@@ -31,6 +32,7 @@ const LinkedProducts = ({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
+  const [isAddLinkedProductsModalOpen, setIsAddLinkedProductsModalOpen] = useState<boolean>(false);
 
   const { data, isFetching } = useGetProductsQuery({
     searchString: searchVal,
@@ -117,6 +119,14 @@ const LinkedProducts = ({
     });
   };
 
+  const handleAddLinkedProductsModalOpen = () => {
+    setIsAddLinkedProductsModalOpen(true);
+  };
+
+  const handleAddLinkedProductsModalClose = () => {
+    setIsAddLinkedProductsModalOpen(false);
+  };
+
   return (
     <div>
       <SpaceBetweenDiv>
@@ -130,7 +140,12 @@ const LinkedProducts = ({
                 </div>
               </Tooltip>
             </RowAlignWrapper>
-            <IconButton aria-label="Add category" size="small" style={{ marginLeft: '4px' }}>
+            <IconButton
+              aria-label="Add category"
+              size="small"
+              style={{ marginLeft: '4px' }}
+              onClick={handleAddLinkedProductsModalOpen}
+            >
               <PlaylistAdd fontSize="inherit" />
             </IconButton>
           </SpaceBetweenDiv>
@@ -167,6 +182,11 @@ const LinkedProducts = ({
         isMenuLoading={isFilterOptionsFetching}
         withPadding={false}
         withCheckboxSelection={true}
+      />
+      <AddLinkedProductsDialog
+        isOpen={isAddLinkedProductsModalOpen}
+        handleClose={handleAddLinkedProductsModalClose}
+        isLoading={false}
       />
     </div>
   );
