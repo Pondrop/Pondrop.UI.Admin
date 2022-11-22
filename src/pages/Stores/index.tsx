@@ -147,6 +147,8 @@ const Stores: FunctionComponent = (): JSX.Element => {
         <SearchField
           id="store-search-field"
           value={searchValue}
+          isfullsize={false}
+          width={321}
           onEnterPress={handleSearchDispatch}
           padding="16px 14px 14px"
         />

@@ -38,9 +38,10 @@ const Grid: FunctionComponent<IGridProps> = ({
   selectionModel,
   hideFooterSelectedRowCount = false,
   page,
+  borderColor,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
-  const [gridRowCount, setGridRowCount] = useState<number>(rowCount);
+  const [gridRowCount, setGridRowCount] = useState<number>(rowCount ?? gridData?.length);
   const [localFilter, setLocalFilter] = useState<IFilterItem>({} as IFilterItem);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   }, [data]);
 
   useEffect(() => {
-    setGridRowCount(rowCount);
+    setGridRowCount(rowCount ?? gridData?.length);
   }, [rowCount]);
 
   // components
@@ -137,6 +138,8 @@ const Grid: FunctionComponent<IGridProps> = ({
       keepNonExistentRowsSelected
       hideFooterSelectedRowCount={hideFooterSelectedRowCount}
       page={page}
+      hideFooter={!!!rowCount}
+      borderColor={borderColor}
     />
   );
 };

@@ -14,9 +14,9 @@ export const productsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number, parentCategory?: string, selectedCategories?: string[], baseCategory?: string }>({
+    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number, parentCategory?: string, selectedCategories?: string[], baseCategory?: string, isNotLinkedProducts?: boolean }>({
       query: (arg) => {
-        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10, parentCategory, selectedCategories = [], baseCategory } = arg;
+        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10, parentCategory, selectedCategories = [], baseCategory, isNotLinkedProducts = false } = arg;
 
         let filterQuery = '';
         let sortQuery = '';
@@ -29,7 +29,8 @@ export const productsApi = createApi({
 
         if (baseCategory) {
           if (parentCategory && parentCategory !== 'all') filterQuery = filterQuery.concat(' and ');
-          filterQuery = filterQuery.concat(`categories/any(t: t/name eq '${baseCategory}')`);
+          filterQuery = filterQuery.concat(`categories/any(t: t/name ${isNotLinkedProducts ? 'ne' : 'eq'} '${baseCategory}')`);
+          if (isNotLinkedProducts) filterQuery = filterQuery.concat(` or categoryNames eq  ''`);
         }
 
         if (selectedCategories?.length > 0) {
@@ -73,9 +74,9 @@ export const productsApi = createApi({
         };
       },
     }),
-    getAllProductFilter: builder.query<IApiResponse, { searchString: string, parentCategory?: string, selectedCategory?: string }>({
+    getAllProductFilter: builder.query<IApiResponse, { searchString: string, parentCategory?: string, selectedCategory?: string, isNotLinkedProducts?: boolean }>({
       query: (arg) => {
-        const { searchString, parentCategory, selectedCategory } = arg;
+        const { searchString, parentCategory, selectedCategory, isNotLinkedProducts = false } = arg;
 
         let filterQuery = '';
 
@@ -84,6 +85,8 @@ export const productsApi = createApi({
           if (parentCategory === 'uncategorised') filterQuery = filterQuery.concat(`parentCategoryId eq null`);
           if (selectedCategory) filterQuery = filterQuery.concat(` and categories/any(t: t/name eq '${selectedCategory}')`);
         }
+
+        if (isNotLinkedProducts) filterQuery = filterQuery.concat(`categories/any(t: t/name ne '${selectedCategory}') or categoryNames eq  ''`);
 
         return {
           url: `/indexes/cosmosdb-index-allproduct/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&facet=name,count:0,sort:value&facet=barcodeNumber,count:0,sort:value&facet=categories/name,count:0,sort:value`,
@@ -151,5 +154,5 @@ export const productsMicroService = createApi({
   })
 });
 
-export const { useGetAllProductCountQuery, useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
+export const { useGetAllProductCountQuery, useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetAllProductFilterQuery, useLazyGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
 export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useLazyRefreshProductsQuery, useUpdateLinkedCategoriesMutation } = productsMicroService;

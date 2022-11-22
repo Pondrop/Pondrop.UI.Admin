@@ -4,6 +4,6 @@ export interface IAddLinkedProductsProps {
   isOpen: boolean;
   handleClose: () => void;
   handleSubmit?: (createData: ICategoryDialogData) => void;
-  errorMessage?: string;
   isLoading?: boolean;
+  baseCategory: string;
 }

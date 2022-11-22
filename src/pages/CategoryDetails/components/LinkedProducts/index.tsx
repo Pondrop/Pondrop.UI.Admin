@@ -187,6 +187,7 @@ const LinkedProducts = ({
         isOpen={isAddLinkedProductsModalOpen}
         handleClose={handleAddLinkedProductsModalClose}
         isLoading={false}
+        baseCategory={categoryName}
       />
     </div>
   );

@@ -37,6 +37,11 @@ export const linkedProductsColumns: GridColDef[] = [
   { field: 'categories', headerName: 'Categories', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: (params) => handleRenderChips(params, false), sortable: false },
 ];
 
+export const addLinkedProductsColumns: GridColDef[] = [
+  { field: 'name', headerName: 'Product name', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'barcodeNumber', headerName: 'GTIN', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+];
+
 export const tasksColumns: GridColDef[] = [
   { field: 'taskType', headerName: 'Task type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
   { field: 'submittedUtc', headerName: 'Date & time submitted', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 200, renderCell: handleRenderCellDate },

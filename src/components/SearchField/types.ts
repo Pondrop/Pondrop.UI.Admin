@@ -1,4 +1,4 @@
-import { FocusEvent, MouseEvent } from "react";
+import { MouseEvent } from "react";
 
 export interface ISearchFieldProps {
   onEnterPress?: (searchValue: string) => void;

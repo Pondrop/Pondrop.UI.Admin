@@ -3,15 +3,15 @@ import { TextField } from "@mui/material";
 
 export const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) => !['isfullsize', 'width', 'padding'].includes(prop)
-})<{ isfullsize: boolean, width?: number, padding: string }>`
-  width: ${({ isfullsize, width }) => isfullsize ? '321px' : `${width}px` };
+})<{ isfullsize: boolean, width?: number, padding: string, variant?: "standard" | "outlined" | "filled" }>`
+  width: ${({ isfullsize, width }) => isfullsize ? '100%' : `${width}px` };
   
   & input {
     height: 24px;
     padding: ${({ padding }) => padding} !important;
   }
 
-  ${({ isfullsize }) => isfullsize && 
+  ${({ isfullsize, variant }) => isfullsize && variant !== 'outlined' &&
     `& svg {
       margin-left: 12px;
     }`

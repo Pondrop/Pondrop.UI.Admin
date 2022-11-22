@@ -13,9 +13,9 @@ export interface IGridProps {
   onFilterModelChange: (model: GridFilterModel) => void;
   filterItem: IFilterItem;
   handleOnFilterClick?: (value: string, currColumn: string, filters: IBasicFilter) => void;
-  rowCount: number;
-  onPageChange: (page: number, details: GridCallbackDetails) => void;
-  onPageSizeChange: (pageSize: number, details: GridCallbackDetails) => void;
+  rowCount?: number;
+  onPageChange?: (page: number, details: GridCallbackDetails) => void;
+  onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
   menuData: IFacetValue;
   onSortModelChange: (model: GridSortModel) => void;
   initialState?: GridInitialState;
@@ -30,4 +30,5 @@ export interface IGridProps {
   selectionModel?: GridInputSelectionModel;
   hideFooterSelectedRowCount?: boolean;
   page?: number;
+  borderColor?: string;
 }

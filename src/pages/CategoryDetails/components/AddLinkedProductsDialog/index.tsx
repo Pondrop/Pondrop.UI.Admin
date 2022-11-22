@@ -1,63 +1,70 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
-import { Close, Info } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { CircularProgress, DialogActions, DialogTitle, IconButton } from '@mui/material';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { Close } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { useGetParentCategoriesQuery } from 'store/api/categories/api';
-import { categoryTitles } from './constants';
-import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+import Grid from 'components/Grid';
+import { addLinkedProductsColumns } from 'components/Grid/constants';
+import { IBasicFilter } from 'components/GridMenu/types';
+import { handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
+import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { useLazyGetAllProductFilterQuery, useLazyGetProductsQuery } from 'store/api/products/api';
+import { productInitialState } from 'store/api/products/initialState';
+import { IFacetValue, IFilterItem, ISortItem } from 'store/api/types';
+import { StyledDialog, StyledDialogContent } from './styles';
 import { IAddLinkedProductsProps } from './types';
 
 const AddLinkedProductsDialog = ({
   isOpen,
   handleClose,
   handleSubmit,
-  errorMessage,
   isLoading,
+  baseCategory,
 }: IAddLinkedProductsProps): JSX.Element => {
-  const selectComponent = useRef<HTMLInputElement>(null);
-  const [position, setPosition] = useState<DOMRect>({} as DOMRect);
-  const [categoryName, setCategoryName] = useState<string>('');
-  const [parentCategory, setParentCategory] = useState<string>('');
-  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
+  const [linkedProdSearchVal, setLinkedProdSearchVal] = useState<string>('');
+  const [linkedProdSortVal, setLinkedProdSortVal] = useState<ISortItem>(productInitialState.sortValue);
+  const [linkedProdFilterVal, setLinkedProdFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
+  const [linkedProdSelectedProds, setLinkedProdSelectedProds] = useState<string[]>([]);
 
-  const { data, isFetching } = useGetParentCategoriesQuery();
+  const [getNotLinkedProducts, { data, isFetching }] = useLazyGetProductsQuery();
+  const [getNotLinkedProductsFilterOptions, { data: filterOptionsData, isFetching: isFilterOptionsFetching }] =
+    useLazyGetAllProductFilterQuery();
+
+  const menuData = {
+    name: filterOptionsData?.['@search.facets']?.name,
+    barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
+  };
+
+  const initialGridState = {
+    sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
+  };
 
   useEffect(() => {
-    setPosition(selectComponent?.current ? selectComponent?.current?.getBoundingClientRect() : ({} as DOMRect));
+    if (isOpen && linkedProdSearchVal.length > 2) {
+      getNotLinkedProducts({
+        searchString: linkedProdSearchVal,
+        sortValue: linkedProdSortVal,
+        filterItem: linkedProdFilterVal,
+        prevPageItems: 0,
+        pageSize: 100,
+        baseCategory,
+        isNotLinkedProducts: true,
+      });
+      getNotLinkedProductsFilterOptions({
+        searchString: linkedProdSearchVal,
+        selectedCategory: baseCategory,
+        isNotLinkedProducts: true,
+      });
+    }
     if (!isOpen) {
-      setCategoryName('');
-      setParentCategory('');
+      setLinkedProdSearchVal('');
+      setLinkedProdSortVal(productInitialState.sortValue);
+      setLinkedProdFilterVal(productInitialState.filterItem);
     }
   }, [isOpen]);
 
-  const handleSelectClose = () => {
-    setIsSelectOpen(false);
-  };
-
-  const handleSelectOpen = () => {
-    setIsSelectOpen(true);
-  };
-
-  const handleCategoryOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategoryName(e.target.value);
-  };
-
-  const handleDescriptionOnChange = (event: SelectChangeEvent<unknown>) => {
-    setParentCategory(String(event.target.value));
-  };
-
   const handleModalClose = () => {
-    setCategoryName('');
-    setParentCategory('');
     handleClose();
   };
 
@@ -66,97 +73,105 @@ const AddLinkedProductsDialog = ({
     handleModalClose();
   };
 
+  const handleSearchChange = (searchValue: string) => {
+    setLinkedProdSearchVal(searchValue);
+
+    if (searchValue.length > 2) {
+      getNotLinkedProducts({
+        searchString: searchValue,
+        sortValue: linkedProdSortVal,
+        filterItem: linkedProdFilterVal,
+        prevPageItems: 0,
+        pageSize: 100,
+        baseCategory,
+        isNotLinkedProducts: true,
+      });
+      getNotLinkedProductsFilterOptions({
+        searchString: searchValue,
+        selectedCategory: baseCategory,
+        isNotLinkedProducts: true,
+      });
+    }
+  };
+
+  const onFilterModelChange = (model: GridFilterModel) => {
+    if (!model.items[0]) return;
+    setLinkedProdFilterVal({
+      columnField: model.items[0].columnField,
+      value: model.items[0].value,
+      operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
+    });
+  };
+
+  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+    if (!value) return;
+
+    const combinedValue =
+      filters.field === currColumn && Array.isArray(filters.value)
+        ? handleFilterStateChange(value, filters.value)
+        : [value];
+
+    setLinkedProdFilterVal({
+      columnField: currColumn,
+      value: combinedValue,
+      operatorValue: 'isAnyOf',
+    });
+  };
+
+  const handleSortModelChange = (model: GridSortModel) => {
+    setLinkedProdSortVal({
+      field: model[0]?.field,
+      sort: model[0]?.sort,
+    });
+  };
+
+  const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
+    setLinkedProdSelectedProds(selectionModel as string[]);
+  };
+
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />
     </CircularLoaderWrapper>
   );
 
-  const renderStates = () => {
-    if (isFetching) {
-      return (
-        <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-          {renderLoader(100)}
-        </MenuItem>
-      );
-    } else {
-      return (
-        <MenuItem>
-          <i style={{ color: '#72787e', fontSize: '12px' }}>No Parent Categories found.</i>
-        </MenuItem>
-      );
-    }
-  };
-
-  const renderCreateCategory = () => {
+  const renderLinkedProducts = () => {
     return (
       <div>
-        <div>
-          <div className="label-div">
-            <span className="row-label">{categoryTitles[0].label}</span>
-            <span className="req-icon"> *</span>
-          </div>
-          <StyledTextInput
-            id={`${categoryTitles[0].field}-input`}
-            margin="none"
+        <div className="linked-products-modal" style={{ marginBottom: '24px' }}>
+          <SearchField
+            id="linked-prod-modal-search-field"
+            value={linkedProdSearchVal}
+            onChange={handleSearchChange}
+            padding="8px 12px 8px 0"
             variant="outlined"
-            value={categoryName}
-            onChange={handleCategoryOnChange}
-            placeholder={categoryTitles[0].placeholder}
-            sx={{ marginBottom: '24px' }}
+            placeholder="Search by product name or barcode"
           />
         </div>
-        <div>
-          <div className="label-div">
-            <span className="row-label">{categoryTitles[1].label}</span>
-            <span className="req-icon"> *</span>
-          </div>
-          <StyledSelect
-            ref={selectComponent}
-            id={`${categoryTitles[1].field}-input`}
-            className="select-component"
-            value={parentCategory}
-            onChange={handleDescriptionOnChange}
-            renderValue={
-              parentCategory !== ''
-                ? undefined
-                : () => <div className="placeholder">{categoryTitles[1].placeholder}</div>
-            }
-            MenuProps={{
-              PaperProps: {
-                sx: {
-                  top: `${position.top + 48}px !important`,
-                  left: `${position.left}px !important`,
-                  width: `${position.width - 2}px !important`,
-                  border: '1px solid #006492 !important',
-                  borderRadius: '0 0 8px 8px !important',
-                  maxHeight: '144px !important',
-                  '::-webkit-scrollbar': {
-                    width: '6px',
-                  },
-                  '::-webkit-scrollbar-thumb': {
-                    height: '6px',
-                    borderRadius: '20px',
-                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                  },
-                },
-              },
-            }}
-            input={<StyledInputBase />}
-            onClose={handleSelectClose}
-            onOpen={handleSelectOpen}
-            isOpen={isSelectOpen}
-            displayEmpty
-          >
-            {isFetching || data?.value?.length === 0
-              ? renderStates()
-              : data?.value.map((category) => (
-                  <StyledMenuItem key={String(category.id)} value={String(category.id)}>
-                    {category.name}
-                  </StyledMenuItem>
-                ))}
-          </StyledSelect>
+        <div className="label-div">
+          <span className="row-label">Search results</span>
         </div>
+        <Grid
+          data={data?.value}
+          columns={addLinkedProductsColumns}
+          id="add-linked-products-grid"
+          dataIdKey="id"
+          isFetching={isFetching}
+          onFilterModelChange={onFilterModelChange}
+          filterItem={linkedProdFilterVal}
+          handleOnFilterClick={handleOnFilterClick}
+          menuData={menuData as IFacetValue}
+          onSortModelChange={handleSortModelChange}
+          initialState={initialGridState}
+          isMenuLoading={isFilterOptionsFetching}
+          withPadding={false}
+          withCheckboxSelection={true}
+          withBorder={true}
+          borderColor="rgba(0,0,0,0.24)"
+          rowHeight={48}
+          onSelectionModelChange={onSelectionModelChange}
+          selectionModel={linkedProdSelectedProds}
+        />
       </div>
     );
   };
@@ -185,24 +200,16 @@ const AddLinkedProductsDialog = ({
     return (
       <RowAlignWrapper>
         <StyledCategoryBtn
-          data-testid="add-category-btn"
-          className="add-category-btn"
+          data-testid="add-linked-products-btn"
+          className="add-linked-products-btn"
           variant="contained"
           disableElevation
           height={40}
           onClick={handleModalSubmit}
-          disabled={categoryName === '' || parentCategory === '' || isLoading}
+          disabled={true}
         >
           {isLoading ? renderLoader(34) : 'Done'}
         </StyledCategoryBtn>
-        {/* {errorMessage !== '' && !isLoading && (
-          <MessageWrapper color="red">
-            <div className="info-icon" style={{ margin: '0 4px 0 8px' }}>
-              <Info />
-            </div>
-            {errorMessage}
-          </MessageWrapper>
-        )} */}
       </RowAlignWrapper>
     );
   };
@@ -218,7 +225,7 @@ const AddLinkedProductsDialog = ({
       keepMounted
     >
       {renderDialogTitle()}
-      {/* <DialogContent className="dialog-content">{renderCreateCategory()}</DialogContent> */}
+      <StyledDialogContent className="dialog-content">{renderLinkedProducts()}</StyledDialogContent>
       <DialogActions className="dialog-actions">{renderActionButtons()}</DialogActions>
     </StyledDialog>
   );
