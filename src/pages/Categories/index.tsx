@@ -256,6 +256,8 @@ const Categories: FunctionComponent = (): JSX.Element => {
           <SearchField
             id="category-search-field"
             value={searchValue}
+            isfullsize={false}
+            width={321}
             onEnterPress={handleSearchDispatch}
             padding="16px 14px 14px"
           />

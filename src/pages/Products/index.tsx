@@ -207,8 +207,8 @@ const Products: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     if (
       (selectedParent !== 'all' && selectedParent !== 'uncategorised') ||
-      (selectedParent === 'all' && searchValue.length > 3) ||
-      (selectedParent === 'uncategorised' && searchValue.length > 3)
+      (selectedParent === 'all' && searchValue.length > 2) ||
+      (selectedParent === 'uncategorised' && searchValue.length > 2)
     ) {
       setRowCount(data?.['@odata.count'] ?? 0);
       setGridData(data?.value ?? []);
@@ -295,6 +295,8 @@ const Products: FunctionComponent = (): JSX.Element => {
           <SearchField
             id="category-search-field"
             value={searchValue}
+            isfullsize={false}
+            width={321}
             onEnterPress={handleSearchDispatch}
             padding="16px 14px 14px"
           />

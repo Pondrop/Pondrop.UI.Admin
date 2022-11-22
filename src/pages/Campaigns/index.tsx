@@ -252,6 +252,8 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
           <SearchField
             id="campaign-search-field"
             value={''}
+            isfullsize={false}
+            width={321}
             onEnterPress={handleSearchDispatch}
             padding="16px 14px 14px"
           />

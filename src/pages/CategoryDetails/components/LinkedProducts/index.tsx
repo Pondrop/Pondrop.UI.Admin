@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
+import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
 import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 // Components
@@ -12,27 +12,42 @@ import SearchField from 'components/SearchField';
 
 // Other variables / values
 import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
-import { useGetAllProductFilterQuery, useGetProductsQuery } from 'store/api/products/api';
+import { useAppDispatch } from 'store';
+import {
+  productsApi,
+  useGetAllProductFilterQuery,
+  useGetProductsQuery,
+  useLazyRefreshProductsQuery,
+  useUpdateLinkedProductsMutation,
+} from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 import { tooltipContent } from '../CategoryInfoPanel/constants';
+import AddLinkedProductsDialog from '../AddLinkedProductsDialog';
 
 const LinkedProducts = ({
   categoryName,
   parentCategory,
+  categoryId,
 }: {
   categoryName: string;
   parentCategory: string;
+  categoryId: string;
 }): JSX.Element => {
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [searchVal, setSearchVal] = useState<string>('');
   const [filterVal, setFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
   const [sortVal, setSortVal] = useState<ISortItem>(productInitialState.sortValue);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [linkedProducts, setLinkedProducts] = useState<string[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
+  const [isAddLinkedProductsModalOpen, setIsAddLinkedProductsModalOpen] = useState<boolean>(false);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
-  const { data, isFetching } = useGetProductsQuery({
+  const dispatch = useAppDispatch();
+
+  const { data, isFetching, refetch } = useGetProductsQuery({
     searchString: searchVal,
     sortValue: sortVal,
     filterItem: filterVal,
@@ -48,6 +63,13 @@ const LinkedProducts = ({
     { skip: !gridData.length },
   );
 
+  const [, { isSuccess: isUpdateProductsSuccess, reset: resetUpdateProducts }] = useUpdateLinkedProductsMutation({
+    fixedCacheKey: 'update-linked-products-mutation',
+  });
+
+  const [refreshProducts, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
+    useLazyRefreshProductsQuery();
+
   const menuData = {
     name: filterOptionsData?.['@search.facets']?.name,
     barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
@@ -60,16 +82,6 @@ const LinkedProducts = ({
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
-
-  // Use Effects
-  useEffect(() => {
-    setRowCount(data?.['@odata.count'] ?? 0);
-    setGridData(data?.value ?? []);
-  }, [data]);
-
-  useEffect(() => {
-    setSelectedCategories([]);
-  }, [categoryName]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -117,6 +129,49 @@ const LinkedProducts = ({
     });
   };
 
+  const handleAddLinkedProductsModalOpen = () => {
+    setIsAddLinkedProductsModalOpen(true);
+  };
+
+  const handleAddLinkedProductsModalClose = () => {
+    setIsAddLinkedProductsModalOpen(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    resetUpdateProducts();
+  };
+
+  // Use Effects
+  useEffect(() => {
+    setRowCount(data?.['@odata.count'] ?? 0);
+    setGridData(data?.value ?? []);
+    const tempLinkedProducts: string[] = [];
+    data?.value.forEach((product) => tempLinkedProducts.push(String(product.id)));
+    setLinkedProducts(tempLinkedProducts);
+  }, [data]);
+
+  useEffect(() => {
+    setSelectedCategories([]);
+  }, [categoryName]);
+
+  useEffect(() => {
+    setIsSnackbarOpen(isUpdateProductsSuccess);
+    if (isUpdateProductsSuccess) {
+      handleAddLinkedProductsModalClose();
+      refreshProducts();
+    }
+  }, [isUpdateProductsSuccess]);
+
+  useEffect(() => {
+    if (!isRefreshFetching && isRefreshSuccess) {
+      setTimeout(() => {
+        dispatch(productsApi.util.resetApiState());
+        refetch();
+      }, 7000);
+    }
+  }, [isRefreshFetching, isRefreshSuccess]);
+
   return (
     <div>
       <SpaceBetweenDiv>
@@ -130,7 +185,12 @@ const LinkedProducts = ({
                 </div>
               </Tooltip>
             </RowAlignWrapper>
-            <IconButton aria-label="Add category" size="small" style={{ marginLeft: '4px' }}>
+            <IconButton
+              aria-label="Add category"
+              size="small"
+              style={{ marginLeft: '4px' }}
+              onClick={handleAddLinkedProductsModalOpen}
+            >
               <PlaylistAdd fontSize="inherit" />
             </IconButton>
           </SpaceBetweenDiv>
@@ -167,6 +227,23 @@ const LinkedProducts = ({
         isMenuLoading={isFilterOptionsFetching}
         withPadding={false}
         withCheckboxSelection={true}
+      />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Products linked successfully
+        </Alert>
+      </Snackbar>
+      <AddLinkedProductsDialog
+        isOpen={isAddLinkedProductsModalOpen}
+        handleClose={handleAddLinkedProductsModalClose}
+        baseCategory={categoryName}
+        categoryId={categoryId}
+        linkedProducts={linkedProducts}
       />
     </div>
   );

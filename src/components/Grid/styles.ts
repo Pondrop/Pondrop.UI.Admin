@@ -3,13 +3,13 @@ import { Paper, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 export const StyledDataGrid = styled(DataGrid, {
-  shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent', 'withPadding', 'rowHeight'].includes(prop)
-})<{ withBorder: boolean, hasClickEvent: boolean, withPadding?: boolean, rowHeight?: number }>`
+  shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent', 'withPadding', 'rowHeight', 'borderColor'].includes(prop)
+})<{ withBorder: boolean, hasClickEvent: boolean, withPadding?: boolean, rowHeight?: number, borderColor?: string }>`
   ${({ withPadding = true }) => withPadding && 'padding: 8px 16px;'}
   
-  ${({ withBorder }) => withBorder ? `
+  ${({ withBorder, borderColor }) => withBorder ? `
     border-radius: 12px;
-    border: 1px solid #dde3ea;
+    border: 1px solid ${borderColor ? `${borderColor}` : '#dde3ea; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1)'};
   ` : 'border: none;'}
 
   & .MuiDataGrid-columnHeaders {
