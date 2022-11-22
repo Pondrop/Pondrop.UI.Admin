@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse, IFilterItem, ISortItem, IViewResponse } from '../types';
-import { ICreateProduct, ICreateProductRequest, IFullProductInfo, ISetCategories, ISetCategoriesRequest } from './types';
+import { ICreateProduct, ICreateProductRequest, IFullProductInfo, ISetLinkedItem, ISetCategoriesRequest, ISetProductsRequest } from './types';
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
@@ -134,7 +134,7 @@ export const productsMicroService = createApi({
         };
       },
     }),
-    updateLinkedCategories: builder.mutation<ISetCategories[], ISetCategoriesRequest>({
+    updateLinkedCategories: builder.mutation<ISetLinkedItem[], ISetCategoriesRequest>({
       query: (arg) => {
         return {
           url: `/ProductCategory/setcategories`,
@@ -151,8 +151,17 @@ export const productsMicroService = createApi({
         };
       },
     }),
+    updateLinkedProducts: builder.mutation<ISetLinkedItem[], ISetProductsRequest>({
+      query: (arg) => {
+        return {
+          url: `/ProductCategory/setproducts`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
   })
 });
 
 export const { useGetAllProductCountQuery, useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetAllProductFilterQuery, useLazyGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
-export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useLazyRefreshProductsQuery, useUpdateLinkedCategoriesMutation } = productsMicroService;
+export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useLazyRefreshProductsQuery, useUpdateLinkedCategoriesMutation, useUpdateLinkedProductsMutation } = productsMicroService;

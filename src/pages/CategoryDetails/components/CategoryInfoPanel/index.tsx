@@ -62,6 +62,7 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
           <LinkedProducts
             categoryName={categoryInfo?.categoryName as string}
             parentCategory={categoryInfo?.higherLevelCategoryId as string}
+            categoryId={categoryInfo?.lowerLevelCategoryId as string}
           />
         </StyledCard>
       </RowAlignWrapper>

@@ -35,7 +35,13 @@ export interface ISetCategoriesRequest {
   publicationLifecycleId?: string;
 }
 
-export interface ISetCategories {
+export interface ISetProductsRequest {
+  categoryId: string;
+  productIds: string[];
+  publicationLifecycleId?: string;
+}
+
+export interface ISetLinkedItem {
   id: string;
   categoryId: string;
   productId: string;

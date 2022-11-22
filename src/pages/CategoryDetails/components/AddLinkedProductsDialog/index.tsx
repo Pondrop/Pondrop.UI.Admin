@@ -9,32 +9,38 @@ import { IBasicFilter } from 'components/GridMenu/types';
 import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { useLazyGetAllProductFilterQuery, useLazyGetProductsQuery } from 'store/api/products/api';
+import {
+  useLazyGetAllProductFilterQuery,
+  useLazyGetProductsQuery,
+  useUpdateLinkedProductsMutation,
+} from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
-import { IFacetValue, IFilterItem, ISortItem } from 'store/api/types';
+import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 import { StyledDialog, StyledDialogContent } from './styles';
 import { IAddLinkedProductsProps } from './types';
 
 const AddLinkedProductsDialog = ({
   isOpen,
   handleClose,
-  handleSubmit,
-  isLoading,
   baseCategory,
+  categoryId,
+  linkedProducts,
 }: IAddLinkedProductsProps): JSX.Element => {
+  const [gridData, setGridData] = useState<IValue[]>([]);
+  const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
   const [linkedProdSearchVal, setLinkedProdSearchVal] = useState<string>('');
   const [linkedProdSortVal, setLinkedProdSortVal] = useState<ISortItem>(productInitialState.sortValue);
   const [linkedProdFilterVal, setLinkedProdFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
   const [linkedProdSelectedProds, setLinkedProdSelectedProds] = useState<string[]>([]);
 
-  const [getNotLinkedProducts, { data, isFetching }] = useLazyGetProductsQuery();
-  const [getNotLinkedProductsFilterOptions, { data: filterOptionsData, isFetching: isFilterOptionsFetching }] =
-    useLazyGetAllProductFilterQuery();
-
-  const menuData = {
-    name: filterOptionsData?.['@search.facets']?.name,
-    barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
-  };
+  const [getNotLinkedProducts, { data, isFetching, isSuccess }] = useLazyGetProductsQuery();
+  const [
+    getNotLinkedProductsFilterOptions,
+    { data: filterOptionsData, isFetching: isFilterOptionsFetching, isSuccess: isFilterOptionsSuccess },
+  ] = useLazyGetAllProductFilterQuery();
+  const [updateLinkedProducts, { isLoading: isUpdateProductsLoading }] = useUpdateLinkedProductsMutation({
+    fixedCacheKey: 'update-linked-products-mutation',
+  });
 
   const initialGridState = {
     sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
@@ -56,21 +62,47 @@ const AddLinkedProductsDialog = ({
         selectedCategory: baseCategory,
         isNotLinkedProducts: true,
       });
+    } else if (isOpen && linkedProdSearchVal.length < 3) {
+      setGridData([]);
+      setMenuData({} as IFacetValue);
     }
+
     if (!isOpen) {
       setLinkedProdSearchVal('');
       setLinkedProdSortVal(productInitialState.sortValue);
       setLinkedProdFilterVal(productInitialState.filterItem);
+      setLinkedProdSelectedProds([]);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && linkedProdSearchVal.length > 2) setGridData(data?.value ?? []);
+  }, [data, isSuccess, isOpen]);
+
+  useEffect(() => {
+    if (isOpen && linkedProdSearchVal.length > 2) {
+      const tempMenuData = {
+        name: filterOptionsData?.['@search.facets']?.name,
+        barcodeNumber: filterOptionsData?.['@search.facets']?.barcodeNumber,
+      } as IFacetValue;
+      setMenuData(tempMenuData);
+    }
+  }, [filterOptionsData, isFilterOptionsSuccess, isOpen]);
+
+  const handleUpdateProducts = () => {
+    updateLinkedProducts({
+      categoryId,
+      productIds: [...linkedProducts, ...linkedProdSelectedProds],
+      publicationLifecycleId: '1',
+    });
+  };
 
   const handleModalClose = () => {
     handleClose();
   };
 
   const handleModalSubmit = () => {
-    //handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
-    handleModalClose();
+    handleUpdateProducts();
   };
 
   const handleSearchChange = (searchValue: string) => {
@@ -91,6 +123,9 @@ const AddLinkedProductsDialog = ({
         selectedCategory: baseCategory,
         isNotLinkedProducts: true,
       });
+    } else {
+      setGridData([]);
+      setMenuData({} as IFacetValue);
     }
   };
 
@@ -152,7 +187,7 @@ const AddLinkedProductsDialog = ({
           <span className="row-label">Search results</span>
         </div>
         <Grid
-          data={data?.value}
+          data={gridData}
           columns={addLinkedProductsColumns}
           id="add-linked-products-grid"
           dataIdKey="id"
@@ -171,6 +206,7 @@ const AddLinkedProductsDialog = ({
           rowHeight={48}
           onSelectionModelChange={onSelectionModelChange}
           selectionModel={linkedProdSelectedProds}
+          hideFooter={true}
         />
       </div>
     );
@@ -206,9 +242,9 @@ const AddLinkedProductsDialog = ({
           disableElevation
           height={40}
           onClick={handleModalSubmit}
-          disabled={true}
+          disabled={linkedProdSelectedProds.length === 0 || isUpdateProductsLoading}
         >
-          {isLoading ? renderLoader(34) : 'Done'}
+          {isUpdateProductsLoading ? renderLoader(34) : 'Done'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );
