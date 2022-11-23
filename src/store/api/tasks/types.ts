@@ -2,6 +2,7 @@ export interface IItemValue {
   itemId: string;
   itemName: string;
   itemType: string;
+  itemBarcode?: string;
 }
 
 export interface IValueTypes {

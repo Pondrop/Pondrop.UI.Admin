@@ -47,7 +47,9 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
               (value) =>
                 value.itemValue?.itemName && (
                   <li className="row-value" key={`${stepData?.id}-${value.itemValue?.itemId}`}>
-                    {`${value.itemValue?.itemName} ${value.itemValue?.itemId ? '' : '(Manual)'}`}
+                    {`${value.itemValue?.itemName}${
+                      value.itemValue?.itemId ? '' : `, ${value.itemValue?.itemBarcode} (Manual)`
+                    }`}
                   </li>
                 ),
             )}
