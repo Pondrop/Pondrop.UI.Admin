@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IValue } from 'store/api/types';
 import {
   productsApi,
+  productsMicroService,
   useAddProductMutation,
   useGetAllProductCountQuery,
   useGetAllProductFilterQuery,
@@ -73,7 +74,7 @@ const Products: FunctionComponent = (): JSX.Element => {
     selectedCategories,
   });
 
-  const { data: allProductData } = useGetAllProductCountQuery();
+  const { data: allProductData, refetch: refetchParentCategories } = useGetAllProductCountQuery();
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
     { searchString: searchValue, parentCategory: selectedParent },
@@ -261,7 +262,9 @@ const Products: FunctionComponent = (): JSX.Element => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {
         dispatch(productsApi.util.resetApiState());
+        dispatch(productsMicroService.util.resetApiState());
         refetch();
+        refetchParentCategories();
       }, 7000);
     }
   }, [isRefreshFetching, isRefreshSuccess]);
