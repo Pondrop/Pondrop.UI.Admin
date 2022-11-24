@@ -53,7 +53,7 @@ const LinkedProducts = ({
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [linkedProdSelectedProds, setLinkedProdSelectedProds] = useState<string[]>([]);
   const [isUpdateDelete, setIsUpdateDelete] = useState<boolean>(false);
-  const [shouldRefreshData, setShouldRefreshData] = useState<boolean>(false);
+  const [showRemoveBtn, setShowRemoveBtn] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
 
@@ -149,6 +149,8 @@ const LinkedProducts = ({
 
   const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
     setLinkedProdSelectedProds(selectionModel as string[]);
+    if (selectionModel.length > 0) setShowRemoveBtn(true);
+    else setShowRemoveBtn(false);
   };
 
   const handleAddLinkedProductsModalOpen = () => {
@@ -192,6 +194,8 @@ const LinkedProducts = ({
     const tempLinkedProducts: string[] = [];
     data?.value.forEach((product) => tempLinkedProducts.push(String(product.id)));
     setLinkedProducts(tempLinkedProducts);
+    setLinkedProdSelectedProds([]);
+    setShowRemoveBtn(false);
   }, [data]);
 
   useEffect(() => {
@@ -201,25 +205,18 @@ const LinkedProducts = ({
   useEffect(() => {
     setIsSnackbarOpen(isUpdateProductsSuccess);
     if (isUpdateProductsSuccess) {
-      if (isUpdateDelete) {
-        const tempData = gridData.filter((row) => !linkedProdSelectedProds.includes(String(row?.id)));
-        setGridData(tempData);
-        setLinkedProdSelectedProds([]);
-        setShouldRefreshData(false);
-      } else {
-        handleAddLinkedProductsModalClose();
-        setShouldRefreshData(true);
-      }
+      if (isUpdateDelete) setShowRemoveBtn(false);
+      else if (!isUpdateDelete) handleAddLinkedProductsModalClose();
       refreshProducts();
     }
   }, [isUpdateProductsSuccess]);
 
   useEffect(() => {
-    if (!isRefreshFetching && isRefreshSuccess && shouldRefreshData) {
+    if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {
         dispatch(productsApi.util.resetApiState());
         refetch();
-        setShouldRefreshData(false);
+        if (isUpdateDelete) setLinkedProdSelectedProds([]);
       }, 7000);
     }
   }, [isRefreshFetching, isRefreshSuccess]);
@@ -248,7 +245,7 @@ const LinkedProducts = ({
           </SpaceBetweenDiv>
         </StyledCardTitle>
         <RowAlignWrapper className="linked-products">
-          {linkedProdSelectedProds.length > 0 && (
+          {showRemoveBtn && (
             <CategoryBtnWrapper rightmargin={12}>
               <StyledCategoryBtn
                 data-testid="remove-product"
@@ -256,6 +253,7 @@ const LinkedProducts = ({
                 disableElevation
                 height={40}
                 onClick={handleRemoveProducts}
+                disabled={isUpdateProductsLoading}
               >
                 {isUpdateProductsLoading ? renderLoader(34) : 'Remove from category'}
               </StyledCategoryBtn>
