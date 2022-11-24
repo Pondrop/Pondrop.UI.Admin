@@ -82,6 +82,10 @@ export const StyledDataGrid = styled(DataGrid, {
     outline: none;
   }
 
+  & .MuiCircularProgress-root {
+    color: rgba(171, 200, 224, 0.54) !important;
+  }
+
   ${({ hasClickEvent }) => hasClickEvent && `
     & .MuiDataGrid-row {
       cursor: pointer;

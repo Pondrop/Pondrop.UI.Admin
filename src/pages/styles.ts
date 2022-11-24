@@ -174,7 +174,7 @@ export const CircularLoaderWrapper = styled.div<{ height: string }>`
   justify-content: center;
 
   span {
-    color: rgba(171, 200, 224, 0.54);
+    color: rgba(171, 200, 224, 0.54) !important;
   }
 `;
 
