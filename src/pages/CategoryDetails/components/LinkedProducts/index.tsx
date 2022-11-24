@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
-import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
-import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { Alert, CircularProgress, IconButton, Snackbar, Tooltip } from '@mui/material';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
 // Components
 import Grid from 'components/Grid';
@@ -11,7 +11,14 @@ import { handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
 // Other variables / values
-import { RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+import {
+  CategoryBtnWrapper,
+  CircularLoaderWrapper,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCardTitle,
+  StyledCategoryBtn,
+} from 'pages/styles';
 import { useAppDispatch } from 'store';
 import {
   productsApi,
@@ -44,6 +51,9 @@ const LinkedProducts = ({
   const [pageSkip, setPageSkip] = useState<number>(0);
   const [isAddLinkedProductsModalOpen, setIsAddLinkedProductsModalOpen] = useState<boolean>(false);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [linkedProdSelectedProds, setLinkedProdSelectedProds] = useState<string[]>([]);
+  const [isUpdateDelete, setIsUpdateDelete] = useState<boolean>(false);
+  const [showRemoveBtn, setShowRemoveBtn] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
 
@@ -54,7 +64,6 @@ const LinkedProducts = ({
     prevPageItems: pageSkip,
     pageSize,
     selectedCategories,
-    parentCategory,
     baseCategory: categoryName,
   });
 
@@ -63,7 +72,10 @@ const LinkedProducts = ({
     { skip: !gridData.length },
   );
 
-  const [, { isSuccess: isUpdateProductsSuccess, reset: resetUpdateProducts }] = useUpdateLinkedProductsMutation({
+  const [
+    updateLinkedProducts,
+    { isSuccess: isUpdateProductsSuccess, isLoading: isUpdateProductsLoading, reset: resetUpdateProducts },
+  ] = useUpdateLinkedProductsMutation({
     fixedCacheKey: 'update-linked-products-mutation',
   });
 
@@ -82,6 +94,12 @@ const LinkedProducts = ({
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
+
+  const renderLoader = (height: number) => (
+    <CircularLoaderWrapper height={`${height}px`}>
+      <CircularProgress size={height / 2} thickness={6} />
+    </CircularLoaderWrapper>
+  );
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -129,6 +147,12 @@ const LinkedProducts = ({
     });
   };
 
+  const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
+    setLinkedProdSelectedProds(selectionModel as string[]);
+    if (selectionModel.length > 0) setShowRemoveBtn(true);
+    else setShowRemoveBtn(false);
+  };
+
   const handleAddLinkedProductsModalOpen = () => {
     setIsAddLinkedProductsModalOpen(true);
   };
@@ -140,7 +164,28 @@ const LinkedProducts = ({
   const handleSnackbarClose = () => {
     setIsSnackbarOpen(false);
     resetUpdateProducts();
+    if (isUpdateDelete) setIsUpdateDelete(false);
   };
+
+  const handleRemoveProducts = () => {
+    const includedIds: string[] = linkedProducts.filter((linkedId) => !linkedProdSelectedProds.includes(linkedId));
+    setLinkedProducts(includedIds);
+    setIsUpdateDelete(true);
+
+    updateLinkedProducts({
+      categoryId,
+      productIds: includedIds,
+      publicationLifecycleId: '1',
+    });
+  };
+
+  const getSnackbarMsg = useCallback(() => {
+    let msg;
+    if (isUpdateDelete) msg = 'Product links removed successfully';
+    else msg = 'Products linked successfully';
+
+    return msg;
+  }, [isUpdateDelete]);
 
   // Use Effects
   useEffect(() => {
@@ -149,6 +194,8 @@ const LinkedProducts = ({
     const tempLinkedProducts: string[] = [];
     data?.value.forEach((product) => tempLinkedProducts.push(String(product.id)));
     setLinkedProducts(tempLinkedProducts);
+    setLinkedProdSelectedProds([]);
+    setShowRemoveBtn(false);
   }, [data]);
 
   useEffect(() => {
@@ -158,7 +205,8 @@ const LinkedProducts = ({
   useEffect(() => {
     setIsSnackbarOpen(isUpdateProductsSuccess);
     if (isUpdateProductsSuccess) {
-      handleAddLinkedProductsModalClose();
+      if (isUpdateDelete) setShowRemoveBtn(false);
+      else if (!isUpdateDelete) handleAddLinkedProductsModalClose();
       refreshProducts();
     }
   }, [isUpdateProductsSuccess]);
@@ -168,6 +216,7 @@ const LinkedProducts = ({
       setTimeout(() => {
         dispatch(productsApi.util.resetApiState());
         refetch();
+        if (isUpdateDelete) setLinkedProdSelectedProds([]);
       }, 7000);
     }
   }, [isRefreshFetching, isRefreshSuccess]);
@@ -195,7 +244,21 @@ const LinkedProducts = ({
             </IconButton>
           </SpaceBetweenDiv>
         </StyledCardTitle>
-        <div className="linked-products">
+        <RowAlignWrapper className="linked-products">
+          {showRemoveBtn && (
+            <CategoryBtnWrapper rightmargin={12}>
+              <StyledCategoryBtn
+                data-testid="remove-product"
+                variant="contained"
+                disableElevation
+                height={40}
+                onClick={handleRemoveProducts}
+                disabled={isUpdateProductsLoading}
+              >
+                {isUpdateProductsLoading ? renderLoader(34) : 'Remove from category'}
+              </StyledCategoryBtn>
+            </CategoryBtnWrapper>
+          )}
           <SearchField
             id="category-search-field"
             value={searchVal}
@@ -206,7 +269,7 @@ const LinkedProducts = ({
             variant="outlined"
             placeholder="Search by product name or barcode"
           />
-        </div>
+        </RowAlignWrapper>
       </SpaceBetweenDiv>
       <Grid
         data={gridData}
@@ -227,6 +290,9 @@ const LinkedProducts = ({
         isMenuLoading={isFilterOptionsFetching}
         withPadding={false}
         withCheckboxSelection={true}
+        onSelectionModelChange={onSelectionModelChange}
+        selectionModel={linkedProdSelectedProds}
+        rowHeight={52}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -235,7 +301,7 @@ const LinkedProducts = ({
         autoHideDuration={3000}
       >
         <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
-          Products linked successfully
+          {getSnackbarMsg()}
         </Alert>
       </Snackbar>
       <AddLinkedProductsDialog
