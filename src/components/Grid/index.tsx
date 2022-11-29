@@ -1,5 +1,5 @@
 import { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid';
+import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid-pro';
 import { FilterList } from '@mui/icons-material';
 
 // API Types

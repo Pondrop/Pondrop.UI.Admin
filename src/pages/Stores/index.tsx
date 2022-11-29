@@ -1,6 +1,6 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid-pro';
 
 import { storeColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';

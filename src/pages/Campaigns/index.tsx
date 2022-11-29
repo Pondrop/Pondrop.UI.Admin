@@ -1,7 +1,7 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Snackbar } from '@mui/material';
-import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 import { campaignsColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';

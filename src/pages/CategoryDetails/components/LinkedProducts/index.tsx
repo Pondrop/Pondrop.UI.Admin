@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
 import { Alert, CircularProgress, IconButton, Snackbar, Tooltip } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 // Components
 import Grid from 'components/Grid';

@@ -1,4 +1,4 @@
-import { GridRowsProp } from '@mui/x-data-grid';
+import { GridRowsProp } from '@mui/x-data-grid-pro';
 import userEvent from '@testing-library/user-event';
 
 import { IFilterItem } from 'store/api/types';

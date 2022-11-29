@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CircularProgress, DialogActions, DialogTitle, IconButton } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 import { Close } from '@mui/icons-material';
 
 import Grid from 'components/Grid';

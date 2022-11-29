@@ -1,5 +1,5 @@
-import { getGridStringOperators, GridColDef } from "@mui/x-data-grid";
-import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips, handleRenderProvider } from "./utils";
+import { getGridStringOperators, GridColDef } from '@mui/x-data-grid-pro';
+import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips, handleRenderProvider } from './utils';
 
 // filterOperators to be updated to make way for ssr filters, disabled most operators for now
 

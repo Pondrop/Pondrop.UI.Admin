@@ -1,4 +1,4 @@
-import { GridSortDirection } from "@mui/x-data-grid";
+import { GridSortDirection } from '@mui/x-data-grid-pro';
 
 export interface IValue {
   [key: string]: number | string | string[];

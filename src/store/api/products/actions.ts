@@ -1,8 +1,8 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { GridSortDirection } from "@mui/x-data-grid";
+import { PayloadAction } from '@reduxjs/toolkit';
+import { GridSortDirection } from '@mui/x-data-grid';
 
-import { initialState } from "../constants";
-import { IFilterItem, IProductState, ISortItem } from "../types";
+import { initialState } from '../constants';
+import { IFilterItem, IProductState, ISortItem } from '../types';
 
 const setProductsFilter = (state: IProductState, action: PayloadAction<IFilterItem>) => {
   return {

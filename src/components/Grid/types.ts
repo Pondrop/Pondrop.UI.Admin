@@ -1,5 +1,5 @@
-import { MouseEvent } from "react";
-import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridInputSelectionModel, GridRowParams, GridSelectionModel, GridSortModel, MuiEvent } from "@mui/x-data-grid";
+import { MouseEvent } from 'react';
+import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridInputSelectionModel, GridRowParams, GridSelectionModel, GridSortModel, MuiEvent } from '@mui/x-data-grid-pro';
 
 import { IFacetValue, IFilterItem } from "store/api/types";
 import { IBasicFilter } from "components/GridMenu/types";

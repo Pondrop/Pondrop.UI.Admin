@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 import Grid from 'components/Grid';
 import { categoriesColumns, productColumns } from 'components/Grid/constants';

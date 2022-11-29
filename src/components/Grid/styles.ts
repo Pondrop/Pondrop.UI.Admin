@@ -1,8 +1,8 @@
-import styled from "@emotion/styled";
-import { Paper, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import styled from '@emotion/styled';
+import { Paper, Typography } from '@mui/material';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
-export const StyledDataGrid = styled(DataGrid, {
+export const StyledDataGrid = styled(DataGridPro, {
   shouldForwardProp: (prop) => !['withBorder', 'hasClickEvent', 'withPadding', 'rowHeight', 'borderColor'].includes(prop)
 })<{ withBorder: boolean, hasClickEvent: boolean, withPadding?: boolean, rowHeight?: number, borderColor?: string }>`
   ${({ withPadding = true }) => withPadding && 'padding: 8px 16px;'}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortModel } from '@mui/x-data-grid-pro';
 
 import Grid from 'components/Grid';
 import { campaignStoreColumns } from 'components/Grid/constants';

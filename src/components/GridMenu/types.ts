@@ -1,6 +1,6 @@
-import { GridColumnMenuProps, GridRowsProp } from "@mui/x-data-grid";
+import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid-pro';
 
-import { IFacetValue, IFilterItem } from "store/api/types";
+import { IFacetValue, IFilterItem } from 'store/api/types';
 
 export interface IBasicFilter {
   field: string;
