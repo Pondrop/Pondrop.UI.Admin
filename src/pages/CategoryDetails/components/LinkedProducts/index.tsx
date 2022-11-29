@@ -54,6 +54,7 @@ const LinkedProducts = ({
   const [linkedProdSelectedProds, setLinkedProdSelectedProds] = useState<string[]>([]);
   const [isUpdateDelete, setIsUpdateDelete] = useState<boolean>(false);
   const [showRemoveBtn, setShowRemoveBtn] = useState<boolean>(false);
+  const [isFetchingUpdates, setIsFetchingUpdates] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
 
@@ -213,10 +214,14 @@ const LinkedProducts = ({
 
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
+      setIsFetchingUpdates(true);
+      setRowCount(0);
+      setGridData([]);
       setTimeout(() => {
         dispatch(productsApi.util.resetApiState());
         refetch();
         if (isUpdateDelete) setLinkedProdSelectedProds([]);
+        setIsFetchingUpdates(false);
       }, 7000);
     }
   }, [isRefreshFetching, isRefreshSuccess]);
@@ -276,7 +281,7 @@ const LinkedProducts = ({
         columns={linkedProductsColumns}
         id="view-products-mini-grid"
         dataIdKey="id"
-        isFetching={isFetching}
+        isFetching={isFetching || isFetchingUpdates}
         onFilterModelChange={onFilterModelChange}
         filterItem={filterVal}
         handleOnFilterClick={handleOnFilterClick}

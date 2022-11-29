@@ -141,6 +141,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       page={page}
       hideFooter={hideFooter}
       borderColor={borderColor}
+      disableColumnMenu={isFetching}
     />
   );
 };
