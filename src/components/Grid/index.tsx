@@ -142,6 +142,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       hideFooter={hideFooter}
       borderColor={borderColor}
       disableColumnMenu={isFetching}
+      pagination={typeof onPageChange === 'function'}
     />
   );
 };
