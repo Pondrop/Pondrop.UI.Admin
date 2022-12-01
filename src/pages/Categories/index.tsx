@@ -1,13 +1,15 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Snackbar } from '@mui/material';
-import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
+// Components
 import Grid from 'components/Grid';
 import { categoriesColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+
+// Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   categoriesApi,
@@ -17,7 +19,6 @@ import {
   useGetCategoriesQuery,
   useLazyRefreshCategoriesQuery,
 } from 'store/api/categories/api';
-import { categoryInitialState } from 'store/api/categories/initialState';
 import {
   selectCategories,
   setCategoriesFilter,
@@ -43,8 +44,9 @@ const Categories: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
+  const categoriesFilterInitState = generateFilterInitState(categoriesColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
-  const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem>(categoryInitialState.filterItem);
+  const [categoryFilterItem, setCategoryFilterItem] = useState<IFilterItem[]>(categoriesFilterInitState);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
@@ -103,7 +105,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setCategoryFilterItem(filterItem);
+    if (filterItem.length !== 0) setCategoryFilterItem(filterItem);
   }, [filterItem]);
 
   useEffect(() => {
@@ -113,25 +115,13 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    dispatch(
-      setCategoriesFilter({
-        columnField: '',
-        value: '',
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setCategoriesFilter(categoriesFilterInitState));
     dispatch(setCategoriesSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    dispatch(
-      setCategoriesFilter({
-        columnField: model.items[0].columnField,
-        value: model.items[0].value,
-        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-      }),
-    );
+    dispatch(setCategoriesFilter(model.items as IFilterItem[]));
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
@@ -151,21 +141,23 @@ const Categories: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
 
-    dispatch(
-      setCategoriesFilter({
-        columnField: currColumn,
-        value: combinedValue,
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
+    });
+
+    setPageSkip(0);
+    dispatch(setCategoriesFilter(newAppliedFilters));
   };
 
   const handleAddCategory = () => {

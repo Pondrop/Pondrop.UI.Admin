@@ -1,15 +1,12 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
 import { IFilterItem, IGridState, ISortItem } from "../types";
+import { categoryInitialState } from "./initialState";
 
-const setCategoriesFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
+const setCategoriesFilter = (state: IGridState, action: PayloadAction<IFilterItem[]>) => {
   return {
     ...state,
-    filterItem: {
-      columnField: action.payload.columnField,
-      value: action.payload.value,
-      operatorValue: action.payload.operatorValue
-    }
+    filterItem: [...action.payload]
   };
 };
 
@@ -37,4 +34,11 @@ const setCategoriesSelectedIds = (state: IGridState, action: PayloadAction<strin
   };
 };
 
-export const actions = { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSelectedIds, setCategoriesSortValue };
+const resetCategoriesToInitialState = (state: IGridState, action: PayloadAction<undefined>) => {
+  return {
+    ...state,
+    ...categoryInitialState,
+  };
+};
+
+export const actions = { resetCategoriesToInitialState, setCategoriesFilter, setCategoriesSearchValue, setCategoriesSelectedIds, setCategoriesSortValue };

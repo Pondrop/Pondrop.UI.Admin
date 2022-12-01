@@ -61,7 +61,6 @@ const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element =
         <StyledCard className="grid-card" width="100%" height="fit-content">
           <LinkedProducts
             categoryName={categoryInfo?.categoryName as string}
-            parentCategory={categoryInfo?.higherLevelCategoryId as string}
             categoryId={categoryInfo?.lowerLevelCategoryId as string}
           />
         </StyledCard>

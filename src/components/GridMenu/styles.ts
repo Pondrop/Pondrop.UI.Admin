@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import { Checkbox } from "@mui/material";
-import { GridColumnMenuContainer } from "@mui/x-data-grid";
-import { FixedSizeList } from "react-window";
+import styled from '@emotion/styled';
+import { Checkbox } from '@mui/material';
+import { GridColumnMenuContainer } from '@mui/x-data-grid-pro';
+import { FixedSizeList } from 'react-window';
 
 export const MenuWrapper = styled(GridColumnMenuContainer, {
   shouldForwardProp: (prop) => !['isLoading'].includes(prop)

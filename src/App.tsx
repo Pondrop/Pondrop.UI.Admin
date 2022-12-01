@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import { LicenseInfo } from '@mui/x-license-pro';
 
 import {
   Campaigns,
@@ -14,6 +15,10 @@ import {
 } from './pages';
 import SidePanel from 'components/SidePanel';
 import { DivWrapper } from 'App.styles';
+
+LicenseInfo.setLicenseKey(
+  'fc952579b57377b5167cfbeaa8c5b0d6Tz01NDQ1MSxFPTE3MDAxOTM0MTM0MDgsUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
+);
 
 function App() {
   return (

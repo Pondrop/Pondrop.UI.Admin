@@ -1,4 +1,4 @@
-import { GridRowsProp } from '@mui/x-data-grid';
+import { GridRowsProp } from '@mui/x-data-grid-pro';
 import userEvent from '@testing-library/user-event';
 
 import { IFilterItem } from 'store/api/types';
@@ -8,17 +8,15 @@ import { initialState } from 'store/api/constants';
 import { storeColumns } from '../../Grid/constants';
 import GridMenu from '../../GridMenu';
 
-//initialState.filterItem
-
 describe('<GridMenu />', () => {
   const mockHideMenuFn = jest.fn();
   const mockFilterHandlerFn = jest.fn();
   const initialFilter = initialState.filterItem;
-  const renderGridMenu = (filterItem: IFilterItem) =>
+  const renderGridMenu = (filterItem: IFilterItem[]) =>
     render(
       <GridMenu
         data={gridMockData as unknown as GridRowsProp[]}
-        filterItem={filterItem}
+        filterItems={filterItem}
         hideMenu={mockHideMenuFn}
         handleOnFilterClick={mockFilterHandlerFn}
         currentColumn={storeColumns[0]}
@@ -58,11 +56,14 @@ describe('<GridMenu />', () => {
   test('should show checked checkbox after clicking on option', () => {
     jest.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(50);
     jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(200);
-    const filterItem = {
-      columnField: 'Provider',
-      value: ['Woolworths Group'],
-      operatorValue: 'isAnyOf',
-    };
+    const filterItem = [
+      {
+        columnField: 'provider',
+        id: 'provider',
+        value: ['Woolworths Group'],
+        operatorValue: 'isAnyOf',
+      },
+    ];
 
     const { getByRole } = renderGridMenu(filterItem);
     const checkbox = getByRole('checkbox');

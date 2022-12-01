@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { CircularProgress, DialogActions, DialogTitle, IconButton } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 import { Close } from '@mui/icons-material';
 
+// Components
 import Grid from 'components/Grid';
 import { addLinkedProductsColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+
+// Other variables / values
 import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
 import {
   useLazyGetAllProductFilterQuery,
@@ -26,11 +28,13 @@ const AddLinkedProductsDialog = ({
   categoryId,
   linkedProducts,
 }: IAddLinkedProductsProps): JSX.Element => {
+  // States
+  const addProductsFilterInitState = generateFilterInitState(addLinkedProductsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
   const [linkedProdSearchVal, setLinkedProdSearchVal] = useState<string>('');
   const [linkedProdSortVal, setLinkedProdSortVal] = useState<ISortItem>(productInitialState.sortValue);
-  const [linkedProdFilterVal, setLinkedProdFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
+  const [linkedProdFilterVal, setLinkedProdFilterVal] = useState<IFilterItem[]>(addProductsFilterInitState);
   const [linkedProdSelectedProds, setLinkedProdSelectedProds] = useState<string[]>([]);
 
   const [getNotLinkedProducts, { data, isFetching, isSuccess }] = useLazyGetProductsQuery();
@@ -107,6 +111,7 @@ const AddLinkedProductsDialog = ({
 
   const handleSearchChange = (searchValue: string) => {
     setLinkedProdSearchVal(searchValue);
+    setLinkedProdFilterVal(addProductsFilterInitState);
 
     if (searchValue.length > 2) {
       getNotLinkedProducts({
@@ -131,26 +136,25 @@ const AddLinkedProductsDialog = ({
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    setLinkedProdFilterVal({
-      columnField: model.items[0].columnField,
-      value: model.items[0].value,
-      operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-    });
+    setLinkedProdFilterVal(model.items as IFilterItem[]);
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
 
-    setLinkedProdFilterVal({
-      columnField: currColumn,
-      value: combinedValue,
-      operatorValue: 'isAnyOf',
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
     });
+
+    setLinkedProdFilterVal(newAppliedFilters);
   };
 
   const handleSortModelChange = (model: GridSortModel) => {

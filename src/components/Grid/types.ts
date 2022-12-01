@@ -1,8 +1,7 @@
-import { MouseEvent } from "react";
-import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridInputSelectionModel, GridRowParams, GridSelectionModel, GridSortModel, MuiEvent } from "@mui/x-data-grid";
+import { MouseEvent } from 'react';
+import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridInputSelectionModel, GridRowParams, GridSelectionModel, GridSortModel, MuiEvent } from '@mui/x-data-grid-pro';
 
 import { IFacetValue, IFilterItem } from "store/api/types";
-import { IBasicFilter } from "components/GridMenu/types";
 
 export interface IGridProps {
   data?: unknown[];
@@ -11,8 +10,8 @@ export interface IGridProps {
   dataIdKey: string;
   isFetching: boolean;
   onFilterModelChange: (model: GridFilterModel) => void;
-  filterItem: IFilterItem;
-  handleOnFilterClick?: (value: string, currColumn: string, filters: IBasicFilter) => void;
+  filterItem: IFilterItem[];
+  handleOnFilterClick?: (value: string, currColumn: string, currFilterItems: IFilterItem[]) => void;
   rowCount?: number;
   onPageChange?: (page: number, details: GridCallbackDetails) => void;
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
@@ -32,4 +31,5 @@ export interface IGridProps {
   hideFooter?: boolean;
   page?: number;
   borderColor?: string;
+  disableColumnMenu?: boolean;
 }

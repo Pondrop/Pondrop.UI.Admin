@@ -2,23 +2,25 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
 
+// Components
+import Grid from 'components/Grid';
 import { tasksColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
+
+// Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllTaskFilterQuery, useGetTasksQuery } from 'store/api/tasks/api';
-import { taskInitialState } from 'store/api/tasks/initialState';
 import { selectTasks, setTasksFilter, setTasksSearchValue, setTasksSortValue } from 'store/api/tasks/slice';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
-import Grid from 'components/Grid';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
-import SearchField from 'components/SearchField';
 
 const SubmittedTasks: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [taskFilterItem, setTaskFilterItem] = useState<IFilterItem>(taskInitialState.filterItem);
+  const tasksFilterInitState = generateFilterInitState(tasksColumns);
+  const [taskFilterItem, setTaskFilterItem] = useState<IFilterItem[]>(tasksFilterInitState);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
@@ -55,7 +57,7 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setTaskFilterItem(filterItem);
+    if (filterItem.length !== 0) setTaskFilterItem(filterItem);
   }, [filterItem]);
 
   useEffect(() => {
@@ -64,25 +66,13 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    dispatch(
-      setTasksFilter({
-        columnField: '',
-        value: '',
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setTasksFilter(tasksFilterInitState));
     dispatch(setTasksSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    dispatch(
-      setTasksFilter({
-        columnField: model.items[0].columnField,
-        value: model.items[0].value,
-        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-      }),
-    );
+    dispatch(setTasksFilter(model.items as IFilterItem[]));
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
@@ -102,21 +92,24 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
 
-    dispatch(
-      setTasksFilter({
-        columnField: currColumn,
-        value: combinedValue,
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
+    });
+
+    setPageSkip(0);
+
+    dispatch(setTasksFilter(newAppliedFilters));
   };
 
   const handleOnRowClick = (params: GridRowParams) => {

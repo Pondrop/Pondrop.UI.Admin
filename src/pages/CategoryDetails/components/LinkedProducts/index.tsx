@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
 import { Alert, CircularProgress, IconButton, Snackbar, Tooltip } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 // Components
 import Grid from 'components/Grid';
 import { linkedProductsColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+import { tooltipContent } from '../CategoryInfoPanel/constants';
+import AddLinkedProductsDialog from '../AddLinkedProductsDialog';
 
 // Other variables / values
 import {
@@ -29,21 +30,13 @@ import {
 } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
-import { tooltipContent } from '../CategoryInfoPanel/constants';
-import AddLinkedProductsDialog from '../AddLinkedProductsDialog';
 
-const LinkedProducts = ({
-  categoryName,
-  parentCategory,
-  categoryId,
-}: {
-  categoryName: string;
-  parentCategory: string;
-  categoryId: string;
-}): JSX.Element => {
+const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; categoryId: string }): JSX.Element => {
+  // States
+  const linkedProductsFilterInitState = generateFilterInitState(linkedProductsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [searchVal, setSearchVal] = useState<string>('');
-  const [filterVal, setFilterVal] = useState<IFilterItem>(productInitialState.filterItem);
+  const [filterVal, setFilterVal] = useState<IFilterItem[]>(linkedProductsFilterInitState);
   const [sortVal, setSortVal] = useState<ISortItem>(productInitialState.sortValue);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [linkedProducts, setLinkedProducts] = useState<string[]>([]);
@@ -69,7 +62,7 @@ const LinkedProducts = ({
   });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
-    { searchString: searchVal, parentCategory, selectedCategory: categoryName },
+    { searchString: searchVal, selectedCategory: categoryName },
     { skip: !gridData.length },
   );
 
@@ -104,33 +97,34 @@ const LinkedProducts = ({
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
+    setFilterVal(linkedProductsFilterInitState);
     setSearchVal(searchValue);
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    setFilterVal({
-      columnField: model.items[0].columnField,
-      value: model.items[0].value,
-      operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-    });
+    setFilterVal(model.items as IFilterItem[]);
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
+
+    setPageSkip(0);
 
     if (currColumn === 'categories') setSelectedCategories([...combinedValue]);
 
-    setFilterVal({
-      columnField: currColumn,
-      value: combinedValue,
-      operatorValue: 'isAnyOf',
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
     });
+    setFilterVal(newAppliedFilters);
   };
 
   const onPageChange = (page: number) => {
@@ -298,6 +292,7 @@ const LinkedProducts = ({
         onSelectionModelChange={onSelectionModelChange}
         selectionModel={linkedProdSelectedProds}
         rowHeight={52}
+        disableColumnMenu={isFetchingUpdates}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

@@ -1,5 +1,5 @@
 import { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid';
+import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid-pro';
 import { FilterList } from '@mui/icons-material';
 
 // API Types
@@ -43,7 +43,7 @@ const Grid: FunctionComponent<IGridProps> = ({
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount ?? gridData?.length);
-  const [localFilter, setLocalFilter] = useState<IFilterItem>({} as IFilterItem);
+  const [localFilter, setLocalFilter] = useState<IFilterItem[]>([]);
 
   useEffect(() => {
     setGridData(data as unknown as GridRowsProp[]);
@@ -63,7 +63,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       return (
         <CustomMenu
           data={gridData}
-          filterItem={localFilter}
+          filterItems={localFilter}
           handleOnFilterClick={handleOnFilterClick}
           menuData={menuData}
           isMenuLoading={isMenuLoading}
@@ -81,13 +81,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   // helper function
   const getFilterModel = () => {
     const filterModelItem = {
-      items: [
-        {
-          columnField: filterItem.columnField,
-          value: filterItem.value,
-          operatorValue: filterItem.operatorValue,
-        },
-      ],
+      items: [...filterItem],
     };
 
     return filterModelItem;
@@ -141,7 +135,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       page={page}
       hideFooter={hideFooter}
       borderColor={borderColor}
-      disableColumnMenu={isFetching}
+      pagination={typeof onPageChange === 'function'}
     />
   );
 };

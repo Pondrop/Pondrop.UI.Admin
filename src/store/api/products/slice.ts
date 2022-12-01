@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "store";
-import { actions } from "./actions";
-import { productInitialState } from "./initialState";
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from 'store';
+import { actions } from './actions';
+import { productInitialState } from './initialState';
 
 export const productsSlice = createSlice({
   name: 'products',
@@ -11,6 +11,6 @@ export const productsSlice = createSlice({
 
 export const selectProducts = (state: RootState) => state.products;
 
-export const { resetToInitialState, setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue } = productsSlice.actions;
+export const { resetProductToInitialState, setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue } = productsSlice.actions;
 
 export default productsSlice.reducer;

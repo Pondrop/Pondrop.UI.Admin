@@ -1,5 +1,5 @@
 import { initialState } from '../constants';
-import { IProductState } from "../types";
+import { IProductState } from '../types';
 
 export const productInitialState: IProductState = {
   ...initialState,

@@ -8,8 +8,13 @@ import {
   Storefront,
 } from '@mui/icons-material';
 
+// Components
+import { campaignsColumns, productColumns, storeColumns, tasksColumns } from 'components/Grid/constants';
+import { generateFilterInitState } from 'components/GridMenu/utils';
+
 import pondrop from 'assets/images/pondrop.png';
 import { useAppDispatch } from 'store';
+import { setCampaignsFilter, setCampaignsSearchValue } from 'store/api/campaigns/slice';
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
 import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 import { setTasksFilter, setTasksSearchValue } from 'store/api/tasks/slice';
@@ -23,46 +28,34 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   const handleCampaignsRedirect = () => {
+    const campaignsFilterInitState = generateFilterInitState(campaignsColumns);
     setCurrentTab('campaigns');
     navigate('../campaigns', { replace: true });
+    dispatch(setCampaignsFilter(campaignsFilterInitState));
+    dispatch(setCampaignsSearchValue(''));
   };
 
   const handleProductsRedirect = () => {
+    const productFilterInitState = generateFilterInitState(productColumns);
     setCurrentTab('products');
     navigate('../products', { replace: true });
-    dispatch(
-      setProductsFilter({
-        columnField: '',
-        value: [],
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setProductsFilter(productFilterInitState));
     dispatch(setProductsSearchValue(''));
   };
 
   const handleStoresRedirect = () => {
+    const storeFilterInitState = generateFilterInitState(storeColumns);
     setCurrentTab('stores');
     navigate('../stores', { replace: true });
-    dispatch(
-      setStoresFilter({
-        columnField: '',
-        value: [],
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setStoresFilter(storeFilterInitState));
     dispatch(setStoresSearchValue(''));
   };
 
   const handleTasksRedirect = () => {
+    const taskFilterInitState = generateFilterInitState(tasksColumns);
     setCurrentTab('submissions');
     navigate('../submissions', { replace: true });
-    dispatch(
-      setTasksFilter({
-        columnField: '',
-        value: [],
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setTasksFilter(taskFilterInitState));
     dispatch(setTasksSearchValue(''));
   };
 

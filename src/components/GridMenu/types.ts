@@ -1,6 +1,6 @@
-import { GridColumnMenuProps, GridRowsProp } from "@mui/x-data-grid";
+import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid-pro';
 
-import { IFacetValue, IFilterItem } from "store/api/types";
+import { IFacetValue, IFilterItem } from 'store/api/types';
 
 export interface IBasicFilter {
   field: string;
@@ -9,8 +9,8 @@ export interface IBasicFilter {
 
 export interface ICustomMenuProps extends GridColumnMenuProps {
   data?: GridRowsProp[];
-  filterItem: IFilterItem;
-  handleOnFilterClick?: (value: string, currColumn: string, filters: IBasicFilter) => void;
+  filterItems: IFilterItem[];
+  handleOnFilterClick?: (value: string, currColumn: string, currFilterItems: IFilterItem[]) => void;
   menuData: IFacetValue;
   isMenuLoading?: boolean;
 }

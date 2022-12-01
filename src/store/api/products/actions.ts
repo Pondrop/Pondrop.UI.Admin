@@ -1,17 +1,13 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { GridSortDirection } from "@mui/x-data-grid";
+import { PayloadAction } from '@reduxjs/toolkit';
+import { GridSortDirection } from '@mui/x-data-grid-pro';
 
-import { initialState } from "../constants";
-import { IFilterItem, IProductState, ISortItem } from "../types";
+import { initialState } from '../constants';
+import { IFilterItem, IProductState, ISortItem } from '../types';
 
-const setProductsFilter = (state: IProductState, action: PayloadAction<IFilterItem>) => {
+const setProductsFilter = (state: IProductState, action: PayloadAction<IFilterItem[]>) => {
   return {
     ...state,
-    filterItem: {
-      columnField: action.payload.columnField,
-      value: action.payload.value,
-      operatorValue: action.payload.operatorValue
-    }
+    filterItem: [...action.payload]
   };
 };
 
@@ -53,7 +49,7 @@ const setProductsSelectedParent = (state: IProductState, action: PayloadAction<s
   };
 };
 
-const resetToInitialState = (state: IProductState, action: PayloadAction<undefined>) => {
+const resetProductToInitialState = (state: IProductState, action: PayloadAction<undefined>) => {
   return {
     ...state,
     ...initialState,
@@ -65,4 +61,4 @@ const resetToInitialState = (state: IProductState, action: PayloadAction<undefin
   };
 };
 
-export const actions = { resetToInitialState, setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue };
+export const actions = { resetProductToInitialState, setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue };
