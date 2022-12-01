@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { GridSortDirection } from '@mui/x-data-grid';
+import { GridSortDirection } from '@mui/x-data-grid-pro';
 
 import { initialState } from '../constants';
 import { IFilterItem, IProductState, ISortItem } from '../types';
@@ -49,7 +49,7 @@ const setProductsSelectedParent = (state: IProductState, action: PayloadAction<s
   };
 };
 
-const resetToInitialState = (state: IProductState, action: PayloadAction<undefined>) => {
+const resetProductToInitialState = (state: IProductState, action: PayloadAction<undefined>) => {
   return {
     ...state,
     ...initialState,
@@ -61,4 +61,4 @@ const resetToInitialState = (state: IProductState, action: PayloadAction<undefin
   };
 };
 
-export const actions = { resetToInitialState, setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue };
+export const actions = { resetProductToInitialState, setProductsFilter, setProductsSearchValue, setProductsSelectedCategories, setProductsSelectedIds, setProductsSelectedParent, setProductsSortValue };

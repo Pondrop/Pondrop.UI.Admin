@@ -11,6 +11,6 @@ export const categoriesSlice = createSlice({
 
 export const selectCategories = (state: RootState) => state.categories;
 
-export const { setCategoriesFilter, setCategoriesSearchValue, setCategoriesSelectedIds, setCategoriesSortValue } = categoriesSlice.actions;
+export const { resetCategoriesToInitialState, setCategoriesFilter, setCategoriesSearchValue, setCategoriesSelectedIds, setCategoriesSortValue } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;

@@ -43,11 +43,10 @@ export const addLinkedProductsColumns: GridColDef[] = [
 ];
 
 export const tasksColumns: GridColDef[] = [
-  { field: 'taskType', headerName: 'Task type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
+  { field: 'taskType', headerName: 'Task type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 250, renderCell: handleRenderCell },
   { field: 'submittedUtc', headerName: 'Date & time submitted', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 200, renderCell: handleRenderCellDate },
   { field: 'retailerName', headerName: 'Provider', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 150, renderCell: handleRenderCell },
   { field: 'storeName', headerName: 'Store name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
-  { field: 'Product', headerName: 'Product', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
 ];
 
 export const campaignsColumns: GridColDef[] = [

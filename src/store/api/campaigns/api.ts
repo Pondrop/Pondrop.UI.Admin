@@ -26,7 +26,8 @@ export const campaignsApi = createApi({
           filterItem.forEach((filter, filterIndex) => {
             const filterValues = filter.value;
             if (Array.isArray(filterValues)) filterValues?.forEach((filterValue, index) => {
-              if (index === 0 && filterIndex !== 0) filterQuery = filterQuery.concat(' and (');
+              if (filterIndex > 0 && filterQuery[filterQuery.length - 1] === ')') filterQuery = filterQuery.concat(' and ');
+              if (index === 0) filterQuery = filterQuery.concat('(');
               if (index !== 0) filterQuery = filterQuery.concat(' or ');
               filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
               if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');

@@ -15,7 +15,10 @@ import { ICreateCampaignModalData, IModalData } from './components/CampaignDialo
 // Other variables / values
 import { CATEGORY_FOCUS_ID } from 'pages/types';
 import { useAppDispatch, useAppSelector } from 'store';
+import { categoriesApi } from 'store/api/categories/api';
 import { useGetAllCampaignFilterQuery, useGetCampaignsQuery } from 'store/api/campaigns/api';
+import { productsApi } from 'store/api/products/api';
+import { storeApi } from 'store/api/stores/api';
 import {
   selectCampaigns,
   setCampaignsFilter,
@@ -23,9 +26,9 @@ import {
   setCampaignsSortValue,
   setDidCreateCampaign,
 } from 'store/api/campaigns/slice';
-import { setCategoriesSelectedIds } from 'store/api/categories/slice';
-import { setProductsSelectedIds } from 'store/api/products/slice';
-import { setStoresSelectedIds } from 'store/api/stores/slice';
+import { resetCategoriesToInitialState } from 'store/api/categories/slice';
+import { resetProductToInitialState } from 'store/api/products/slice';
+import { resetStoresToInitialState } from 'store/api/stores/slice';
 import {
   submissionsMicroService,
   useCreateCampaignMutation,
@@ -107,7 +110,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setCampaignFilterItem(filterItem);
+    if (filterItem.length !== 0) setCampaignFilterItem(filterItem);
   }, [filterItem]);
 
   useEffect(() => {
@@ -134,9 +137,16 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     if (isCreateCampaignSuccess) {
       refreshCampaigns();
       dispatch(setDidCreateCampaign(true));
-      if (newCampaignData?.template === CATEGORY_FOCUS_ID) dispatch(setCategoriesSelectedIds([]));
-      else dispatch(setProductsSelectedIds([]));
-      dispatch(setStoresSelectedIds([]));
+      if (newCampaignData?.template === CATEGORY_FOCUS_ID) {
+        dispatch(resetCategoriesToInitialState());
+        dispatch(categoriesApi.util.resetApiState());
+      } else {
+        dispatch(resetProductToInitialState());
+        dispatch(productsApi.util.resetApiState());
+      }
+
+      dispatch(resetStoresToInitialState());
+      dispatch(storeApi.util.resetApiState());
       resetCreateCampaign();
 
       navigate('new', {

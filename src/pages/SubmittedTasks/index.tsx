@@ -57,7 +57,7 @@ const SubmittedTasks: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setTaskFilterItem(filterItem);
+    if (filterItem.length !== 0) setTaskFilterItem(filterItem);
   }, [filterItem]);
 
   useEffect(() => {

@@ -6,7 +6,6 @@ import { GridFilterModel, GridSelectionModel, GridSortModel } from '@mui/x-data-
 // Components
 import Grid from 'components/Grid';
 import { campaignStoreColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
 import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
@@ -28,12 +27,13 @@ const StoreGrid = (): JSX.Element => {
   // States
   const storeFilterInitState = generateFilterInitState(campaignStoreColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
+  const [storeFilterItemState, setStoreFilterItemState] = useState<IFilterItem[]>(storeFilterInitState);
   const [storePageSize, setStorePageSize] = useState<number>(10);
   const [storePageSkip, setStorePageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
   const {
-    filterItem: storeFilterItem = storeFilterInitState,
+    filterItem: storeFilterItem = storeFilterItemState,
     searchValue: storeSearchValue = '',
     selectedIds: selectedStoresIds,
     selectedProviders = [],
@@ -74,8 +74,11 @@ const StoreGrid = (): JSX.Element => {
   useEffect(() => {
     setStoreRowCount(storeData?.['@odata.count'] ?? 0);
     setGridData(storeData?.value ?? []);
-    dispatch(setStoresSelectedProviders([]));
   }, [storeData]);
+
+  useEffect(() => {
+    if (storeFilterItem.length !== 0) setStoreFilterItemState(storeFilterItem);
+  }, [storeFilterItem]);
 
   const handleSearchDispatch = (searchValue: string) => {
     dispatch(setStoresFilter(storeFilterInitState));
@@ -179,7 +182,7 @@ const StoreGrid = (): JSX.Element => {
         dataIdKey="id"
         isFetching={isStoreFetching}
         onFilterModelChange={onFilterModelChange}
-        filterItem={storeFilterItem}
+        filterItem={storeFilterItemState}
         handleOnFilterClick={handleOnFilterClick}
         rowCount={storeRowCount}
         onPageChange={onPageChange}

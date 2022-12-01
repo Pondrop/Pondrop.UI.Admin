@@ -31,15 +31,7 @@ import {
 import { productInitialState } from 'store/api/products/initialState';
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 
-const LinkedProducts = ({
-  categoryName,
-  parentCategory,
-  categoryId,
-}: {
-  categoryName: string;
-  parentCategory: string;
-  categoryId: string;
-}): JSX.Element => {
+const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; categoryId: string }): JSX.Element => {
   // States
   const linkedProductsFilterInitState = generateFilterInitState(linkedProductsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
@@ -70,7 +62,7 @@ const LinkedProducts = ({
   });
 
   const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllProductFilterQuery(
-    { searchString: searchVal, parentCategory, selectedCategory: categoryName },
+    { searchString: searchVal, selectedCategory: categoryName },
     { skip: !gridData.length },
   );
 
@@ -123,18 +115,16 @@ const LinkedProducts = ({
     setPageSkip(0);
 
     if (currColumn === 'categories') setSelectedCategories([...combinedValue]);
-    else {
-      const newAppliedFilters = currFilterItems.map((filter) => {
-        if (filter.columnField === currColumn)
-          return {
-            ...filter,
-            value: combinedValue,
-          };
-        else return filter;
-      });
-      setSelectedCategories([]);
-      setFilterVal(newAppliedFilters);
-    }
+
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
+    });
+    setFilterVal(newAppliedFilters);
   };
 
   const onPageChange = (page: number) => {
@@ -302,6 +292,7 @@ const LinkedProducts = ({
         onSelectionModelChange={onSelectionModelChange}
         selectionModel={linkedProdSelectedProds}
         rowHeight={52}
+        disableColumnMenu={isFetchingUpdates}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

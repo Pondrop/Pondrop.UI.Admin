@@ -31,4 +31,5 @@ export interface IGridProps {
   hideFooter?: boolean;
   page?: number;
   borderColor?: string;
+  disableColumnMenu?: boolean;
 }

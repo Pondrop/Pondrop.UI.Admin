@@ -25,6 +25,7 @@ import {
   selectProducts,
   setProductsFilter,
   setProductsSearchValue,
+  setProductsSelectedCategories,
   setProductsSelectedIds,
   setProductsSortValue,
 } from 'store/api/products/slice';
@@ -38,19 +39,22 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [productPageSize, setProductPageSize] = useState<number>(10);
   const [productPageSkip, setProductPageSkip] = useState<number>(0);
+  const [productsFilterItem, setProductsFilterItem] = useState<IFilterItem[]>(productsFilterInitState);
   const [categPageSize, setCategPageSize] = useState<number>(10);
   const [categPageSkip, setCategPageSkip] = useState<number>(0);
+  const [categoriesFilterItem, setCategoriesFilterItem] = useState<IFilterItem[]>(categoriesFilterInitState);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
 
   const dispatch = useAppDispatch();
   const {
-    filterItem: productFilterItem = productsFilterInitState,
+    filterItem: productFilterItem = productsFilterItem,
     searchValue: productSearchValue = '',
+    selectedCategories = [],
     selectedIds: selectedProductsIds,
     sortValue: productSortValue,
   } = useAppSelector(selectProducts);
   const {
-    filterItem: categFilterItem = categoriesFilterInitState,
+    filterItem: categFilterItem = categoriesFilterItem,
     searchValue: categSearchValue = '',
     selectedIds: selectedCategoriesIds,
     sortValue: categSortValue,
@@ -64,6 +68,7 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
       filterItem: productFilterItem,
       prevPageItems: productPageSkip,
       pageSize: productPageSize,
+      selectedCategories,
     },
     {
       skip: stepType !== 'product',
@@ -120,6 +125,8 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
     if (stepType === 'product') {
       tempMenuData = {
         name: productFilterOptions?.['@search.facets']?.name,
+        barcodeNumber: productFilterOptions?.['@search.facets']?.barcodeNumber,
+        categories: productFilterOptions?.['@search.facets']?.['categories/name'],
       };
     } else if (stepType === 'category') {
       tempMenuData = {
@@ -136,6 +143,14 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
       setRowCount(0);
     }
   }, [productSearchValue]);
+
+  useEffect(() => {
+    if (categFilterItem.length !== 0) setCategoriesFilterItem(categFilterItem);
+  }, [categFilterItem]);
+
+  useEffect(() => {
+    if (productFilterItem.length !== 0) setProductsFilterItem(productFilterItem);
+  }, [productFilterItem]);
 
   const getInitialState = () => {
     let tempGridState;
@@ -180,8 +195,8 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   };
 
   const getFilterValue = () => {
-    if (stepType === 'product') return productFilterItem;
-    else return categFilterItem;
+    if (stepType === 'product') return productsFilterItem;
+    else return categoriesFilterItem;
   };
 
   const getDataIdKey = () => {
@@ -225,6 +240,8 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
 
     const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
     const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
+
+    if (stepType === 'product' && currColumn === 'categories') dispatch(setProductsSelectedCategories(combinedValue));
 
     const newAppliedFilters = currFilterItems.map((filter) => {
       if (filter.columnField === currColumn)

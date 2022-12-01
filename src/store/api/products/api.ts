@@ -46,11 +46,13 @@ export const productsApi = createApi({
         // FUTURE ENHANCEMENT: Take into account operatorValues other than isAnyOf
         // Currently limited to isAnyOf
         if (Array.isArray(filterItem) && filterItem.length > 0) {
-          filterItem.forEach((filter, filterIndex) => {
+          filterItem.forEach((filter) => {
             const filterValues = filter.value;
-            if (Array.isArray(filterValues) && (!parentCategory || filter.columnField !== 'categories')) filterValues?.forEach((filterValue, index) => {
-              if (index === 0 && parentCategory) filterQuery = filterQuery.concat(' and ');
-              if (index === 0 && filterIndex !== 0) filterQuery = filterQuery.concat(' and (');
+            if (Array.isArray(filterValues) && filter.columnField !== 'categories') filterValues?.forEach((filterValue, index) => {
+              if (index === 0) {
+                if (parentCategory || baseCategory || (selectedCategories?.length > 0)) filterQuery = filterQuery.concat(' and ');
+                filterQuery = filterQuery.concat('(');
+              }
               if (index !== 0) filterQuery = filterQuery.concat(' or ');
               filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
               if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
@@ -92,8 +94,9 @@ export const productsApi = createApi({
         if (parentCategory) {
           if (parentCategory !== 'all' && parentCategory !== 'uncategorised') filterQuery = filterQuery.concat(`parentCategoryId eq '${parentCategory}'`);
           if (parentCategory === 'uncategorised') filterQuery = filterQuery.concat(`parentCategoryId eq null`);
-          if (selectedCategory) filterQuery = filterQuery.concat(` and categories/any(t: t/name eq '${selectedCategory}')`);
         }
+
+        if (selectedCategory && !isNotLinkedProducts) filterQuery = filterQuery.concat(`categories/any(t: t/name eq '${selectedCategory}')`);
 
         if (isNotLinkedProducts) filterQuery = filterQuery.concat(`categories/any(t: t/name ne '${selectedCategory}') or categoryNames eq  ''`);
 

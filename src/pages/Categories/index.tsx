@@ -105,7 +105,7 @@ const Categories: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setCategoryFilterItem(filterItem);
+    if (filterItem.length !== 0) setCategoryFilterItem(filterItem);
   }, [filterItem]);
 
   useEffect(() => {
