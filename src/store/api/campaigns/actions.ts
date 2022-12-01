@@ -3,14 +3,10 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { ICampaignState } from "./initialState";
 import { IFilterItem, ISortItem } from "../types";
 
-const setCampaignsFilter = (state: ICampaignState, action: PayloadAction<IFilterItem>) => {
+const setCampaignsFilter = (state: ICampaignState, action: PayloadAction<IFilterItem[]>) => {
   return {
     ...state,
-    filterItem: {
-      columnField: action.payload.columnField,
-      value: action.payload.value,
-      operatorValue: action.payload.operatorValue
-    }
+    filterItem: [...action.payload]
   };
 };
 

@@ -3,8 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, Snackbar } from '@mui/material';
 import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
+// Components
+import Grid from 'components/Grid';
 import { campaignsColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
+import CampaignDialog from './components/CampaignDialog';
+import { initialModalData } from './components/CampaignDialog/constants';
+import { ICreateCampaignModalData, IModalData } from './components/CampaignDialog/types';
+
+// Other variables / values
 import { CATEGORY_FOCUS_ID } from 'pages/types';
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllCampaignFilterQuery, useGetCampaignsQuery } from 'store/api/campaigns/api';
@@ -25,7 +33,6 @@ import {
   useUpdateCampaignMutation,
 } from 'store/api/tasks/api';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
-import { initialState } from 'store/api/constants';
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -35,17 +42,12 @@ import {
   StyledCategoryBtn,
   StyledTitle,
 } from '../styles';
-import Grid from 'components/Grid';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
-import SearchField from 'components/SearchField';
-import CampaignDialog from './components/CampaignDialog';
-import { initialModalData } from './components/CampaignDialog/constants';
-import { ICreateCampaignModalData, IModalData } from './components/CampaignDialog/types';
 
 const Campaigns: FunctionComponent = (): JSX.Element => {
   // States
+  const campaignsFilterInitState = generateFilterInitState(campaignsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
-  const [campaignFilterItem, setCampaignFilterItem] = useState<IFilterItem>(initialState.filterItem);
+  const [campaignFilterItem, setCampaignFilterItem] = useState<IFilterItem[]>(campaignsFilterInitState);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
@@ -146,25 +148,13 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    dispatch(
-      setCampaignsFilter({
-        columnField: '',
-        value: '',
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setCampaignsFilter(campaignsFilterInitState));
     dispatch(setCampaignsSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    dispatch(
-      setCampaignsFilter({
-        columnField: model.items[0].columnField,
-        value: model.items[0].value,
-        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-      }),
-    );
+    dispatch(setCampaignsFilter(model.items as IFilterItem[]));
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
@@ -184,21 +174,24 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
 
-    dispatch(
-      setCampaignsFilter({
-        columnField: currColumn,
-        value: combinedValue,
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
+    });
+
+    setPageSkip(0);
+
+    dispatch(setCampaignsFilter(newAppliedFilters));
   };
 
   const handleNewCampaign = () => {

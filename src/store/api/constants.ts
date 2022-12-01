@@ -1,11 +1,7 @@
 import { IGridState } from "./types";
 
 export const initialState: IGridState = {
-  filterItem: {
-    columnField: '',
-    value: [],
-    operatorValue: ''
-  },
+  filterItem: [],
   searchValue: '',
   sortValue: {
     field: '',

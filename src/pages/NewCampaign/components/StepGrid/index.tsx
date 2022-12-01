@@ -3,11 +3,13 @@ import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
+// Components
 import Grid from 'components/Grid';
 import { categoriesColumns, productColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+
+// Other variables / values
 import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
@@ -26,10 +28,13 @@ import {
   setProductsSelectedIds,
   setProductsSortValue,
 } from 'store/api/products/slice';
-import { IFacetValue, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { IStepGrid } from './types';
 
 const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
+  // States
+  const categoriesFilterInitState = generateFilterInitState(categoriesColumns);
+  const productsFilterInitState = generateFilterInitState(productColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [productPageSize, setProductPageSize] = useState<number>(10);
   const [productPageSkip, setProductPageSkip] = useState<number>(0);
@@ -39,13 +44,13 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const {
-    filterItem: productFilterItem,
+    filterItem: productFilterItem = productsFilterInitState,
     searchValue: productSearchValue = '',
     selectedIds: selectedProductsIds,
     sortValue: productSortValue,
   } = useAppSelector(selectProducts);
   const {
-    filterItem: categFilterItem,
+    filterItem: categFilterItem = categoriesFilterInitState,
     searchValue: categSearchValue = '',
     selectedIds: selectedCategoriesIds,
     sortValue: categSortValue,
@@ -186,13 +191,8 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
 
   const handleSearchDispatch = (searchValue: string) => {
     if (stepType === 'product') {
-      dispatch(
-        setProductsFilter({
-          columnField: '',
-          value: '',
-          operatorValue: 'isAnyOf',
-        }),
-      );
+      setProductPageSkip(0);
+      dispatch(setProductsFilter(productsFilterInitState));
       dispatch(setProductsSearchValue(searchValue));
 
       if (searchValue === '') {
@@ -200,13 +200,8 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
         setRowCount(0);
       }
     } else if (stepType === 'category') {
-      dispatch(
-        setCategoriesFilter({
-          columnField: '',
-          value: '',
-          operatorValue: 'isAnyOf',
-        }),
-      );
+      setCategPageSkip(0);
+      dispatch(setCategoriesFilter(categoriesFilterInitState));
       dispatch(setCategoriesSearchValue(searchValue));
     }
   };
@@ -214,21 +209,9 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
     if (stepType === 'product') {
-      dispatch(
-        setProductsFilter({
-          columnField: model.items[0].columnField,
-          value: model.items[0].value,
-          operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-        }),
-      );
+      dispatch(setProductsFilter(model.items as IFilterItem[]));
     } else if (stepType === 'category') {
-      dispatch(
-        setCategoriesFilter({
-          columnField: model.items[0].columnField,
-          value: model.items[0].value,
-          operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-        }),
-      );
+      dispatch(setCategoriesFilter(model.items as IFilterItem[]));
     }
   };
 
@@ -237,30 +220,27 @@ const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
     else if (stepType === 'category') dispatch(setCategoriesSelectedIds(selectionModel as string[]));
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
+
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
+    });
 
     if (stepType === 'product') {
-      dispatch(
-        setProductsFilter({
-          columnField: currColumn,
-          value: combinedValue,
-          operatorValue: 'isAnyOf',
-        }),
-      );
+      setProductPageSkip(0);
+      dispatch(setProductsFilter(newAppliedFilters));
     } else if (stepType === 'category') {
-      dispatch(
-        setCategoriesFilter({
-          columnField: currColumn,
-          value: combinedValue,
-          operatorValue: 'isAnyOf',
-        }),
-      );
+      setCategPageSkip(0);
+      dispatch(setCategoriesFilter(newAppliedFilters));
     }
   };
 

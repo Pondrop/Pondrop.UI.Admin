@@ -4,14 +4,10 @@ import { GridSortDirection } from '@mui/x-data-grid';
 import { initialState } from '../constants';
 import { IFilterItem, IProductState, ISortItem } from '../types';
 
-const setProductsFilter = (state: IProductState, action: PayloadAction<IFilterItem>) => {
+const setProductsFilter = (state: IProductState, action: PayloadAction<IFilterItem[]>) => {
   return {
     ...state,
-    filterItem: {
-      columnField: action.payload.columnField,
-      value: action.payload.value,
-      operatorValue: action.payload.operatorValue
-    }
+    filterItem: [...action.payload]
   };
 };
 

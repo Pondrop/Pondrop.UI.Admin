@@ -2,12 +2,16 @@ import { FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid-pro';
 
+// Components
+import Grid from 'components/Grid';
 import { storeColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
+import SearchField from 'components/SearchField';
+
+// Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
 import { IFacetValue, IFilterItem } from 'store/api/types';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
-import { storeInitialState } from 'store/api/stores/initialState';
 import {
   selectStores,
   setStoresFilter,
@@ -16,20 +20,23 @@ import {
   setStoresSortValue,
 } from 'store/api/stores/slice';
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
-import Grid from 'components/Grid';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
-import SearchField from 'components/SearchField';
 
 const Stores: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
-  const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem>(storeInitialState.filterItem);
+  const storeFilterInitState = generateFilterInitState(storeColumns);
+  const [storeFilterItem, setStoreFilterItem] = useState<IFilterItem[]>(storeFilterInitState);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const { filterItem, searchValue = '', selectedProviders = [], sortValue } = useAppSelector(selectStores);
+  const {
+    filterItem = storeFilterItem,
+    searchValue = '',
+    selectedProviders = [],
+    sortValue,
+  } = useAppSelector(selectStores);
   const { data, isFetching } = useGetStoresQuery({
     searchString: searchValue,
     sortValue,
@@ -62,7 +69,7 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   // Use Effects
   useEffect(() => {
-    setStoreFilterItem(filterItem);
+    if (filterItem.length !== 0) setStoreFilterItem(filterItem);
   }, [filterItem]);
 
   useEffect(() => {
@@ -71,25 +78,13 @@ const Stores: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    dispatch(
-      setStoresFilter({
-        columnField: '',
-        value: '',
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setStoresFilter(storeFilterInitState));
     dispatch(setStoresSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    dispatch(
-      setStoresFilter({
-        columnField: model.items[0].columnField,
-        value: model.items[0].value,
-        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-      }),
-    );
+    dispatch(setStoresFilter(model.items as IFilterItem[]));
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
@@ -109,24 +104,26 @@ const Stores: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
+
+    setPageSkip(0);
 
     if (currColumn === 'retailer') dispatch(setStoresSelectedProviders(combinedValue));
-    else dispatch(setStoresSelectedProviders([]));
 
-    dispatch(
-      setStoresFilter({
-        columnField: currColumn,
-        value: combinedValue,
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
+    });
+
+    dispatch(setStoresFilter(newAppliedFilters));
   };
 
   const handleOnRowClick = (params: GridRowParams) => {

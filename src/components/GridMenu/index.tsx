@@ -19,29 +19,27 @@ import { ICustomMenuProps } from './types';
 import { getAllUniqueValues, handleFilterStateChange } from './utils';
 
 const CustomMenu = (props: ICustomMenuProps) => {
-  const { filterItem, handleOnFilterClick, hideMenu, menuData, currentColumn, isMenuLoading = true, ...other } = props;
+  const { filterItems, handleOnFilterClick, hideMenu, menuData, currentColumn, isMenuLoading = true, ...other } = props;
 
   const uniqueValues = getAllUniqueValues(menuData[currentColumn.field]);
-  const [filteredData, setFilteredData] = useState<string[]>(uniqueValues);
-  const [appliedFilter, setAppliedFilters] = useState<IFilterItem>(filterItem as IFilterItem);
+  const [searchedData, setSearchedData] = useState<string[]>(uniqueValues);
+  const [appliedFilters, setAppliedFilters] = useState<IFilterItem[]>([...filterItems]);
 
   const handleOnGridFilterClick = (value: string) => () => {
-    if (typeof handleOnFilterClick === 'function') {
-      const filterData = {
-        field: appliedFilter.columnField,
-        value: appliedFilter.value,
-      };
-      handleOnFilterClick(value, currentColumn.field, filterData);
-    }
+    if (typeof handleOnFilterClick === 'function') handleOnFilterClick(value, currentColumn.field, appliedFilters);
 
-    const combinedValue =
-      appliedFilter.columnField === currentColumn.field ? handleFilterStateChange(value, appliedFilter.value) : [value];
+    const columnValues = appliedFilters.find((filter) => filter.columnField === currentColumn.field);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
 
-    setAppliedFilters({
-      columnField: currentColumn.field,
-      value: combinedValue,
-      operatorValue: 'isAnyOf',
+    const newAppliedFilters = appliedFilters.map((filter) => {
+      if (filter.columnField === currentColumn.field)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
     });
+    setAppliedFilters(newAppliedFilters);
   };
 
   const handleOnSearchChange = (searchValue: string) => {
@@ -49,22 +47,24 @@ const CustomMenu = (props: ICustomMenuProps) => {
     const filteredItems = searchValue
       ? uniqueValues.filter((value) => value.toLowerCase().includes(lowercaseSearchVal))
       : uniqueValues;
-    setFilteredData(filteredItems);
+    setSearchedData(filteredItems);
   };
 
   const MenuItems = ({ index, style }: Pick<ListChildComponentProps, 'index' | 'style'>) => {
-    const idValue = String(filteredData[index]).replaceAll(/\s+/g, '-');
-    const isChecked = Array.isArray(appliedFilter.value) ? appliedFilter.value.includes(filteredData[index]) : false;
+    const idValue = String(searchedData[index]).replaceAll(/\s+/g, '-');
+    const columnValues = appliedFilters.find((filter) => filter.columnField === currentColumn.field);
+    const isChecked =
+      columnValues && Array.isArray(columnValues.value) ? columnValues.value.includes(searchedData[index]) : false;
 
     return (
       <RowDiv
         key={idValue}
         style={style}
         data-testid={`${currentColumn.field}-${idValue}`}
-        onClick={handleOnGridFilterClick(filteredData[index])}
+        onClick={handleOnGridFilterClick(searchedData[index])}
       >
         <StyledCheckbox value={idValue} checked={isChecked} />
-        <LabelDiv>{filteredData[index]}</LabelDiv>
+        <LabelDiv>{searchedData[index]}</LabelDiv>
       </RowDiv>
     );
   };
@@ -99,7 +99,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
             <StyledList
               className={`${currentColumn.field}-List`}
               height={height}
-              itemCount={filteredData.length}
+              itemCount={searchedData.length}
               itemSize={42}
               width={width}
             >
@@ -113,7 +113,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
 
   return (
     <MenuWrapper
-      items={filteredData.length}
+      items={searchedData.length}
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       isLoading={isMenuLoading}

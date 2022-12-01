@@ -14,7 +14,7 @@ export const productsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem, prevPageItems: number, pageSize: number, parentCategory?: string, selectedCategories?: string[], baseCategory?: string, isNotLinkedProducts?: boolean }>({
+    getProducts: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem[], prevPageItems: number, pageSize: number, parentCategory?: string, selectedCategories?: string[], baseCategory?: string, isNotLinkedProducts?: boolean }>({
       query: (arg) => {
         const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10, parentCategory, selectedCategories = [], baseCategory, isNotLinkedProducts = false } = arg;
 
@@ -35,19 +35,28 @@ export const productsApi = createApi({
 
         if (selectedCategories?.length > 0) {
           if ((parentCategory && parentCategory !== 'all') || baseCategory) filterQuery = filterQuery.concat(' and ');
+          filterQuery = filterQuery.concat('(');
           selectedCategories.forEach((categ, index) => {
             filterQuery = filterQuery.concat(`categories/any(t: t/name eq '${categ}')`);
             if (index !== selectedCategories?.length - 1) filterQuery = filterQuery.concat(' or ');
           });
+          filterQuery = filterQuery.concat(')');
         }
 
-        if (Array.isArray(filterItem.value) && filterItem.value.length > 0 && (!parentCategory || filterItem.columnField !== 'categories')) {
-          filterItem.value.forEach((filter, index) => {
-            if (index === 0 && parentCategory) filterQuery = filterQuery.concat(' and ');
-            if (index !== 0) filterQuery = filterQuery.concat(' or ');
-            filterQuery = filterQuery.concat(`${filterItem.columnField} eq '${filter}'`);
+        // FUTURE ENHANCEMENT: Take into account operatorValues other than isAnyOf
+        // Currently limited to isAnyOf
+        if (Array.isArray(filterItem) && filterItem.length > 0) {
+          filterItem.forEach((filter, filterIndex) => {
+            const filterValues = filter.value;
+            if (Array.isArray(filterValues) && (!parentCategory || filter.columnField !== 'categories')) filterValues?.forEach((filterValue, index) => {
+              if (index === 0 && parentCategory) filterQuery = filterQuery.concat(' and ');
+              if (index === 0 && filterIndex !== 0) filterQuery = filterQuery.concat(' and (');
+              if (index !== 0) filterQuery = filterQuery.concat(' or ');
+              filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
+              if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
+            });
           });
-        } else if (!Array.isArray(filterItem.value) && filterItem.value) filterQuery = filterQuery.concat(`${filterItem.columnField} eq ${filterItem.value}`);
+        }
 
         if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
 

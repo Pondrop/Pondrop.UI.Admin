@@ -3,11 +3,14 @@ import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import { GridFilterModel, GridSelectionModel, GridSortModel } from '@mui/x-data-grid-pro';
 
+// Components
 import Grid from 'components/Grid';
 import { campaignStoreColumns } from 'components/Grid/constants';
 import { IBasicFilter } from 'components/GridMenu/types';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+
+// Other variables / values
 import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
@@ -19,16 +22,18 @@ import {
   setStoresSelectedProviders,
   setStoresSortValue,
 } from 'store/api/stores/slice';
-import { IFacetValue, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 
 const StoreGrid = (): JSX.Element => {
+  // States
+  const storeFilterInitState = generateFilterInitState(campaignStoreColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [storePageSize, setStorePageSize] = useState<number>(10);
   const [storePageSkip, setStorePageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();
   const {
-    filterItem: storeFilterItem,
+    filterItem: storeFilterItem = storeFilterInitState,
     searchValue: storeSearchValue = '',
     selectedIds: selectedStoresIds,
     selectedProviders = [],
@@ -73,49 +78,40 @@ const StoreGrid = (): JSX.Element => {
   }, [storeData]);
 
   const handleSearchDispatch = (searchValue: string) => {
-    dispatch(
-      setStoresFilter({
-        columnField: '',
-        value: '',
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setStoresFilter(storeFilterInitState));
     dispatch(setStoresSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    dispatch(
-      setStoresFilter({
-        columnField: model.items[0].columnField,
-        value: model.items[0].value,
-        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-      }),
-    );
+    dispatch(setStoresFilter(model.items as IFilterItem[]));
   };
 
   const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
     dispatch(setStoresSelectedIds(selectionModel as string[]));
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
+
+    setStorePageSkip(0);
 
     if (currColumn === 'retailer') dispatch(setStoresSelectedProviders(combinedValue));
-    else dispatch(setStoresSelectedProviders([]));
-
-    dispatch(
-      setStoresFilter({
-        columnField: currColumn,
-        value: combinedValue,
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    else {
+      const newAppliedFilters = currFilterItems.map((filter) => {
+        if (filter.columnField === currColumn)
+          return {
+            ...filter,
+            value: combinedValue,
+          };
+        else return filter;
+      });
+      dispatch(setStoresSelectedProviders([]));
+      dispatch(setStoresFilter(newAppliedFilters));
+    }
   };
 
   const onPageChange = (page: number) => {

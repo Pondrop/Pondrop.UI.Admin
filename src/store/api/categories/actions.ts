@@ -2,14 +2,10 @@ import { PayloadAction } from "@reduxjs/toolkit";
 
 import { IFilterItem, IGridState, ISortItem } from "../types";
 
-const setCategoriesFilter = (state: IGridState, action: PayloadAction<IFilterItem>) => {
+const setCategoriesFilter = (state: IGridState, action: PayloadAction<IFilterItem[]>) => {
   return {
     ...state,
-    filterItem: {
-      columnField: action.payload.columnField,
-      value: action.payload.value,
-      operatorValue: action.payload.operatorValue
-    }
+    filterItem: [...action.payload]
   };
 };
 

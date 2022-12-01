@@ -6,15 +6,14 @@ import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from
 // Components
 import Grid from 'components/Grid';
 import { productColumns } from 'components/Grid/constants';
-import { IBasicFilter } from 'components/GridMenu/types';
-import { handleFilterStateChange } from 'components/GridMenu/utils';
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import CategoryList from './components/CategoryList';
 import AddProductDialog from './components/AddProductDialog';
 
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import {
   productsApi,
   productsMicroService,
@@ -50,6 +49,7 @@ const Products: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
 
   // States
+  const productsFilterInitState = generateFilterInitState(productColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [allProductCount, setAllProductCount] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(20);
@@ -58,7 +58,7 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const {
-    filterItem,
+    filterItem = productsFilterInitState,
     searchValue = '',
     selectedCategories = [],
     selectedParent,
@@ -110,25 +110,13 @@ const Products: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    dispatch(
-      setProductsFilter({
-        columnField: '',
-        value: '',
-        operatorValue: 'isAnyOf',
-      }),
-    );
+    dispatch(setProductsFilter(productsFilterInitState));
     dispatch(setProductsSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    dispatch(
-      setProductsFilter({
-        columnField: model.items[0].columnField,
-        value: model.items[0].value,
-        operatorValue: model.items[0].operatorValue ?? 'isAnyOf',
-      }),
-    );
+    dispatch(setProductsFilter(model.items as IFilterItem[]));
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
@@ -149,26 +137,28 @@ const Products: FunctionComponent = (): JSX.Element => {
     setPageSize(pageSize);
   };
 
-  const handleOnFilterClick = (value: string, currColumn: string, filters: IBasicFilter) => {
+  const handleOnFilterClick = (value: string, currColumn: string, currFilterItems: IFilterItem[]) => {
     if (!value) return;
 
-    const combinedValue =
-      filters.field === currColumn && Array.isArray(filters.value)
-        ? handleFilterStateChange(value, filters.value)
-        : [value];
-
-    if (currColumn === 'categories') dispatch(setProductsSelectedCategories(combinedValue));
-    else dispatch(setProductsSelectedCategories([]));
+    const columnValues = currFilterItems.find((filter) => filter.columnField === currColumn);
+    const combinedValue = handleFilterStateChange(value, columnValues?.value ?? []);
 
     setPageSkip(0);
     setPage(0);
-    dispatch(
-      setProductsFilter({
-        columnField: currColumn,
-        value: combinedValue,
-        operatorValue: 'isAnyOf',
-      }),
-    );
+
+    if (currColumn === 'categories') dispatch(setProductsSelectedCategories(combinedValue));
+    else {
+      const newAppliedFilters = currFilterItems.map((filter) => {
+        if (filter.columnField === currColumn)
+          return {
+            ...filter,
+            value: combinedValue,
+          };
+        else return filter;
+      });
+      dispatch(setProductsSelectedCategories([]));
+      dispatch(setProductsFilter(newAppliedFilters));
+    }
   };
 
   const handleOnRowClick = (params: GridRowParams) => {

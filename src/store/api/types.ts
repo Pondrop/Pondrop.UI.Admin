@@ -25,6 +25,7 @@ export interface IFilterItem {
   columnField: string;
   value: string | string[];
   operatorValue: string;
+  id: string;
 }
 
 export interface ISortItem {
@@ -33,7 +34,7 @@ export interface ISortItem {
 }
 
 export interface IGridState {
-  filterItem: IFilterItem;
+  filterItem: IFilterItem[];
   searchValue?: string;
   sortValue: ISortItem;
   selectedIds?: string[] | number[];

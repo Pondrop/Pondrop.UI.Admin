@@ -14,19 +14,26 @@ export const categoriesApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getCategories: builder.query<IApiResponse, { searchString: string, sortValue?: ISortItem, filterItem?: IFilterItem, prevPageItems?: number, pageSize?: number }>({
+    getCategories: builder.query<IApiResponse, { searchString: string, sortValue?: ISortItem, filterItem?: IFilterItem[], prevPageItems?: number, pageSize?: number }>({
       query: (arg) => {
         const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10 } = arg;
 
         let filterQuery = '';
         let sortQuery = '';
 
-        if (filterItem && Array.isArray(filterItem?.value) && filterItem?.value?.length > 0) {
-          filterItem?.value.forEach((filter, index) => {
-            if (index !== 0) filterQuery = filterQuery.concat(' or ');
-            filterQuery = filterQuery.concat(`${filterItem.columnField} eq '${filter}'`);
+        // FUTURE ENHANCEMENT: Take into account operatorValues other than isAnyOf
+        // Currently limited to isAnyOf
+        if (Array.isArray(filterItem) && filterItem.length > 0) {
+          filterItem.forEach((filter, filterIndex) => {
+            const filterValues = filter.value;
+            if (Array.isArray(filterValues)) filterValues?.forEach((filterValue, index) => {
+              if (index === 0 && filterIndex !== 0) filterQuery = filterQuery.concat(' and (');
+              if (index !== 0) filterQuery = filterQuery.concat(' or ');
+              filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
+              if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
+            });
           });
-        } else if (!Array.isArray(filterItem?.value) && filterItem?.value) filterQuery = filterQuery.concat(`${filterItem.columnField} eq ${filterItem.value}`);
+        }
 
         if (sortValue?.sort) sortQuery = sortQuery.concat(`${sortValue?.field} ${sortValue?.sort}`);
 
