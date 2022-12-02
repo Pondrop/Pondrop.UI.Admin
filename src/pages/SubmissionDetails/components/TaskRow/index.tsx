@@ -1,12 +1,24 @@
+import { useState } from 'react';
 import { FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
 import moment from 'moment';
 
 import { ColAlignDiv, RowAlignWrapper } from 'pages/styles';
 import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
+import EnlargedImageDialog from '../EnlargedImage';
 import { ImgWrapper } from './styles';
 import { IFieldLabels, ITaskRowProps, IValueTypeFields } from './types';
 
 const TaskRow = ({ stepData }: ITaskRowProps) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
   const renderImage = () => {
     const hasPhoto = !!stepData?.fields[0]?.values[0]?.photoUrl;
     const photoUrl = stepData?.fields[0]?.values[0]?.photoUrl;
@@ -21,7 +33,19 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
 
     return (
       <ImgWrapper>
-        {!hasPhoto ? emptyImage : <img src={photoUrl as string} alt={photoLabel} height="125px" width="125px" />}
+        {!hasPhoto ? (
+          emptyImage
+        ) : (
+          <>
+            <img src={photoUrl as string} alt={photoLabel} height="125px" width="125px" onClick={handleModalOpen} />
+            <EnlargedImageDialog
+              isOpen={isModalOpen}
+              handleClose={handleModalClose}
+              imageUrl={photoUrl ?? ''}
+              altLabel={photoLabel ?? ''}
+            />
+          </>
+        )}
       </ImgWrapper>
     );
   };
