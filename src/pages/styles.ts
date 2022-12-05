@@ -235,6 +235,11 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
     max-width: ${({ width }) => `calc(${width} - 170px)`};
   }
 
+  .link {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
   .singleline {
     white-space: nowrap;
     overflow-x: hidden;

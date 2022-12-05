@@ -43,7 +43,6 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
 
   const handleAddProductSubmit = (productData: IProductDialogData) => {
     // Insert submit code here
-    console.log('product data ', productData);
     setIsAddProductModalOpen(false);
   };
 
@@ -120,6 +119,21 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
     } else return null;
   };
 
+  const renderText = (itemValue: IItemValue) => {
+    if (itemValue?.itemId) {
+      const handleClick = () => {
+        navigate(`/products/${itemValue?.itemId}`);
+      };
+      return (
+        <span className="link" onClick={handleClick}>
+          {itemValue?.itemName}
+        </span>
+      );
+    } else {
+      return <span>{`${itemValue?.itemName}, ${itemValue?.itemBarcode} (Manual)`}</span>;
+    }
+  };
+
   const renderValues = (
     isComment: boolean,
     isProduct: boolean,
@@ -138,9 +152,7 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
                 value.itemValue?.itemName && (
                   <SpaceBetweenDiv withmargin={false}>
                     <li className="row-value" key={`${stepData?.id}-${value.itemValue?.itemId}`}>
-                      {`${value.itemValue?.itemName}${
-                        value.itemValue?.itemId ? '' : `, ${value.itemValue?.itemBarcode} (Manual)`
-                      }`}
+                      {renderText(value.itemValue)}
                     </li>
                     {renderProductButton(value)}
                   </SpaceBetweenDiv>
