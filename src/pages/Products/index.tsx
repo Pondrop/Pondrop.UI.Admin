@@ -4,12 +4,12 @@ import { Alert, Snackbar } from '@mui/material';
 import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 // Components
+import AddProductDialog from 'components/AddProductDialog';
 import Grid from 'components/Grid';
 import { productColumns } from 'components/Grid/constants';
 import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import CategoryList from './components/CategoryList';
-import AddProductDialog from './components/AddProductDialog';
 
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
@@ -338,6 +338,7 @@ const Products: FunctionComponent = (): JSX.Element => {
         </Alert>
       </Snackbar>
       <AddProductDialog
+        id="add-product-products-page"
         isOpen={isAddModalOpen}
         handleClose={handleAddModalClose}
         handleSubmit={handleAddProductSubmit}

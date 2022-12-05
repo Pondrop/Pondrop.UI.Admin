@@ -29,10 +29,14 @@ const SubmissionInfoPanel = ({ value, index, data }: ISubmissionInfoPanelProps):
   };
 
   const renderTaskData = () => {
+    console.log('steps ', data?.steps);
+    const categoryFocus =
+      data?.steps[0]?.fields[0]?.type === 'focus' ? data?.steps[0]?.fields[0]?.values[0]?.itemValue : null;
+    console.log('focussss ', categoryFocus);
     return (
       <div>
         {data?.steps.map((step) => (
-          <TaskRow stepData={step} key={step.id} />
+          <TaskRow stepData={step} key={step.id} categoryFocus={categoryFocus} />
         ))}
       </div>
     );

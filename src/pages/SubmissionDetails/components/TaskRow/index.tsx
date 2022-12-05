@@ -1,15 +1,28 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
 import moment from 'moment';
 
-import { ColAlignDiv, RowAlignWrapper } from 'pages/styles';
+// Components
+import AddProductDialog from 'components/AddProductDialog';
+import Chips from 'components/Chips';
+import { StyledChipWrapper } from 'components/Grid/styles';
+
+import { CategoryBtnWrapper, ColAlignDiv, RowAlignWrapper, SpaceBetweenDiv, StyledCategoryBtn } from 'pages/styles';
+import { IProductDialogData } from 'store/api/products/types';
 import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
 import EnlargedImageDialog from '../EnlargedImage';
 import { ImgWrapper } from './styles';
-import { IFieldLabels, ITaskRowProps, IValueTypeFields } from './types';
+import { IAddProductInitialValues, IFieldLabels, ITaskRowProps, IValueTypeFields } from './types';
 
-const TaskRow = ({ stepData }: ITaskRowProps) => {
+const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
+  const navigate = useNavigate();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
+  const [addProductInitialValues, setAddProductInitialValues] = useState<IAddProductInitialValues>(
+    {} as IAddProductInitialValues,
+  );
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -17,6 +30,21 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
+  };
+
+  const handleAddProductModalClose = () => {
+    setIsAddProductModalOpen(false);
+  };
+
+  const handleAddProductModalOpen = (initialValues: IAddProductInitialValues) => () => {
+    setAddProductInitialValues(initialValues);
+    setIsAddProductModalOpen(true);
+  };
+
+  const handleAddProductSubmit = (productData: IProductDialogData) => {
+    // Insert submit code here
+    console.log('product data ', productData);
+    setIsAddProductModalOpen(false);
   };
 
   const renderImage = () => {
@@ -58,26 +86,77 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     return <i style={{ marginRight: '2px' }}>"{value}"</i>;
   };
 
+  const renderProductButton = (rowValue: IValueTypes) => {
+    if (!rowValue?.itemValue?.itemId) {
+      const categoryFocusValue = [
+        {
+          categoryName: categoryFocus?.itemName ?? '',
+          id: categoryFocus?.itemId ?? '',
+          lowerLevelCategoryId: categoryFocus?.itemId ?? '',
+        },
+      ];
+
+      const initialValue = {
+        name: rowValue?.itemValue?.itemName ?? '',
+        barcodeNumber: rowValue?.itemValue?.itemBarcode ?? '',
+        categoryIds: [categoryFocus?.itemId ?? ''],
+        categoryChips: categoryFocusValue,
+      };
+      return (
+        <CategoryBtnWrapper rightmargin={0} key={`${rowValue?.itemValue?.itemId}-add-button`}>
+          <StyledCategoryBtn
+            data-testid="add-product-btn"
+            className="add-product-btn"
+            variant="contained"
+            disableElevation
+            height={28}
+            style={{ fontSize: '12px' }}
+            onClick={handleAddProductModalOpen(initialValue)}
+          >
+            + Add product
+          </StyledCategoryBtn>
+        </CategoryBtnWrapper>
+      );
+    } else return null;
+  };
+
   const renderValues = (
     isComment: boolean,
     isProduct: boolean,
     fieldValue: string | number | IItemValue | IValueTypes[] | null | undefined,
+    focusData: IItemValue | null,
   ) => {
     if (isProduct) {
       return (
-        <ul className="row-value" style={{ paddingInlineStart: '16px', width: '500px', fontSize: '14px' }}>
+        <ul
+          className="row-value"
+          style={{ listStyle: 'none', paddingInlineStart: '0', flex: '1', fontSize: '14px', lineHeight: '32px' }}
+        >
           {Array.isArray(fieldValue) &&
             fieldValue?.map(
               (value) =>
                 value.itemValue?.itemName && (
-                  <li className="row-value" key={`${stepData?.id}-${value.itemValue?.itemId}`}>
-                    {`${value.itemValue?.itemName}${
-                      value.itemValue?.itemId ? '' : `, ${value.itemValue?.itemBarcode} (Manual)`
-                    }`}
-                  </li>
+                  <SpaceBetweenDiv withmargin={false}>
+                    <li className="row-value" key={`${stepData?.id}-${value.itemValue?.itemId}`}>
+                      {`${value.itemValue?.itemName}${
+                        value.itemValue?.itemId ? '' : `, ${value.itemValue?.itemBarcode} (Manual)`
+                      }`}
+                    </li>
+                    {renderProductButton(value)}
+                  </SpaceBetweenDiv>
                 ),
             )}
         </ul>
+      );
+    } else if (focusData?.itemId && focusData?.itemType === 'category') {
+      const handleChipClick = () => {
+        navigate(`/products/categories/${focusData?.itemId}`);
+      };
+
+      return (
+        <StyledChipWrapper>
+          <Chips key={focusData?.itemId} label={focusData?.itemName} onChipClick={handleChipClick} />
+        </StyledChipWrapper>
       );
     } else if (!fieldValue || !isComment) {
       return (
@@ -100,11 +179,14 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     const isDate = step.type === 'date';
     const isProduct = step.type === 'search';
     const isFocus = step.type === 'focus';
+    const focusData = isFocus ? step?.values[0]?.itemValue : null;
 
     let fieldValue;
 
-    if (isFocus) fieldValue = step?.values[0]?.itemValue?.itemName;
-    else if (isProduct) fieldValue = step?.values;
+    if (isFocus) {
+      fieldValue = step?.values[0]?.itemValue?.itemName;
+      //if (step?.values[0]?.itemValue) setCategoryFocusData(step?.values[0]?.itemValue);
+    } else if (isProduct) fieldValue = step?.values;
     else
       fieldValue =
         step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
@@ -113,9 +195,9 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
     if (isDate) fieldValue = fieldValue ? moment(String(fieldValue)).format('DD/MM/YYYY') : null;
 
     return (
-      <RowAlignWrapper key={step.id} style={{ width: '700px', alignItems: 'center' }}>
+      <RowAlignWrapper key={step.id} style={{ alignItems: 'center' }}>
         <span className="row-label">{IFieldLabels[step?.templateFieldId as keyof typeof IFieldLabels]}</span>
-        {renderValues(isComment, isProduct, fieldValue)}
+        {renderValues(isComment, isProduct, fieldValue, focusData)}
       </RowAlignWrapper>
     );
   };
@@ -132,7 +214,15 @@ const TaskRow = ({ stepData }: ITaskRowProps) => {
   return (
     <RowAlignWrapper style={{ borderTop: '1px solid rgba(224, 224, 224, 1)', padding: '10px 0', alignItems: 'center' }}>
       {renderImage()}
-      <ColAlignDiv style={{ alignSelf: 'center' }}>{renderData()}</ColAlignDiv>
+      <ColAlignDiv style={{ alignSelf: 'center', flex: '1' }}>{renderData()}</ColAlignDiv>
+      <AddProductDialog
+        id="add-new-product-from-task"
+        isOpen={isAddProductModalOpen}
+        handleClose={handleAddProductModalClose}
+        handleSubmit={handleAddProductSubmit}
+        initialValue={addProductInitialValues}
+        errorMessage={''}
+      />
     </RowAlignWrapper>
   );
 };
