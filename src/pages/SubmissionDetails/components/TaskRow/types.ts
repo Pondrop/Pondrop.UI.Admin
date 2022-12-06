@@ -1,7 +1,9 @@
-import { ISteps } from "store/api/tasks/types";
+import { IItemValue, ISteps } from "store/api/tasks/types";
+import { IValue } from "store/api/types";
 
 export interface ITaskRowProps {
   stepData?: ISteps;
+  categoryFocus: IItemValue | null;
 }
 
 export enum IValueTypeFields {
@@ -37,4 +39,18 @@ export enum IFieldLabels {
   "9c534991-85bf-4bcb-9d9d-15ceb2d32f2a" = "Qty @ nearest use by date",
   "2436688a-9b51-49b8-ad2e-013c23bb1bbe" = "Furthest use by date",
   "827f99de-e0df-4cca-8912-35e097b07c84" = "Qty @ furthest use by date"
+}
+
+export interface IAddProductInitialValues {
+  name: string;
+  barcodeNumber: string;
+  categoryIds: string[];
+  categoryChips: IValue[];
+}
+
+export interface IManualChecker {
+  name: string;
+  id: string;
+  isAdded: boolean;
+  isInitialised: boolean;
 }

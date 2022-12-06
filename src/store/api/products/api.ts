@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IApiResponse, IFilterItem, ISortItem, IViewResponse } from '../types';
-import { ICreateProduct, ICreateProductRequest, IFullProductInfo, ISetLinkedItem, ISetCategoriesRequest, ISetProductsRequest } from './types';
+import { ICheckProductInfo, ICreateProduct, ICreateProductRequest, IFullProductInfo, ISetLinkedItem, ISetCategoriesRequest, ISetProductsRequest } from './types';
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
@@ -172,8 +172,17 @@ export const productsMicroService = createApi({
         };
       },
     }),
+    checkIsProductExisting: builder.query<ICheckProductInfo, { productName: string }>({
+      query: (arg) => {
+        const { productName } = arg;
+        return {
+          url: `/Product/name/${productName}`,
+          method: 'GET',
+        };
+      },
+    }),
   })
 });
 
 export const { useGetAllProductCountQuery, useGetAllProductFilterQuery, useGetProductInfoQuery, useGetProductsQuery, useLazyGetAllProductFilterQuery, useLazyGetProductsQuery, useLazyGetProductInfoQuery } = productsApi;
-export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useLazyRefreshProductsQuery, useUpdateLinkedCategoriesMutation, useUpdateLinkedProductsMutation } = productsMicroService;
+export const { useAddProductMutation, useGetFullProductInfoQuery, useGetParentCategoriesQuery, useLazyCheckIsProductExistingQuery, useLazyGetFullProductInfoQuery, useLazyRefreshProductsQuery, useUpdateLinkedCategoriesMutation, useUpdateLinkedProductsMutation } = productsMicroService;

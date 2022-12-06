@@ -12,27 +12,28 @@ import { StyledDialog, StyledTextInput } from './styles';
 import { IAddProductProps } from './types';
 
 const AddProductDialog = ({
+  id,
   isOpen,
   handleClose,
   handleSubmit,
   errorMessage,
   isLoading,
+  initialValue,
 }: IAddProductProps): JSX.Element => {
-  const [productName, setProductName] = useState<string>('');
-  const [barcode, setBarcode] = useState<string>('');
+  const [productName, setProductName] = useState<string>(initialValue?.name ?? '');
+  const [barcode, setBarcode] = useState<string>(initialValue?.barcodeNumber ?? '');
   const [description, setDescription] = useState<string>('');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [categoryChips, setCategoryChips] = useState<IValue[]>([]);
+  const [categories, setCategories] = useState<string[]>(initialValue?.categoryIds ?? []);
+  const [categoryChips, setCategoryChips] = useState<IValue[]>(initialValue?.categoryChips ?? []);
 
   useEffect(() => {
-    if (!isOpen) {
-      setProductName('');
-      setBarcode('');
-      setDescription('');
-      setCategories([]);
-      setCategoryChips([]);
+    if (isOpen) {
+      setProductName(initialValue?.name ?? '');
+      setBarcode(initialValue?.barcodeNumber ?? '');
+      setCategories(initialValue?.categoryIds ?? []);
+      setCategoryChips(initialValue?.categoryChips ?? []);
     }
-  }, [isOpen]);
+  }, [isOpen, initialValue]);
 
   const handleNameOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProductName(e.target.value);
@@ -213,7 +214,8 @@ const AddProductDialog = ({
       maxWidth="sm"
       fullWidth={true}
       transitionDuration={300}
-      data-testid="add-product-modal"
+      data-testid={id}
+      id={id}
       keepMounted
     >
       {renderDialogTitle()}

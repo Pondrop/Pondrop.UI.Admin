@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
 import { EditOutlined, Info } from '@mui/icons-material';
 
+// Components
 import Chips from 'components/Chips';
 import { StyledChipWrapper } from 'components/Grid/styles';
+import UpdateCategoriesDialog from 'components/UpdateCategoriesDialog';
+
 import {
   ColAlignDiv,
   RowAlignWrapper,
@@ -26,7 +29,6 @@ import { selectProducts } from 'store/api/products/slice';
 import { IFullProductInfo } from 'store/api/products/types';
 import { ICategories, IValue } from 'store/api/types';
 import { IProductDetailTabProps } from '../types';
-import UpdateCategoriesDialog from '../UpdateCategoriesDialog';
 import { attributesChips, organisationTitles, packagingTitles, productDescTitles, tooltipContent } from './constants';
 
 const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.Element => {
@@ -69,13 +71,19 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
   const renderCategoriesChips = () => {
     return (
       <StyledChipWrapper>
-        {(productInfo?.categories as unknown as ICategories[])?.map((val: ICategories, index: number) => {
-          const handleChipClick = () => {
-            navigate(`/products/categories/${val.id}`, { state: { rowData: val } });
-          };
+        {productInfo?.categories ? (
+          (productInfo?.categories as unknown as ICategories[])?.map((val: ICategories, index: number) => {
+            const handleChipClick = () => {
+              navigate(`/products/categories/${val.id}`, { state: { rowData: val } });
+            };
 
-          return <Chips key={`${val.id}-${productInfo?.id}-${index}`} label={val.name} onChipClick={handleChipClick} />;
-        })}
+            return (
+              <Chips key={`${val.id}-${productInfo?.id}-${index}`} label={val.name} onChipClick={handleChipClick} />
+            );
+          })
+        ) : (
+          <i style={{ lineHeight: '40px', fontSize: '12px' }}>No linked categories available</i>
+        )}
       </StyledChipWrapper>
     );
   };
@@ -168,7 +176,7 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
   useEffect(() => {
     setProductInfo(data ?? ({} as IFullProductInfo));
     const categoriesData = data?.categories as unknown as IValue[];
-    if (categoriesData.length > 0) {
+    if (categoriesData?.length > 0) {
       const categoryIds: string[] = [];
       const categoryChips: IValue[] = [];
 

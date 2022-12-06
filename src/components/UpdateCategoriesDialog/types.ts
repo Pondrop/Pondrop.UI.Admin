@@ -5,6 +5,7 @@ export interface IUpdateProductProps {
   handleClose: () => void;
   handleSubmit: (newCategories: string[]) => void;
   isLoading?: boolean;
+  isFetchingData?: boolean;
   categories: string[];
   categoryChips: IValue[];
 }
