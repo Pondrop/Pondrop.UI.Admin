@@ -77,3 +77,27 @@ export interface IFullProductInfo {
   parentCategory: ICategoryType;
   categories: ICategoryType[];
 }
+
+export interface ICheckProductInfo {
+  name: string;
+  brandId: string;
+  externalReferenceId: string;
+  variant: string;
+  altName: string;
+  shortDescription: string;
+  netContent: number;
+  netContentUom: string;
+  possibleCategories: string;
+  publicationLifecycleId: string;
+  childProductId: string[];
+  id: string;
+  streamId: string;
+  streamType: string;
+  atSequence: number;
+  createdBy: string;
+  updatedBy: string;
+  createdUtc: string;
+  updatedUtc: string;
+  deletedUtc: string;
+  eventsCount: number;
+}

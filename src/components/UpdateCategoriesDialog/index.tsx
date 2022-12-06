@@ -15,6 +15,7 @@ const UpdateCategoriesDialog = ({
   handleClose,
   handleSubmit,
   isLoading,
+  isFetchingData = false,
   categories,
   categoryChips,
 }: IUpdateProductProps): JSX.Element => {
@@ -98,6 +99,11 @@ const UpdateCategoriesDialog = ({
     );
   };
 
+  const renderContent = () => {
+    if (isFetchingData) return renderLoader(50);
+    else return renderFields();
+  };
+
   const renderDialogTitle = () => {
     return (
       <DialogTitle className="dialog-title" sx={{ m: 0, p: 2 }}>
@@ -147,7 +153,7 @@ const UpdateCategoriesDialog = ({
       keepMounted
     >
       {renderDialogTitle()}
-      <DialogContent className="dialog-content">{renderFields()}</DialogContent>
+      <DialogContent className="dialog-content">{renderContent()}</DialogContent>
       <DialogActions className="dialog-actions">{renderActionButtons()}</DialogActions>
     </StyledDialog>
   );

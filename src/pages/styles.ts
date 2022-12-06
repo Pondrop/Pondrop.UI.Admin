@@ -278,6 +278,12 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
       width: 13px;
     }
   }
+
+  .edit-icon {
+    svg {
+      fill: #006492;
+    }
+  }
 `;
 
 export const StyledCardTitle = styled(Typography)`

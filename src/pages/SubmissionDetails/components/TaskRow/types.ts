@@ -47,3 +47,10 @@ export interface IAddProductInitialValues {
   categoryIds: string[];
   categoryChips: IValue[];
 }
+
+export interface IManualChecker {
+  name: string;
+  id: string;
+  isAdded: boolean;
+  isInitialised: boolean;
+}

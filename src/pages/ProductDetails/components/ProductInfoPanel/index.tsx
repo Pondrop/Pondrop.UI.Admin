@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
 import { EditOutlined, Info } from '@mui/icons-material';
 
+// Components
 import Chips from 'components/Chips';
 import { StyledChipWrapper } from 'components/Grid/styles';
+import UpdateCategoriesDialog from 'components/UpdateCategoriesDialog';
+
 import {
   ColAlignDiv,
   RowAlignWrapper,
@@ -26,7 +29,6 @@ import { selectProducts } from 'store/api/products/slice';
 import { IFullProductInfo } from 'store/api/products/types';
 import { ICategories, IValue } from 'store/api/types';
 import { IProductDetailTabProps } from '../types';
-import UpdateCategoriesDialog from '../UpdateCategoriesDialog';
 import { attributesChips, organisationTitles, packagingTitles, productDescTitles, tooltipContent } from './constants';
 
 const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.Element => {
