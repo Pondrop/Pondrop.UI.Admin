@@ -40,6 +40,7 @@ const Grid: FunctionComponent<IGridProps> = ({
   hideFooter = false,
   page,
   borderColor,
+  isRowSelectable,
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount ?? gridData?.length);
@@ -127,6 +128,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       getRowHeight={() => rowHeight ?? 'auto'}
       withPadding={withPadding}
       checkboxSelection={withCheckboxSelection}
+      isRowSelectable={isRowSelectable}
       rowHeight={rowHeight}
       onSelectionModelChange={onSelectionModelChange}
       selectionModel={selectionModel}

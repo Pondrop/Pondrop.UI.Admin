@@ -224,7 +224,7 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
         navigate(`/products/${itemValue?.itemId}`);
       };
       return (
-        <span className="link" onClick={handleClick}>
+        <span className="link" onClick={handleClick} style={{ color: '#000000' }}>
           {itemValue?.itemName}
         </span>
       );
@@ -235,12 +235,12 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
         };
 
         return (
-          <span className="link" onClick={handleClick}>
+          <span className="link" onClick={handleClick} style={{ color: '#000000' }}>
             {`${itemValue?.itemName}, ${itemValue?.itemBarcode} (Manual)`}
           </span>
         );
       }
-      return <span>{`${itemValue?.itemName}, ${itemValue?.itemBarcode} (Manual)`}</span>;
+      return <span style={{ color: '#000000' }}>{`${itemValue?.itemName}, ${itemValue?.itemBarcode} (Manual)`}</span>;
     }
   };
 

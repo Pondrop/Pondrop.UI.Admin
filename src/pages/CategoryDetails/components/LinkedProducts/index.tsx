@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
 import { Alert, CircularProgress, IconButton, Snackbar, Tooltip } from '@mui/material';
-import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
+import {
+  GridFilterModel,
+  GridRowParams,
+  GridSelectionModel,
+  GridSortDirection,
+  GridSortModel,
+} from '@mui/x-data-grid-pro';
 
 // Components
 import Grid from 'components/Grid';
@@ -174,6 +180,11 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
     });
   };
 
+  const handleDisabledLinkedProduct = (params: GridRowParams) => {
+    if (rowCount === 1) return false;
+    else return true;
+  };
+
   const getSnackbarMsg = useCallback(() => {
     let msg;
     if (isUpdateDelete) msg = 'Product links removed successfully';
@@ -293,6 +304,7 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
         selectionModel={linkedProdSelectedProds}
         rowHeight={52}
         disableColumnMenu={isFetchingUpdates}
+        isRowSelectable={handleDisabledLinkedProduct}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

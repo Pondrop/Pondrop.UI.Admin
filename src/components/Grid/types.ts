@@ -32,4 +32,5 @@ export interface IGridProps {
   page?: number;
   borderColor?: string;
   disableColumnMenu?: boolean;
+  isRowSelectable?: (params: GridRowParams) => boolean;
 }
