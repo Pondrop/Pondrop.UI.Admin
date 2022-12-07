@@ -11,7 +11,7 @@ import { IValue } from 'store/api/types';
 import { StyledPaper, StyledPopper, StyledTextField } from './styles';
 import { IAutocompleteProps } from './types';
 
-const TextAutocomplete = ({ onOptionSelect, isModalOpen }: IAutocompleteProps) => {
+const TextAutocomplete = ({ onOptionSelect, isModalOpen, disabledOptions = [] }: IAutocompleteProps) => {
   const [options, setOptions] = useState<IValue[]>([]);
   const [selectedValue, setSelectedValue] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -21,6 +21,8 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen }: IAutocompleteProps) =
   const { data, isFetching } = useGetCategoriesQuery(
     {
       searchString: searchValue,
+      prevPageItems: 0,
+      pageSize: 100,
     },
     { skip: searchValue.length < 3 },
   );
@@ -56,12 +58,15 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen }: IAutocompleteProps) =
     }
   };
 
+  const getOptionDisabled = (option: IValue) => disabledOptions.includes(String(option?.lowerLevelCategoryId));
+
   return (
     <div>
       <Autocomplete
         options={options}
         key={`selected-${selectedValue}`}
         getOptionLabel={(option) => String(option?.categoryName)}
+        getOptionDisabled={getOptionDisabled}
         renderOption={(props, option) => {
           const matches = match(String(option?.categoryName), searchValue, { insideWords: true });
           const parts = parse(String(option?.categoryName), matches);

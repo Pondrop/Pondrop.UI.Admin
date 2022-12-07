@@ -82,7 +82,11 @@ const UpdateCategoriesDialog = ({
     return (
       <div>
         <div>
-          <TextAutocomplete onOptionSelect={handleCategoryOnChange} isModalOpen={isOpen} />
+          <TextAutocomplete
+            onOptionSelect={handleCategoryOnChange}
+            isModalOpen={isOpen}
+            disabledOptions={currCategories}
+          />
         </div>
         <div style={{ marginTop: '24px' }}>
           <div className="label-div">
