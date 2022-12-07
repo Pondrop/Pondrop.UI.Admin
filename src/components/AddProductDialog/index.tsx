@@ -147,7 +147,7 @@ const AddProductDialog = ({
           <div className="label-div">
             <span className="row-label">{addProductTitles[3].label}</span>
           </div>
-          <TextAutocomplete onOptionSelect={handleCategoryOnChange} isModalOpen={isOpen} />
+          <TextAutocomplete onOptionSelect={handleCategoryOnChange} isModalOpen={isOpen} disabledOptions={categories} />
         </div>
         {categories.length > 0 && (
           <div style={{ marginTop: '12px' }}>
