@@ -21,6 +21,7 @@ import AddLinkedProductsDialog from '../AddLinkedProductsDialog';
 import {
   CategoryBtnWrapper,
   CircularLoaderWrapper,
+  MessageWrapper,
   RowAlignWrapper,
   SpaceBetweenDiv,
   StyledCardTitle,
@@ -100,6 +101,16 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
       <CircularProgress size={height / 2} thickness={6} />
     </CircularLoaderWrapper>
   );
+
+  const renderSelectedCount = () => {
+    if (linkedProdSelectedProds.length === 0) return;
+    const productText = linkedProdSelectedProds.length > 1 ? 'products' : 'product';
+    return (
+      <MessageWrapper color="#006492">
+        {linkedProdSelectedProds.length} {productText} selected
+      </MessageWrapper>
+    );
+  };
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -252,6 +263,7 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
             >
               <PlaylistAdd fontSize="inherit" />
             </IconButton>
+            {renderSelectedCount()}
           </SpaceBetweenDiv>
         </StyledCardTitle>
         <RowAlignWrapper className="linked-products">
