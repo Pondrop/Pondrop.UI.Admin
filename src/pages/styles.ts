@@ -218,12 +218,12 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
   span {
     font-size: 14px;
     line-height: 28px;
-    color: #000000 !important;
   }
 
   .row-label {
     font-weight: 600;
     width: 200px;
+    color: #000000 !important;
   }
 
   .capitalize {
@@ -233,6 +233,7 @@ export const StyledCard = styled.div<{ width: string, height?: string }>`
   .row-value {
     font-weight: 400;
     max-width: ${({ width }) => `calc(${width} - 170px)`};
+    color: #000000 !important;
   }
 
   .link {
