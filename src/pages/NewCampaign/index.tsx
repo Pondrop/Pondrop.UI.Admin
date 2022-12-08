@@ -99,6 +99,15 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     setRequestData(requestBody);
   };
 
+  const handleUpdateStartDate = (value: Moment) => {
+    const requestBody = {
+      ...requestData,
+      campaignStartDate: String(moment(value).format('YYYY-MM-DDTHH:mm:ssZ')),
+    };
+
+    setRequestData(requestBody);
+  };
+
   const handleUpdateEndDate = (value: Moment) => {
     const requestBody = {
       ...requestData,
@@ -137,6 +146,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
       name: state?.name,
       campaignType: state?.campaignType,
       selectedTemplateIds: [state?.template],
+      campaignStartDate: null,
       campaignEndDate: null,
     }));
   }, []);
@@ -311,6 +321,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
         <ReviewCardsInfo
           data={state}
           onStoreCompletionChange={handleUpdateStoreCompletion}
+          onStartDateChange={handleUpdateStartDate}
           onEndDateChange={handleUpdateEndDate}
         />
       )}

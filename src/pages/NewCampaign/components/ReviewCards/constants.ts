@@ -30,5 +30,6 @@ export const tooltipContent = {
   category: 'Click back to modify the category selected for this campaign',
   store: 'Click back to view or modify the stores selected for this campaign',
   completion: 'The campaign will only be visible to shoppers at stores until the completion targets are met. For new products we recommend 5 completions per product per store. For established products we recommend 2-3. You can modify this as the campaign progresses.',
+  startDate: 'The campaign will start on this date and will be visible to any shoppers or stores after this date.',
   endDate: 'The campaign will close on this date and no longer be visible to any shoppers or stores.'
 };

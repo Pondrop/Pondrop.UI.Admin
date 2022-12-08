@@ -72,6 +72,7 @@ export interface ICampaign {
   requiredSubmissions: number;
   rewardSchemeId: string | null;
   campaignPublishedDate: string | null;
+  campaignStartDate: string | null;
   campaignEndDate: string | null;
   campaignStatus: string;
   publicationlifecycleId: string;
