@@ -328,7 +328,8 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
     if (!stepData) return;
 
     const stepValues = stepData?.fields.filter((step) => step.type !== 'photo');
-    return stepValues.map((step) => {
+    return stepValues.map((step, index) => {
+      if (index !== 0 && stepValues[0].type === 'focus') return;
       return renderField(step);
     });
   };

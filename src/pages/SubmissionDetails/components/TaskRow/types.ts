@@ -38,7 +38,8 @@ export enum IFieldLabels {
   "bda8238a-445b-47c2-b8c5-72f5dcf30389" = "Nearest use by date",
   "9c534991-85bf-4bcb-9d9d-15ceb2d32f2a" = "Qty @ nearest use by date",
   "2436688a-9b51-49b8-ad2e-013c23bb1bbe" = "Furthest use by date",
-  "827f99de-e0df-4cca-8912-35e097b07c84" = "Qty @ furthest use by date"
+  "827f99de-e0df-4cca-8912-35e097b07c84" = "Qty @ furthest use by date",
+  "91e11392-a444-496d-a161-0d191d8d60dd" = "Product issues"
 }
 
 export interface IAddProductInitialValues {
