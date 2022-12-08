@@ -192,7 +192,7 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
   };
 
   const handleDisabledLinkedProduct = (params: GridRowParams) => {
-    if (rowCount === 1) return false;
+    if (rowCount === 1 || params.row?.categories.length === 1) return false;
     else return true;
   };
 
