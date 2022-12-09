@@ -11,6 +11,7 @@ import categoriesReducer from './api/categories/slice';
 import productsReducer from './api/products/slice';
 import storeReducer from './api/stores/slice';
 import tasksReducer from './api/tasks/slice';
+import templatesReducer from './api/templates/slice';
 import userReducer from './user/slice';
 
 // global store
@@ -21,6 +22,7 @@ export const store = configureStore({
     products: productsReducer,
     store: storeReducer,
     tasks: tasksReducer,
+    templates: templatesReducer,
     user: userReducer,
     [campaignsApi.reducerPath]: campaignsApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,

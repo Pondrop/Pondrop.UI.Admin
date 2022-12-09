@@ -12,6 +12,7 @@ import {
   StoreDetails,
   SubmittedTasks,
   SubmissionDetails,
+  Templates,
 } from './pages';
 import SidePanel from 'components/SidePanel';
 import { DivWrapper } from 'App.styles';
@@ -37,6 +38,7 @@ function App() {
           <Route path="/campaigns/new" element={<NewCampaign />} />
           <Route path="/submissions" element={<SubmittedTasks />} />
           <Route path="/submissions/:submission_id" element={<SubmissionDetails />} />
+          <Route path="/templates" element={<Templates />} />
         </Routes>
       </DivWrapper>
     </BrowserRouter>
