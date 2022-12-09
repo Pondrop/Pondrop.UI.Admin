@@ -169,7 +169,7 @@ const ReviewCardsInfo = ({
             renderInput={(props) => <TextField {...props} />}
             value={endDate}
             onChange={handleEndDateChange}
-            disablePast
+            minDate={startDate}
             PaperProps={{
               sx: {
                 border: '1px solid rgba(0, 0, 0, 0.24) !important',

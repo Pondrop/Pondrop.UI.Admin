@@ -241,7 +241,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
         </SpaceBetweenDiv>
       );
     } else {
-      const isPublishDisabled = requestData?.requiredSubmissions === 0;
+      const isPublishDisabled = requestData?.requiredSubmissions === 0 || requestData?.campaignEndDate === null;
       return (
         <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px 32px' }}>
           <StyleOutlinedBtn
