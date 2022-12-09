@@ -23,10 +23,16 @@ import { campaignInfoTitles, campaignTypeId, campaignTemplateId, tooltipContent 
 import { StyledDatePicker } from './styles';
 import { IReviewCardsInfo } from './types';
 
-const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IReviewCardsInfo): JSX.Element => {
+const ReviewCardsInfo = ({
+  data,
+  onStoreCompletionChange,
+  onStartDateChange,
+  onEndDateChange,
+}: IReviewCardsInfo): JSX.Element => {
   const [campaignInfo, setCampaignInfo] = useState<IModalState>({} as IModalState);
-  const [storeCompletion, setStoreCompletion] = useState<number>();
-  const [endDate, setEndDate] = useState<Moment | null>(moment());
+  const [storeCompletion, setStoreCompletion] = useState<string>('');
+  const [startDate, setStartDate] = useState<Moment | null>(moment());
+  const [endDate, setEndDate] = useState<Moment | null>(null);
 
   const { selectedIds: selectedProductsIds } = useAppSelector(selectProducts);
   const { selectedIds: selectedCategoriesIds } = useAppSelector(selectCategories);
@@ -42,8 +48,13 @@ const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IRe
   }, [data]);
 
   const handleCompletionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setStoreCompletion(Number(e.target.value));
+    setStoreCompletion(e.target.value);
     onStoreCompletionChange(Number(e.target.value));
+  };
+
+  const handleStartDateChange = (value: unknown) => {
+    setStartDate(value as Moment);
+    onStartDateChange(value as Moment);
   };
 
   const handleEndDateChange = (value: unknown) => {
@@ -52,7 +63,7 @@ const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IRe
   };
 
   useEffect(() => {
-    handleEndDateChange(endDate);
+    handleStartDateChange(startDate);
   }, []);
 
   const renderDetails = () => {
@@ -109,11 +120,40 @@ const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IRe
           margin="none"
           variant="outlined"
           type="number"
-          value={storeCompletion}
+          value={storeCompletion ? Number(storeCompletion) : ''}
           onChange={handleCompletionChange}
           sx={{ marginBottom: '20px' }}
           placeholder="Number of task completions per store"
         />
+        <RowAlignWrapper>
+          <span className="card-details" style={{ fontWeight: 600 }}>
+            Campaign start date
+          </span>
+          <Tooltip title={tooltipContent.startDate} placement="top">
+            <div className="info-icon" style={{ marginLeft: '8px' }}>
+              <Info />
+            </div>
+          </Tooltip>
+        </RowAlignWrapper>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <StyledDatePicker
+            renderInput={(props) => <TextField {...props} />}
+            value={startDate ? moment(startDate) : null}
+            onChange={handleStartDateChange}
+            disablePast
+            PaperProps={{
+              sx: {
+                border: '1px solid rgba(0, 0, 0, 0.24) !important',
+                borderRadius: '8px !important',
+              },
+            }}
+            PopperProps={{
+              sx: {
+                inset: 'auto auto 0px 90px !important',
+              },
+            }}
+          />
+        </LocalizationProvider>
         <RowAlignWrapper>
           <span className="card-details" style={{ fontWeight: 600 }}>
             Campaign end date
@@ -129,7 +169,7 @@ const ReviewCardsInfo = ({ data, onStoreCompletionChange, onEndDateChange }: IRe
             renderInput={(props) => <TextField {...props} />}
             value={endDate}
             onChange={handleEndDateChange}
-            disablePast
+            minDate={startDate}
             PaperProps={{
               sx: {
                 border: '1px solid rgba(0, 0, 0, 0.24) !important',

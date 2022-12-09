@@ -26,6 +26,7 @@ export const newCampaignInitialState = {
   requiredSubmissions: 0,
   rewardSchemeId: null,
   campaignPublishedDate: null,
+  campaignStartDate: null,
   campaignEndDate: null,
   campaignStatus: 'draft',
   publicationlifecycleId: '1'
