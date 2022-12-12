@@ -55,7 +55,7 @@ export const campaignsColumns: GridColDef[] = [
   { field: 'campaignType', headerName: 'Campaign type', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
   { field: 'numberOfStores', headerName: 'Number of stores', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 120, renderCell: handleRenderCell },
   { field: 'completions', headerName: 'Completions', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCell },
-  { field: 'campaignStartDate', headerName: 'Start date', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 200, disableColumnMenu: true, renderCell: handleRenderCellDate },
-  { field: 'campaignEndDate', headerName: 'End date', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 200, disableColumnMenu: true, renderCell: handleRenderCellDate },
+  { field: 'campaignStartDate', headerName: 'Start date', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 200, renderCell: handleRenderCellDate },
+  { field: 'campaignEndDate', headerName: 'End date', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 200, renderCell: handleRenderCellDate },
   { field: 'campaignStatus', headerName: 'Status', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellFormat },
 ];

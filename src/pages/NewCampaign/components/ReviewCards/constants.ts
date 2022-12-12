@@ -21,7 +21,8 @@ export const campaignTypeId = {
 export const campaignTemplateId = {
   '68a1ddc7-4d18-4cad-9fa9-23fde3dea96c': 'Category Products',
   'b2a08e75-fb6a-4ad6-a0af-fe98f1f8de07': 'Shelf Stock Levels',
-  '575040cb-3196-4a5a-a9c5-4355b99a8604': 'Price'
+  '575040cb-3196-4a5a-a9c5-4355b99a8604': 'Price',
+  '3941f848-d07d-4876-92fc-3df89e3e73aa': 'Quick Price & Quantity'
 };
 
 export const tooltipContent = {

@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import moment from 'moment';
+
 import { IApiResponse, IFilterItem, ISortItem, IViewResponse } from '../types';
 import { ICampaign, ICreateCampaignRequest, ISubmissionDetailsResponse, IUpdateCampaignRequest } from './types';
 
@@ -30,7 +32,8 @@ export const tasksApi = createApi({
               if (filterIndex > 0 && filterQuery[filterQuery.length - 1] === ')') filterQuery = filterQuery.concat(' and ');
               if (index === 0) filterQuery = filterQuery.concat('(');
               if (index !== 0) filterQuery = filterQuery.concat(' or ');
-              filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
+              if (moment(filterValue, "YYYY-MM-DDTHH:mm:ssZ", true).isValid() || moment(filterValue, "YYYY-MM-DDTHH:mm:ss.sssZ", true).isValid()) filterQuery = filterQuery.concat(`${filter.columnField} eq ${filterValue}`);
+              else filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
               if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
             });
           });
