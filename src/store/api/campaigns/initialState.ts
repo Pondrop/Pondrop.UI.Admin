@@ -8,7 +8,7 @@ export interface ICampaignState extends IGridState {
 export const campaignInitialState: ICampaignState = {
   ...initialState,
   sortValue: {
-    field: 'campaignPublishedDate',
+    field: 'campaignStartDate',
     sort: 'desc'
   },
   didCreateCampaign: false

@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import moment from 'moment';
+
 import { IApiResponse, IFilterItem, ISortItem } from '../types';
 
 export const campaignsApi = createApi({
@@ -29,7 +31,8 @@ export const campaignsApi = createApi({
               if (filterIndex > 0 && filterQuery[filterQuery.length - 1] === ')') filterQuery = filterQuery.concat(' and ');
               if (index === 0) filterQuery = filterQuery.concat('(');
               if (index !== 0) filterQuery = filterQuery.concat(' or ');
-              filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
+              if (moment(filterValue, "YYYY-MM-DDTHH:mm:ssZ", true).isValid() || moment(filterValue, "YYYY-MM-DDTHH:mm:ss.sssZ", true).isValid()) filterQuery = filterQuery.concat(`${filter.columnField} eq ${filterValue}`);
+              else filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
               if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
             });
           });
@@ -47,7 +50,7 @@ export const campaignsApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/cosmosdb-index-campaign/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*&$count=true&facet=name,count:0,sort:value&facet=selectedTemplateTitle,count:0,sort:value&facet=campaignType,count:0,sort:value&facet=numberOfStores,count:0,sort:value&facet=completions,count:0,sort:value&facet=campaignPublishedDate,count:0,sort:value&facet=campaignStatus,count:0,sort:value`,
+          url: `/indexes/cosmosdb-index-campaign/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*&$count=true&facet=name,count:0,sort:value&facet=selectedTemplateTitle,count:0,sort:value&facet=campaignType,count:0,sort:value&facet=numberOfStores,count:0,sort:value&facet=completions,count:0,sort:value&facet=campaignStartDate,count:0,sort:value&facet=campaignEndDate,count:0,sort:value&facet=campaignStatus,count:0,sort:value`,
           method: 'GET',
         };
       },

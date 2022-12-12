@@ -97,7 +97,8 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     campaignType: filterOptionsData?.['@search.facets']?.campaignType,
     numberOfStores: filterOptionsData?.['@search.facets']?.numberOfStores,
     completions: filterOptionsData?.['@search.facets']?.completions,
-    campaignPublishedDate: filterOptionsData?.['@search.facets']?.campaignPublishedDate,
+    campaignStartDate: filterOptionsData?.['@search.facets']?.campaignStartDate,
+    campaignEndDate: filterOptionsData?.['@search.facets']?.campaignEndDate,
     campaignStatus: filterOptionsData?.['@search.facets']?.campaignStatus,
   };
 
@@ -105,7 +106,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
 
   const initialGridState = {
     pagination: { pageSize: 20 },
-    sorting: { sortModel: [{ field: 'campaignPublishedDate', sort: 'desc' as GridSortDirection }] },
+    sorting: { sortModel: [{ field: 'campaignStartDate', sort: 'desc' as GridSortDirection }] },
   };
 
   // Use Effects
