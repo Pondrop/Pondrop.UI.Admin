@@ -6,9 +6,11 @@ import Grid from 'components/Grid';
 import { templatesColumns } from 'components/Grid/constants';
 import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+import NewTemplateDialog from './components/NewTemplateDialog';
 
 // Other variables / values
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+import { INewTemplateDialogData } from './components/NewTemplateDialog/types';
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -25,6 +27,9 @@ const Templates: FunctionComponent = (): JSX.Element => {
   const [templateFilterItem, setTemplateFilterItem] = useState<IFilterItem[]>(templateFilterInitState);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
+
+  // Dialog states
+  const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = useState<boolean>(false);
 
   const gridData: IValue[] = [];
 
@@ -46,6 +51,19 @@ const Templates: FunctionComponent = (): JSX.Element => {
 
   const handleSortModelChange = (model: GridSortModel) => {
     // Inser sort dispatch here
+  };
+
+  const handleNewTemplateModalOpen = () => {
+    setIsNewTemplateModalOpen(true);
+  };
+
+  const handleNewTemplateModalClose = () => {
+    setIsNewTemplateModalOpen(false);
+  };
+
+  const handleNewTemplateSubmit = (newTemplateData: INewTemplateDialogData) => {
+    // Insert submit dispatch logic here
+    handleNewTemplateModalClose();
   };
 
   const onPageChange = (page: number) => {
@@ -95,6 +113,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
               variant="contained"
               disableElevation
               height={40}
+              onClick={handleNewTemplateModalOpen}
             >
               + Create new template
             </StyledCategoryBtn>
@@ -126,6 +145,13 @@ const Templates: FunctionComponent = (): JSX.Element => {
         initialState={initialGridState}
         isMenuLoading={false}
         searchValue={''}
+      />
+      <NewTemplateDialog
+        isOpen={isNewTemplateModalOpen}
+        handleClose={handleNewTemplateModalClose}
+        handleSubmit={handleNewTemplateSubmit}
+        isLoading={false}
+        errorMessage=""
       />
     </MainContent>
   );
