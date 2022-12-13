@@ -274,7 +274,7 @@ const NewTemplateDialog = ({
             isLoading
           }
         >
-          {isLoading ? renderLoader(34) : 'Create'}
+          {isLoading ? renderLoader(34) : 'Next'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">
