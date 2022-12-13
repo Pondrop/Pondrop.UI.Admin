@@ -8,6 +8,7 @@ import Stores from './Stores';
 import StoreDetails from './StoreDetails';
 import SubmittedTasks from './SubmittedTasks';
 import SubmissionDetails from './SubmissionDetails';
+import Templates from './Templates';
 
 export {
   Campaigns,
@@ -20,4 +21,5 @@ export {
   StoreDetails,
   SubmittedTasks,
   SubmissionDetails,
+  Templates,
 };

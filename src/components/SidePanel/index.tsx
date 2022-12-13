@@ -3,13 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import {
   CenterFocusStrongOutlined,
   FactCheckOutlined,
+  FormatListBulletedOutlined,
   Logout,
   ShoppingCartOutlined,
   Storefront,
 } from '@mui/icons-material';
 
 // Components
-import { campaignsColumns, productColumns, storeColumns, tasksColumns } from 'components/Grid/constants';
+import {
+  campaignsColumns,
+  productColumns,
+  storeColumns,
+  tasksColumns,
+  templatesColumns,
+} from 'components/Grid/constants';
 import { generateFilterInitState } from 'components/GridMenu/utils';
 
 import pondrop from 'assets/images/pondrop.png';
@@ -18,6 +25,7 @@ import { setCampaignsFilter, setCampaignsSearchValue } from 'store/api/campaigns
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
 import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 import { setTasksFilter, setTasksSearchValue } from 'store/api/tasks/slice';
+import { setTemplatesFilter, setTemplatesSearchValue } from 'store/api/templates/slice';
 
 import { StyledButton, PanelWrapper } from './styles';
 
@@ -57,6 +65,14 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
     navigate('../submissions', { replace: true });
     dispatch(setTasksFilter(taskFilterInitState));
     dispatch(setTasksSearchValue(''));
+  };
+
+  const handleTemplatesRedirect = () => {
+    const templateFilterInitState = generateFilterInitState(templatesColumns);
+    setCurrentTab('templates');
+    navigate('../templates', { replace: true });
+    // dispatch(setTemplatesFilter(templateFilterInitState));
+    // dispatch(setTemplatesSearchValue(''));
   };
 
   return (
@@ -109,6 +125,18 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
         isActive={currentTab === 'submissions'}
       >
         Submissions
+      </StyledButton>
+      <StyledButton
+        data-testid="panel-templates-btn"
+        className="panel-btn"
+        variant="contained"
+        size="large"
+        startIcon={<FormatListBulletedOutlined className="template-icon" />}
+        disableElevation
+        onClick={handleTemplatesRedirect}
+        isActive={currentTab === 'templates'}
+      >
+        Templates
       </StyledButton>
       <StyledButton
         data-testid="signout-btn"
