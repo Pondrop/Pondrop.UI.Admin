@@ -6,6 +6,7 @@ import {
   Categories,
   CategoryDetails,
   NewCampaign,
+  NewTemplate,
   Products,
   ProductDetails,
   Stores,
@@ -39,6 +40,7 @@ function App() {
           <Route path="/submissions" element={<SubmittedTasks />} />
           <Route path="/submissions/:submission_id" element={<SubmissionDetails />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/templates/new" element={<NewTemplate />} />
         </Routes>
       </DivWrapper>
     </BrowserRouter>
