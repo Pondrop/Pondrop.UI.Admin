@@ -2,6 +2,7 @@ import Campaigns from './Campaigns';
 import Categories from './Categories';
 import CategoryDetails from './CategoryDetails';
 import NewCampaign from './NewCampaign';
+import NewTemplate from './NewTemplate';
 import Products from './Products';
 import ProductDetails from './ProductDetails';
 import Stores from './Stores';
@@ -15,6 +16,7 @@ export {
   Categories,
   CategoryDetails,
   NewCampaign,
+  NewTemplate,
   Products,
   ProductDetails,
   Stores,

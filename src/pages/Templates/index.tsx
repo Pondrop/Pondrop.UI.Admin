@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridSortModel } from '@mui/x-data-grid-pro';
 
 // Components
@@ -27,6 +28,8 @@ const Templates: FunctionComponent = (): JSX.Element => {
   const [templateFilterItem, setTemplateFilterItem] = useState<IFilterItem[]>(templateFilterInitState);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
+
+  const navigate = useNavigate();
 
   // Dialog states
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = useState<boolean>(false);
@@ -63,6 +66,10 @@ const Templates: FunctionComponent = (): JSX.Element => {
 
   const handleNewTemplateSubmit = (newTemplateData: INewTemplateDialogData) => {
     // Insert submit dispatch logic here
+    navigate('new', {
+      replace: false,
+      state: { ...newTemplateData },
+    });
     handleNewTemplateModalClose();
   };
 

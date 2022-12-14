@@ -28,4 +28,11 @@ export interface IModalState {
   id: string;
 }
 
+export interface INewTemplateState {
+  title: string;
+  type: string;
+  description: string;
+  focusObject: string;
+}
+
 export const CATEGORY_FOCUS_ID = '68a1ddc7-4d18-4cad-9fa9-23fde3dea96c';
