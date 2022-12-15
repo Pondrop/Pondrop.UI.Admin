@@ -61,10 +61,10 @@ export const campaignsColumns: GridColDef[] = [
 ];
 
 export const templatesColumns: GridColDef[] = [
-  { field: 'name', headerName: 'Title', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
-  { field: 'type', headerName: 'Type', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
-  { field: 'manualSubmissions', headerName: 'Manual Submissions', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellFormat, disableColumnMenu: true, sortable: false },
-  { field: 'focus', headerName: 'Focus', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
-  { field: 'createdUtc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate, disableColumnMenu: true, sortable: false },
-  { field: 'templateStatus', headerName: 'Status', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat, disableColumnMenu: true, sortable: false },
+  { field: 'title', headerName: 'Title', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'type', headerName: 'Type', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCellFormat },
+  { field: 'isForManualSubmissions', headerName: 'Manual Submissions', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCell },
+  { field: 'focus', headerName: 'Focus', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
+  { field: 'createdUtc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate },
+  { field: 'status', headerName: 'Status', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
 ];

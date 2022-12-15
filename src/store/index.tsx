@@ -6,6 +6,7 @@ import { categoriesApi, categoriesMicroService } from './api/categories/api';
 import { storeApi } from './api/stores/api';
 import { productsApi, productsMicroService } from './api/products/api';
 import { tasksApi, submissionsMicroService } from './api/tasks/api';
+import { templatesApi } from './api/templates/api';
 import campaignsReducer from './api/campaigns/slice';
 import categoriesReducer from './api/categories/slice';
 import productsReducer from './api/products/slice';
@@ -32,6 +33,7 @@ export const store = configureStore({
     [tasksApi.reducerPath]: tasksApi.reducer,
     [submissionsMicroService.reducerPath]: submissionsMicroService.reducer,
     [productsMicroService.reducerPath]: productsMicroService.reducer,
+    [templatesApi.reducerPath]: templatesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -45,7 +47,8 @@ export const store = configureStore({
       .concat(tasksApi.middleware)
       .concat(submissionsMicroService.middleware)
       .concat(campaignsApi.middleware)
-      .concat(productsMicroService.middleware),
+      .concat(productsMicroService.middleware)
+      .concat(templatesApi.middleware),
 });
 
 // types
