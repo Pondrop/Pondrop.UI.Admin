@@ -2,7 +2,7 @@ export interface INewTemplateDialogData {
   title: string;
   type: string;
   description: string;
-  focusObject: string;
+  focus: string;
 }
 
 export interface ICreateCategoryProps {

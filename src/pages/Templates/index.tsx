@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GridFilterModel, GridSortModel } from '@mui/x-data-grid-pro';
+import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 // Components
 import Grid from 'components/Grid';
@@ -11,14 +11,16 @@ import NewTemplateDialog from './components/NewTemplateDialog';
 
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
-import { useGetAllTemplateFilterQuery, useGetTemplatesQuery } from 'store/api/templates/api';
+import { useCreateSubmissionTemplateMutation, useLazyRefreshTemplatesQuery } from 'store/api/tasks/api';
+import { templatesApi, useGetAllTemplateFilterQuery, useGetTemplatesQuery } from 'store/api/templates/api';
 import {
   selectTemplates,
   setTemplatesFilter,
   setTemplatesSearchValue,
   setTemplatesSortValue,
+  setDidCreateTemplate,
 } from 'store/api/templates/slice';
-import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+import { IFacetValue, IFilterItem } from 'store/api/types';
 import { INewTemplateDialogData } from './components/NewTemplateDialog/types';
 import {
   CategoryBtnWrapper,
@@ -36,11 +38,17 @@ const Templates: FunctionComponent = (): JSX.Element => {
   const [templateFilterItem, setTemplateFilterItem] = useState<IFilterItem[]>(templateFilterInitState);
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
+  const [newTemplateData, setNewTemplateData] = useState<INewTemplateDialogData>({} as INewTemplateDialogData);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { filterItem = templateFilterItem, searchValue = '', sortValue } = useAppSelector(selectTemplates);
-  const { data, isFetching } = useGetTemplatesQuery({
+  const {
+    didCreateTemplate,
+    filterItem = templateFilterItem,
+    searchValue = '',
+    sortValue,
+  } = useAppSelector(selectTemplates);
+  const { data, isFetching, refetch } = useGetTemplatesQuery({
     searchString: searchValue,
     sortValue,
     filterItem,
@@ -57,6 +65,19 @@ const Templates: FunctionComponent = (): JSX.Element => {
     { skip: !gridData.length },
   );
 
+  const [
+    createTemplate,
+    {
+      data: createTemplateResponse,
+      isSuccess: isCreateTemplateSuccess,
+      reset: resetCreateTemplate,
+      isLoading: isCreateTemplateLoading,
+    },
+  ] = useCreateSubmissionTemplateMutation();
+
+  const [refreshTemplates, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
+    useLazyRefreshTemplatesQuery();
+
   const menuData = {
     title: filterOptionsData?.['@search.facets']?.title,
     type: filterOptionsData?.['@search.facets']?.type,
@@ -70,16 +91,8 @@ const Templates: FunctionComponent = (): JSX.Element => {
 
   const initialGridState = {
     pagination: { pageSize },
+    sorting: { sortModel: [{ field: 'status', sort: 'asc' as GridSortDirection }] },
   };
-
-  // Use Effects
-  useEffect(() => {
-    if (filterItem.length !== 0) setTemplateFilterItem(filterItem);
-  }, [filterItem]);
-
-  useEffect(() => {
-    setRowCount(data?.['@odata.count'] ?? 0);
-  }, [data]);
 
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
@@ -110,12 +123,14 @@ const Templates: FunctionComponent = (): JSX.Element => {
   };
 
   const handleNewTemplateSubmit = (newTemplateData: INewTemplateDialogData) => {
-    // Insert submit dispatch logic here
-    navigate('new', {
-      replace: false,
-      state: { ...newTemplateData },
+    setNewTemplateData(newTemplateData);
+    createTemplate({
+      ...newTemplateData,
+      isForManualSubmissions: true,
+      status: 'draft',
+      steps: [],
+      iconFontFamily: 'MaterialIcons',
     });
-    handleNewTemplateModalClose();
   };
 
   const onPageChange = (page: number) => {
@@ -145,6 +160,39 @@ const Templates: FunctionComponent = (): JSX.Element => {
 
     dispatch(setTemplatesFilter(newAppliedFilters));
   };
+
+  // Use Effects
+  useEffect(() => {
+    if (filterItem.length !== 0) setTemplateFilterItem(filterItem);
+  }, [filterItem]);
+
+  useEffect(() => {
+    setRowCount(data?.['@odata.count'] ?? 0);
+  }, [data]);
+
+  useEffect(() => {
+    if ((!isRefreshFetching && isRefreshSuccess) || didCreateTemplate) {
+      setTimeout(() => {
+        dispatch(templatesApi.util.resetApiState());
+        refetch();
+        dispatch(setDidCreateTemplate(false));
+      }, 7000);
+    }
+  }, [isRefreshFetching, isRefreshSuccess]);
+
+  useEffect(() => {
+    if (isCreateTemplateSuccess) {
+      refreshTemplates();
+      dispatch(setDidCreateTemplate(true));
+      resetCreateTemplate();
+      handleNewTemplateModalClose();
+
+      navigate('new', {
+        replace: false,
+        state: { ...newTemplateData, id: createTemplateResponse?.id },
+      });
+    }
+  }, [isCreateTemplateSuccess]);
 
   return (
     <MainContent paddingSide={92} paddingTop={16}>
@@ -202,7 +250,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
         isOpen={isNewTemplateModalOpen}
         handleClose={handleNewTemplateModalClose}
         handleSubmit={handleNewTemplateSubmit}
-        isLoading={false}
+        isLoading={isCreateTemplateLoading}
         errorMessage=""
       />
     </MainContent>

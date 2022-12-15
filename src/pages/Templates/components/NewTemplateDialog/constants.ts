@@ -15,7 +15,7 @@ export const newTemplateTitles = [
     placeholder: 'Template description (subheading)'
   },
   {
-    field: 'focusObject',
+    field: 'focus',
     label: 'Focus object',
     placeholder: '- Select template focus object -'
   },
@@ -36,6 +36,12 @@ export const templateTypeData = [
   }
 ];
 
+export const TEMPLATE_TYPE = {
+  'type-1': 'task',
+  'type-2': 'survey',
+  'type-3': 'advert'
+};
+
 export const templateFocusObjectData = [
   {
     label: 'Product',
@@ -46,3 +52,8 @@ export const templateFocusObjectData = [
     id: 'focus-2'
   },
 ];
+
+export const FOCUS_TYPE = {
+  'focus-1': 'product',
+  'focus-2': 'category'
+};

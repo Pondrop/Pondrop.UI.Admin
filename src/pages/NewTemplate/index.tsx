@@ -1,8 +1,6 @@
 import { Fragment, FunctionComponent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 
-import { CircularLoaderWrapper } from 'pages/styles';
 import { INewTemplateState } from 'pages/types';
 import {
   ColAlignDiv,
@@ -15,7 +13,7 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
-import { FocusObjectLabels, MANUAL_SUBMISSION_PLACEHOLDER, templateTitles, TypeLabels } from './constants';
+import { MANUAL_SUBMISSION_PLACEHOLDER, templateTitles } from './constants';
 import { StyledTextInput } from './styles';
 
 const NewTemplate: FunctionComponent = (): JSX.Element => {
@@ -28,12 +26,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
 
   // Handlers
   const handlePrevious = () => navigate(-1);
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderHeader = () => {
     return (
@@ -66,11 +58,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
         </StyledCardTitle>
         <ColAlignDiv>
           {templateTitles.map((value) => {
-            let tempValue;
-            if (value.field === 'type') tempValue = TypeLabels[state?.type as keyof typeof TypeLabels];
-            else if (value.field === 'focusObject')
-              tempValue = FocusObjectLabels[state?.focusObject as keyof typeof FocusObjectLabels];
-            else tempValue = state[value?.field as keyof INewTemplateState];
+            const tempValue = state[value?.field as keyof INewTemplateState];
             return (
               <Fragment key={value.field}>
                 <span className="row-label card-details" style={{ fontSize: '12px', lineHeight: '16px' }}>
@@ -80,7 +68,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
                   className="row-value singleline card-details"
                   style={{ fontSize: '12px', lineHeight: '16px', marginBottom: '12px' }}
                 >
-                  {tempValue}
+                  {tempValue[0].toUpperCase() + tempValue.slice(1)}
                 </span>
               </Fragment>
             );
@@ -99,33 +87,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       </StyledCard>
     );
   };
-
-  // const renderButtons = () => {
-  //   const isPublishDisabled = requestData?.requiredSubmissions === 0 || requestData?.campaignEndDate === null;
-  //   return (
-  //     <SpaceBetweenDiv withmargin={false} style={{ margin: '0 64px 32px' }}>
-  //       <StyleOutlinedBtn
-  //         data-testid="step-3-back-btn"
-  //         variant="outlined"
-  //         disableElevation
-  //         height={40}
-  //         onClick={handleBackButton}
-  //       >
-  //         Back
-  //       </StyleOutlinedBtn>
-  //       <StyledCategoryBtn
-  //         data-testid="step-3-publish-btn"
-  //         variant="contained"
-  //         disableElevation
-  //         height={40}
-  //         onClick={handlePublishCampaign}
-  //         disabled={isPublishDisabled}
-  //       >
-  //         {isUpdateCampaignLoading && isPublish ? renderLoader(34) : 'Publish'}
-  //       </StyledCategoryBtn>
-  //     </SpaceBetweenDiv>
-  //   );
-  // };
 
   const renderContent = () => (
     <div>
