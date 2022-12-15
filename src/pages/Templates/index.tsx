@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GridFilterModel, GridSortModel } from '@mui/x-data-grid-pro';
 
@@ -10,6 +10,14 @@ import SearchField from 'components/SearchField';
 import NewTemplateDialog from './components/NewTemplateDialog';
 
 // Other variables / values
+import { useAppDispatch, useAppSelector } from 'store';
+import { useGetAllTemplateFilterQuery, useGetTemplatesQuery } from 'store/api/templates/api';
+import {
+  selectTemplates,
+  setTemplatesFilter,
+  setTemplatesSearchValue,
+  setTemplatesSortValue,
+} from 'store/api/templates/slice';
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { INewTemplateDialogData } from './components/NewTemplateDialog/types';
 import {
@@ -30,30 +38,67 @@ const Templates: FunctionComponent = (): JSX.Element => {
   const [pageSkip, setPageSkip] = useState<number>(0);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { filterItem = templateFilterItem, searchValue = '', sortValue } = useAppSelector(selectTemplates);
+  const { data, isFetching } = useGetTemplatesQuery({
+    searchString: searchValue,
+    sortValue,
+    filterItem,
+    prevPageItems: pageSkip,
+    pageSize,
+  });
 
   // Dialog states
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = useState<boolean>(false);
 
-  const gridData: IValue[] = [];
+  const gridData = data?.value ?? [];
+  const { data: filterOptionsData, isFetching: isFilterOptionsFetching } = useGetAllTemplateFilterQuery(
+    { searchString: searchValue },
+    { skip: !gridData.length },
+  );
 
-  const [rowCount, setRowCount] = useState<number>(0);
+  const menuData = {
+    title: filterOptionsData?.['@search.facets']?.title,
+    type: filterOptionsData?.['@search.facets']?.type,
+    isForManualSubmissions: filterOptionsData?.['@search.facets']?.isForManualSubmissions,
+    focus: filterOptionsData?.['@search.facets']?.focus,
+    createdUtc: filterOptionsData?.['@search.facets']?.createdUtc,
+    status: filterOptionsData?.['@search.facets']?.status,
+  };
+
+  const [rowCount, setRowCount] = useState<number>(data?.['@odata.count'] ?? 0);
 
   const initialGridState = {
     pagination: { pageSize },
   };
 
+  // Use Effects
+  useEffect(() => {
+    if (filterItem.length !== 0) setTemplateFilterItem(filterItem);
+  }, [filterItem]);
+
+  useEffect(() => {
+    setRowCount(data?.['@odata.count'] ?? 0);
+  }, [data]);
+
   // Handlers
   const handleSearchDispatch = (searchValue: string) => {
-    // Insert search dispatch and filter clear here
+    dispatch(setTemplatesFilter(templateFilterInitState));
+    dispatch(setTemplatesSearchValue(searchValue));
   };
 
   const onFilterModelChange = (model: GridFilterModel) => {
     if (!model.items[0]) return;
-    // Insert filter dispatch here
+    dispatch(setTemplatesFilter(model.items as IFilterItem[]));
   };
 
   const handleSortModelChange = (model: GridSortModel) => {
-    // Inser sort dispatch here
+    dispatch(
+      setTemplatesSortValue({
+        field: model[0]?.field,
+        sort: model[0]?.sort,
+      }),
+    );
   };
 
   const handleNewTemplateModalOpen = () => {
@@ -98,7 +143,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
       else return filter;
     });
 
-    // Insert filter dispatch here
+    dispatch(setTemplatesFilter(newAppliedFilters));
   };
 
   return (
@@ -140,18 +185,18 @@ const Templates: FunctionComponent = (): JSX.Element => {
         columns={templatesColumns}
         id="view-templates-grid"
         dataIdKey="id"
-        isFetching={false}
+        isFetching={isFetching}
         onFilterModelChange={onFilterModelChange}
         filterItem={templateFilterItem}
         handleOnFilterClick={handleOnFilterClick}
         rowCount={rowCount}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
-        menuData={[] as unknown as IFacetValue}
+        menuData={menuData as IFacetValue}
         onSortModelChange={handleSortModelChange}
         initialState={initialGridState}
-        isMenuLoading={false}
-        searchValue={''}
+        isMenuLoading={isFilterOptionsFetching}
+        searchValue={searchValue}
       />
       <NewTemplateDialog
         isOpen={isNewTemplateModalOpen}

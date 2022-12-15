@@ -1,11 +1,12 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
+
 import { IFacetDetails, IFilterItem } from 'store/api/types';
 
 export const getAllUniqueValues = (data: IFacetDetails[]) => {
   const completeValues: string[] = [];
 
   data?.forEach((val) => {
-    if (val.value) completeValues.push(val.value);
+    if (val.value !== '') completeValues.push(val.value);
   });
 
   return [...new Set(completeValues)];
