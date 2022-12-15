@@ -10,7 +10,7 @@ import {
 import { Close, Info } from '@mui/icons-material';
 
 import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { newTemplateTitles, templateFocusObjectData, templateTypeData } from './constants';
+import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
 import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { ICreateCategoryProps } from './types';
 
@@ -88,9 +88,9 @@ const NewTemplateDialog = ({
   const handleModalSubmit = () => {
     handleSubmit({
       title: templateTitle,
-      type: templateType,
+      type: TEMPLATE_TYPE[templateType as keyof typeof TEMPLATE_TYPE],
       description: templateDescription,
-      focusObject: templateFocusObject,
+      focus: FOCUS_TYPE[templateFocusObject as keyof typeof FOCUS_TYPE],
     });
   };
 

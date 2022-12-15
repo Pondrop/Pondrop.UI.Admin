@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import { initialState } from "../constants";
 import { actions } from "./actions";
+import { templateInitialState } from "./initialState";
 
 export const templateSlice = createSlice({
   name: 'templates',
-  initialState: initialState,
+  initialState: templateInitialState,
   reducers: actions,
 });
 
 export const selectTemplates = (state: RootState) => state.templates;
 
-export const { resetTemplatesToInitialState, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue } = templateSlice.actions;
+export const { resetTemplatesToInitialState, setDidCreateTemplate, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue } = templateSlice.actions;
 
 export default templateSlice.reducer;

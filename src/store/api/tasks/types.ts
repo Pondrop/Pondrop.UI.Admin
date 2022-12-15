@@ -60,6 +60,31 @@ export interface ISubmissionTemplateResponse {
   steps: unknown[];
 }
 
+export interface ICreateSubmissionTemplate {
+  title: string;
+  description: string;
+  type: string;
+  focus: string;
+  isForManualSubmissions: boolean;
+  status: string;
+  steps: ISteps[];
+  iconFontFamily: string;
+}
+
+export interface ICreateSubmissionTemplateResponse {
+  id: string;
+  title: string;
+  description: string;
+  iconCodePoint: number;
+  iconFontFamily: string;
+  type: string;
+  steps: ISteps[];
+  createdBy: string;
+  updatedBy: string;
+  createdUtc: string;
+  updatedUtc: string;
+}
+
 export interface ICampaign {
   id: string;
   name: string;
