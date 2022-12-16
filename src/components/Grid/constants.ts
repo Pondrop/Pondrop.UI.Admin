@@ -71,7 +71,7 @@ export const templatesColumns: GridColDef[] = [
 
 export const selectedFieldsColumns: GridColDef[] = [
   { field: 'label', headerName: 'Field label name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
-  { field: 'type', headerName: 'Field type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCellDate, disableColumnMenu: true, sortable: false },
+  { field: 'fieldType', headerName: 'Field type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCellDate, disableColumnMenu: true, sortable: false },
   { field: 'maxValue', headerName: 'Max value', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
-  { field: 'storeName', headerName: 'Mandatory', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
+  { field: 'mandatory', headerName: 'Mandatory', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
 ]; 

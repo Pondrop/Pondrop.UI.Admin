@@ -16,6 +16,7 @@ import {
   StyledCard,
   StyledCardTitle,
   StyledCategoryBtn,
+  StyleOutlinedBtn,
   StyledSubtitle,
   StyledTitle,
   StyledTypography,
@@ -24,6 +25,7 @@ import {
   FIELD_STEP_INSTRUCTION_PLACEHOLDER,
   MANUAL_SUBMISSION_PLACEHOLDER,
   selectedFieldsData,
+  SUMMARY_SUBMIT_INSTRUCTION_PLACEHOLDER,
   templateTitles,
 } from './constants';
 import { StyledBtnWrapper, StyledTextInput } from './styles';
@@ -71,12 +73,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
 
   const renderSection1 = () => {
     return (
-      <StyledCard
-        style={{ margin: '24px 64px 34px' }}
-        className="focus-grid-card"
-        width="calc(100% - 160px)"
-        height="fit-content"
-      >
+      <StyledCard style={{ margin: '24px 64px 34px' }} width="calc(100% - 160px)" height="fit-content">
         <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
           <SpaceBetweenDiv withmargin={false}>Template</SpaceBetweenDiv>
         </StyledCardTitle>
@@ -114,12 +111,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
 
   const renderSection2 = () => {
     return (
-      <StyledCard
-        style={{ margin: '24px 64px 34px' }}
-        className="focus-grid-card"
-        width="calc(100% - 160px)"
-        height="fit-content"
-      >
+      <StyledCard style={{ margin: '24px 64px 34px' }} width="calc(100% - 160px)" height="fit-content">
         <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
           <SpaceBetweenDiv withmargin={false}>Step 2: Selected Fields</SpaceBetweenDiv>
         </StyledCardTitle>
@@ -201,6 +193,52 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
     );
   };
 
+  const renderSection3 = () => {
+    return (
+      <StyledCard style={{ margin: '24px 64px 34px' }} width="calc(100% - 160px)" height="fit-content">
+        <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+          <SpaceBetweenDiv withmargin={false}>Step 3: Summary & Comments</SpaceBetweenDiv>
+        </StyledCardTitle>
+        <div className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
+            Complete summary & submit step instructions
+          </span>
+        </div>
+        <StyledTextInput
+          id="summary-submit-textarea"
+          margin="none"
+          variant="outlined"
+          value={''}
+          placeholder={SUMMARY_SUBMIT_INSTRUCTION_PLACEHOLDER}
+          multiline
+          rows={5}
+          disabled
+        />
+      </StyledCard>
+    );
+  };
+
+  const renderButtons = () => {
+    return (
+      <RowAlignWrapper style={{ margin: '0 64px 32px', justifyContent: 'end' }}>
+        <StyleOutlinedBtn data-testid="step-3-back-btn" variant="outlined" disableElevation height={40}>
+          Save draft & exit
+        </StyleOutlinedBtn>
+        <div style={{ marginLeft: '20px' }}>
+          <StyledCategoryBtn
+            data-testid="step-3-publish-btn"
+            variant="contained"
+            disableElevation
+            height={40}
+            disabled={true}
+          >
+            Activate
+          </StyledCategoryBtn>
+        </div>
+      </RowAlignWrapper>
+    );
+  };
+
   const renderContent = () => (
     <div>
       <StyledBreadcrumbs aria-label="breadcrumb" sx={{ padding: '0 64px 34px !important' }}>
@@ -212,6 +250,8 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       {renderHeader()}
       {renderSection1()}
       {renderSection2()}
+      {renderSection3()}
+      {renderButtons()}
     </div>
   );
 
