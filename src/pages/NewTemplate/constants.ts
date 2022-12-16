@@ -16,4 +16,18 @@ export const templateTitles = [
   }
 ];
 
+export const selectedFieldsData = [
+  {
+    label: 'Modal title',
+    placeholder: 'Screen title',
+    field: 'modalTitle'
+  },
+  {
+    label: 'Modal instructions',
+    placeholder: 'e.g. Take a photo of the shelf for this product',
+    field: 'modalInstructions'
+  },
+];
+
 export const MANUAL_SUBMISSION_PLACEHOLDER = 'Enter comma separated list of instruction sentences for manual submissions';
+export const FIELD_STEP_INSTRUCTION_PLACEHOLDER = 'Enter comma separated list of instruction sentences for completing the instructions';

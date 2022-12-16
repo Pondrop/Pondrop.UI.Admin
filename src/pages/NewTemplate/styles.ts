@@ -12,7 +12,7 @@ export const StyledTextInput = styled(TextField)`
     top: 0;
   }
 
-  textarea {
+  input, textarea {
     height: 16px;
     line-height: 16px;
     font-size: 12px !important;
