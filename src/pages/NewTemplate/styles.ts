@@ -30,3 +30,9 @@ export const StyledTextInput = styled(TextField)`
     border-radius: 8px !important;
   }
 `;
+
+export const StyledBtnWrapper = styled.div`
+  display: flex;
+  align-self: center;
+  margin-bottom: 24px;
+`;

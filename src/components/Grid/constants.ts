@@ -68,3 +68,10 @@ export const templatesColumns: GridColDef[] = [
   { field: 'createdUtc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate },
   { field: 'status', headerName: 'Status', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
 ];
+
+export const selectedFieldsColumns: GridColDef[] = [
+  { field: 'label', headerName: 'Field label name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
+  { field: 'type', headerName: 'Field type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCellDate, disableColumnMenu: true, sortable: false },
+  { field: 'maxValue', headerName: 'Max value', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
+  { field: 'storeName', headerName: 'Mandatory', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell, disableColumnMenu: true, sortable: false },
+]; 

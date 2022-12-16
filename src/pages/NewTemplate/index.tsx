@@ -2,6 +2,10 @@ import { ChangeEvent, Fragment, FunctionComponent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Info } from '@mui/icons-material';
 
+// Components
+import Grid from 'components/Grid';
+import { selectedFieldsColumns } from 'components/Grid/constants';
+
 import { INewTemplateState } from 'pages/types';
 import {
   ColAlignDiv,
@@ -11,6 +15,7 @@ import {
   StyledBreadcrumbs,
   StyledCard,
   StyledCardTitle,
+  StyledCategoryBtn,
   StyledSubtitle,
   StyledTitle,
   StyledTypography,
@@ -21,7 +26,7 @@ import {
   selectedFieldsData,
   templateTitles,
 } from './constants';
-import { StyledTextInput } from './styles';
+import { StyledBtnWrapper, StyledTextInput } from './styles';
 
 const NewTemplate: FunctionComponent = (): JSX.Element => {
   // React router dom values
@@ -119,11 +124,11 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
           <SpaceBetweenDiv withmargin={false}>Step 2: Selected Fields</SpaceBetweenDiv>
         </StyledCardTitle>
         <ColAlignDiv>
-          <RowAlignWrapper className="label-div">
+          <RowAlignWrapper className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
               {selectedFieldsData[0].label}
             </span>
-            <div className="info-icon" style={{ marginLeft: '8px' }}>
+            <div className="info-icon" style={{ display: 'flex', marginLeft: '8px' }}>
               <Info />
             </div>
           </RowAlignWrapper>
@@ -136,11 +141,11 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
             placeholder={selectedFieldsData[0].placeholder}
             sx={{ marginBottom: '24px' }}
           />
-          <RowAlignWrapper className="label-div">
+          <RowAlignWrapper className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
               {selectedFieldsData[1].label}
             </span>
-            <div className="info-icon" style={{ marginLeft: '8px' }}>
+            <div className="info-icon" style={{ display: 'flex', marginLeft: '8px' }}>
               <Info />
             </div>
           </RowAlignWrapper>
@@ -153,8 +158,33 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
             placeholder={selectedFieldsData[1].placeholder}
             sx={{ marginBottom: '24px' }}
           />
-          <div className="label-div">
-            <span className="row-label">Complete fields step instructions</span>
+          <div style={{ marginBottom: '12px' }}>
+            <Grid
+              data={[]}
+              columns={selectedFieldsColumns}
+              id="current-selected-fields-grid"
+              dataIdKey="id"
+              isFetching={false}
+              withPadding={false}
+              withBorder={false}
+              hideFooter={true}
+            />
+          </div>
+          <StyledBtnWrapper>
+            <StyledCategoryBtn
+              data-testid="add-fields-btn"
+              className="add-fields-btn"
+              variant="contained"
+              disableElevation
+              height={40}
+            >
+              + Additional fields
+            </StyledCategoryBtn>
+          </StyledBtnWrapper>
+          <div className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
+              Field step instructions
+            </span>
           </div>
           <StyledTextInput
             id="field-step-instruction-textarea"

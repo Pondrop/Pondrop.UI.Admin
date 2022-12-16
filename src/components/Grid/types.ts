@@ -9,14 +9,14 @@ export interface IGridProps {
   id: string;
   dataIdKey: string;
   isFetching: boolean;
-  onFilterModelChange: (model: GridFilterModel) => void;
-  filterItem: IFilterItem[];
+  onFilterModelChange?: (model: GridFilterModel) => void;
+  filterItem?: IFilterItem[];
   handleOnFilterClick?: (value: string, currColumn: string, currFilterItems: IFilterItem[]) => void;
   rowCount?: number;
   onPageChange?: (page: number, details: GridCallbackDetails) => void;
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-  menuData: IFacetValue;
-  onSortModelChange: (model: GridSortModel) => void;
+  menuData?: IFacetValue;
+  onSortModelChange?: (model: GridSortModel) => void;
   initialState?: GridInitialState;
   onRowClick?: (params: GridRowParams, event: MuiEvent<MouseEvent>, details: GridCallbackDetails) => void;
   withBorder?: boolean;

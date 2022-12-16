@@ -30,4 +30,4 @@ export const selectedFieldsData = [
 ];
 
 export const MANUAL_SUBMISSION_PLACEHOLDER = 'Enter comma separated list of instruction sentences for manual submissions';
-export const FIELD_STEP_INSTRUCTION_PLACEHOLDER = 'Enter comma separated list of instruction sentences for completing the instructions';
+export const FIELD_STEP_INSTRUCTION_PLACEHOLDER = 'Enter comma separated list of instructions for completing the task';
