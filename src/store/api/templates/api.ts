@@ -32,7 +32,10 @@ export const templatesApi = createApi({
               if (index === 0) filterQuery = filterQuery.concat('(');
               if (index !== 0) filterQuery = filterQuery.concat(' or ');
               if (moment(filterValue, "YYYY-MM-DDTHH:mm:ssZ", true).isValid() || moment(filterValue, "YYYY-MM-DDTHH:mm:ss.sssZ", true).isValid()) filterQuery = filterQuery.concat(`${filter.columnField} eq ${filterValue}`);
-              else filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
+              else if (filter.columnField === 'isForManualSubmissions') {
+                const isForManualSubmissions = filterValue === 'Yes';
+                filterQuery = filterQuery.concat(`${filter.columnField} eq ${isForManualSubmissions ? true : false}`);
+              } else filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
               if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
             });
           });
