@@ -65,6 +65,6 @@ export const templatesColumns: GridColDef[] = [
   { field: 'type', headerName: 'Type', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCellFormat },
   { field: 'isForManualSubmissions', headerName: 'Manual Submissions', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderManualSubmissions },
   { field: 'focus', headerName: 'Focus', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
-  { field: 'createdutc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate },
+  { field: 'createdUtc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate },
   { field: 'status', headerName: 'Status', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
 ];
