@@ -6,7 +6,10 @@ export const getAllUniqueValues = (data: IFacetDetails[]) => {
   const completeValues: string[] = [];
 
   data?.forEach((val) => {
-    if (val.value !== '') completeValues.push(val.value);
+    if (typeof val.value === 'boolean') {
+      const tempValue = val.value ? 'Yes' : 'No';
+      completeValues.push(tempValue);
+    } else if (val.value !== '') completeValues.push(val.value);
   });
 
   return [...new Set(completeValues)];

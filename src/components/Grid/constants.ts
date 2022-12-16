@@ -1,5 +1,5 @@
 import { getGridStringOperators, GridColDef } from '@mui/x-data-grid-pro';
-import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips, handleRenderProvider } from './utils';
+import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips, handleRenderManualSubmissions, handleRenderProvider } from './utils';
 
 // filterOperators to be updated to make way for ssr filters, disabled most operators for now
 
@@ -63,8 +63,8 @@ export const campaignsColumns: GridColDef[] = [
 export const templatesColumns: GridColDef[] = [
   { field: 'title', headerName: 'Title', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
   { field: 'type', headerName: 'Type', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCellFormat },
-  { field: 'isForManualSubmissions', headerName: 'Manual Submissions', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCell },
+  { field: 'isForManualSubmissions', headerName: 'Manual Submissions', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderManualSubmissions },
   { field: 'focus', headerName: 'Focus', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
-  { field: 'createdUtc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate },
+  { field: 'createdutc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate },
   { field: 'status', headerName: 'Status', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
 ];

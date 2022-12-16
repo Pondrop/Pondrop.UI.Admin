@@ -83,7 +83,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
     type: filterOptionsData?.['@search.facets']?.type,
     isForManualSubmissions: filterOptionsData?.['@search.facets']?.isForManualSubmissions,
     focus: filterOptionsData?.['@search.facets']?.focus,
-    createdUtc: filterOptionsData?.['@search.facets']?.createdUtc,
+    createdutc: filterOptionsData?.['@search.facets']?.createdutc,
     status: filterOptionsData?.['@search.facets']?.status,
   };
 

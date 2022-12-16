@@ -32,7 +32,10 @@ export const templatesApi = createApi({
               if (index === 0) filterQuery = filterQuery.concat('(');
               if (index !== 0) filterQuery = filterQuery.concat(' or ');
               if (moment(filterValue, "YYYY-MM-DDTHH:mm:ssZ", true).isValid() || moment(filterValue, "YYYY-MM-DDTHH:mm:ss.sssZ", true).isValid()) filterQuery = filterQuery.concat(`${filter.columnField} eq ${filterValue}`);
-              else filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
+              else if (filter.columnField === 'isForManualSubmissions') {
+                const isForManualSubmissions = filterValue === 'Yes';
+                filterQuery = filterQuery.concat(`${filter.columnField} eq ${isForManualSubmissions ? true : false}`);
+              } else filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
               if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
             });
           });
@@ -50,7 +53,7 @@ export const templatesApi = createApi({
       query: (arg) => {
         const { searchString } = arg;
         return {
-          url: `/indexes/cosmosdb-index-submissiontemplate/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*&$count=true&facet=title,count:0,sort:value&facet=type,count:0,sort:value&facet=isForManualSubmissions,count:0,sort:value&facet=focus,count:0,sort:value&facet=createdUtc,count:0,sort:value&facet=status,count:0,sort:value`,
+          url: `/indexes/cosmosdb-index-submissiontemplate/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*&$count=true&facet=title,count:0,sort:value&facet=type,count:0,sort:value&facet=isForManualSubmissions,count:0,sort:value&facet=focus,count:0,sort:value&facet=createdutc,count:0,sort:value&facet=status,count:0,sort:value`,
           method: 'GET',
         };
       },

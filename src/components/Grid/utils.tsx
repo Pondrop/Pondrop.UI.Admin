@@ -108,3 +108,24 @@ export const handleRenderChips = (params: GridRenderCellParams, isClickable: boo
     </StyledChipWrapper>
   );
 };
+
+export const handleRenderManualSubmissions = (params: GridRenderCellParams) => {
+  const tooltipTextRef = useRef<HTMLDivElement>(null);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (tooltipTextRef?.current) {
+      setShowTooltip(tooltipTextRef.current.clientWidth < tooltipTextRef.current.scrollWidth);
+    }
+  }, []);
+
+  const isManualSubmission = params.value ? 'Yes' : 'No';
+
+  return (
+    <Tooltip title={isManualSubmission} placement="top" key={params.id} arrow disableHoverListener={!showTooltip}>
+      <StyledCellContent ref={tooltipTextRef} id={`styled-content-${params.id}-${params.field}`}>
+        {isManualSubmission}
+      </StyledCellContent>
+    </Tooltip>
+  );
+};
