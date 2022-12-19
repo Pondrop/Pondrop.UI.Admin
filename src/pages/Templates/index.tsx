@@ -11,7 +11,11 @@ import NewTemplateDialog from './components/NewTemplateDialog';
 
 // Other variables / values
 import { useAppDispatch, useAppSelector } from 'store';
-import { useCreateSubmissionTemplateMutation, useLazyRefreshTemplatesQuery } from 'store/api/tasks/api';
+import {
+  useAddTemplateStepMutation,
+  useCreateSubmissionTemplateMutation,
+  useLazyRefreshTemplatesQuery,
+} from 'store/api/tasks/api';
 import { templatesApi, useGetAllTemplateFilterQuery, useGetTemplatesQuery } from 'store/api/templates/api';
 import {
   selectTemplates,
@@ -74,6 +78,10 @@ const Templates: FunctionComponent = (): JSX.Element => {
       isLoading: isCreateTemplateLoading,
     },
   ] = useCreateSubmissionTemplateMutation();
+
+  const [, { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep }] = useAddTemplateStepMutation({
+    fixedCacheKey: 'new-template-step-mutation',
+  });
 
   const [refreshTemplates, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
     useLazyRefreshTemplatesQuery();
@@ -169,6 +177,13 @@ const Templates: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setRowCount(data?.['@odata.count'] ?? 0);
   }, [data]);
+
+  useEffect(() => {
+    if (isAddTemplateStepSuccess) {
+      resetAddTemplateStep();
+      refreshTemplates();
+    }
+  }, [isAddTemplateStepSuccess]);
 
   useEffect(() => {
     if ((!isRefreshFetching && isRefreshSuccess) || didCreateTemplate) {

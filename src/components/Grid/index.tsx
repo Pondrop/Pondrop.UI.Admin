@@ -3,7 +3,7 @@ import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid-pro';
 import { FilterList } from '@mui/icons-material';
 
 // API Types
-import { IFilterItem } from 'store/api/types';
+import { IFacetValue, IFilterItem } from 'store/api/types';
 
 // Components
 import CustomEmptyState from 'components/EmptyState';
@@ -19,12 +19,12 @@ const Grid: FunctionComponent<IGridProps> = ({
   dataIdKey,
   isFetching,
   onFilterModelChange,
-  filterItem,
+  filterItem = [],
   handleOnFilterClick,
   rowCount,
   onPageChange,
   onPageSizeChange,
-  menuData,
+  menuData = {} as IFacetValue,
   onSortModelChange,
   initialState,
   onRowClick,
@@ -75,8 +75,14 @@ const Grid: FunctionComponent<IGridProps> = ({
     [searchValue, isMenuLoading, localFilter, id],
   );
 
+  // Rendered when no rows are available after filtering
   const renderEmptyState = () => {
     return <CustomEmptyState displayText="No matches found." />;
+  };
+
+  // Rendered when no rows are given to grid
+  const renderNoRowsState = () => {
+    return <CustomEmptyState displayText="No data available." withIcon={false} />;
   };
 
   // helper function
@@ -106,6 +112,7 @@ const Grid: FunctionComponent<IGridProps> = ({
         ColumnMenuIcon: renderMenuIcon,
         ColumnMenu: renderCustomMenu,
         NoResultsOverlay: renderEmptyState,
+        NoRowsOverlay: renderNoRowsState,
       }}
       componentsProps={{
         pagination: { showFirstButton: true, showLastButton: true },

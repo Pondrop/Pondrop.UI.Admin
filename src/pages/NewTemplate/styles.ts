@@ -12,7 +12,7 @@ export const StyledTextInput = styled(TextField)`
     top: 0;
   }
 
-  textarea {
+  input, textarea {
     height: 16px;
     line-height: 16px;
     font-size: 12px !important;
@@ -29,4 +29,10 @@ export const StyledTextInput = styled(TextField)`
     border-color: rgba(0, 0, 0, 0.24) !important;
     border-radius: 8px !important;
   }
+`;
+
+export const StyledBtnWrapper = styled.div`
+  display: flex;
+  align-self: center;
+  margin-bottom: 24px;
 `;

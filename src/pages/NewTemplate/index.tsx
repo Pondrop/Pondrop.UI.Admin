@@ -1,31 +1,101 @@
-import { Fragment, FunctionComponent } from 'react';
+import { ChangeEvent, Fragment, FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
+import { Info } from '@mui/icons-material';
 
+// Components
+import Grid from 'components/Grid';
+import { selectedFieldsColumns } from 'components/Grid/constants';
+
+import { CircularLoaderWrapper } from 'pages/styles';
 import { INewTemplateState } from 'pages/types';
+import { useAddTemplateStepMutation } from 'store/api/tasks/api';
+import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
+import { IAddTemplateStep } from 'store/api/tasks/types';
 import {
   ColAlignDiv,
   ContentDetails,
+  RowAlignWrapper,
   SpaceBetweenDiv,
   StyledBreadcrumbs,
   StyledCard,
   StyledCardTitle,
+  StyledCategoryBtn,
+  StyleOutlinedBtn,
   StyledSubtitle,
   StyledTitle,
   StyledTypography,
 } from '../styles';
-import { MANUAL_SUBMISSION_PLACEHOLDER, templateTitles } from './constants';
-import { StyledTextInput } from './styles';
+import {
+  FIELD_STEP_INSTRUCTION_PLACEHOLDER,
+  MANUAL_SUBMISSION_PLACEHOLDER,
+  selectedFieldsData,
+  SUMMARY_SUBMIT_INSTRUCTION_PLACEHOLDER,
+  templateTitles,
+} from './constants';
+import { StyledBtnWrapper, StyledTextInput } from './styles';
 
 const NewTemplate: FunctionComponent = (): JSX.Element => {
   // React router dom values
   const location = useLocation();
   const navigate = useNavigate();
 
+  // States
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalInstructions, setModalInstructions] = useState<string>('');
+  const [requestData, setRequestData] = useState<IAddTemplateStep>(addTemplateStepInitialState);
+
   // API values
   const state = location?.state as INewTemplateState;
 
+  // API calls
+  const [
+    addTemplateStep,
+    { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep, isLoading: isAddTemplateStepLoading },
+  ] = useAddTemplateStepMutation({ fixedCacheKey: 'new-template-step-mutation' });
+
   // Handlers
   const handlePrevious = () => navigate(-1);
+
+  const handleModalTitleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setModalTitle(e.target.value);
+  };
+
+  const handleModalInstructionsOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setModalInstructions(e.target.value);
+  };
+
+  const handleSaveDraftExit = () => {
+    if (modalTitle === '' && modalInstructions === '') navigate(-1);
+    else {
+      const requestBody = {
+        ...requestData,
+        title: modalTitle,
+        instructions: modalInstructions,
+      };
+      addTemplateStep(requestBody);
+    }
+  };
+
+  useEffect(() => {
+    setRequestData((oldValue) => ({
+      ...oldValue,
+      submissionId: state?.id,
+    }));
+  }, []);
+
+  useEffect(() => {
+    if (isAddTemplateStepSuccess) {
+      navigate(-1);
+      resetAddTemplateStep();
+    }
+  }, [isAddTemplateStepSuccess]);
+
+  const renderLoader = (height: number) => (
+    <CircularLoaderWrapper height={`${height}px`}>
+      <CircularProgress size={height / 2} thickness={6} />
+    </CircularLoaderWrapper>
+  );
 
   const renderHeader = () => {
     return (
@@ -47,18 +117,13 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
 
   const renderSection1 = () => {
     return (
-      <StyledCard
-        style={{ margin: '24px 64px 34px' }}
-        className="focus-grid-card"
-        width="calc(100% - 160px)"
-        height="fit-content"
-      >
+      <StyledCard style={{ margin: '24px 64px 34px' }} width="calc(100% - 160px)" height="fit-content">
         <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
           <SpaceBetweenDiv withmargin={false}>Template</SpaceBetweenDiv>
         </StyledCardTitle>
         <ColAlignDiv>
           {templateTitles.map((value) => {
-            const tempValue = state[value?.field as keyof INewTemplateState];
+            const tempValue = state?.[value?.field as keyof INewTemplateState] ?? '';
             return (
               <Fragment key={value.field}>
                 <span className="row-label card-details" style={{ fontSize: '12px', lineHeight: '16px' }}>
@@ -68,7 +133,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
                   className="row-value singleline card-details"
                   style={{ fontSize: '12px', lineHeight: '16px', marginBottom: '12px' }}
                 >
-                  {tempValue[0].toUpperCase() + tempValue.slice(1)}
+                  {tempValue ? tempValue[0].toUpperCase() + tempValue.slice(1) : ''}
                 </span>
               </Fragment>
             );
@@ -88,6 +153,142 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
     );
   };
 
+  const renderSection2 = () => {
+    return (
+      <StyledCard style={{ margin: '24px 64px 34px' }} width="calc(100% - 160px)" height="fit-content">
+        <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+          <SpaceBetweenDiv withmargin={false}>Step 2: Selected Fields</SpaceBetweenDiv>
+        </StyledCardTitle>
+        <ColAlignDiv>
+          <RowAlignWrapper className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
+              {selectedFieldsData[0].label}
+            </span>
+            <div className="info-icon" style={{ display: 'flex', marginLeft: '8px' }}>
+              <Info />
+            </div>
+          </RowAlignWrapper>
+          <StyledTextInput
+            id={`${selectedFieldsData[0].field}-input`}
+            margin="none"
+            variant="outlined"
+            value={modalTitle}
+            onChange={handleModalTitleOnChange}
+            placeholder={selectedFieldsData[0].placeholder}
+            sx={{ marginBottom: '24px' }}
+          />
+          <RowAlignWrapper className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
+              {selectedFieldsData[1].label}
+            </span>
+            <div className="info-icon" style={{ display: 'flex', marginLeft: '8px' }}>
+              <Info />
+            </div>
+          </RowAlignWrapper>
+          <StyledTextInput
+            id={`${selectedFieldsData[1].field}-input`}
+            margin="none"
+            variant="outlined"
+            value={modalInstructions}
+            onChange={handleModalInstructionsOnChange}
+            placeholder={selectedFieldsData[1].placeholder}
+            sx={{ marginBottom: '24px' }}
+          />
+          <div style={{ marginBottom: '12px' }}>
+            <Grid
+              data={[]}
+              columns={selectedFieldsColumns}
+              id="current-selected-fields-grid"
+              dataIdKey="id"
+              isFetching={false}
+              withPadding={false}
+              withBorder={false}
+              hideFooter={true}
+            />
+          </div>
+          <StyledBtnWrapper>
+            <StyledCategoryBtn
+              data-testid="add-fields-btn"
+              className="add-fields-btn"
+              variant="contained"
+              disableElevation
+              height={40}
+            >
+              + Additional fields
+            </StyledCategoryBtn>
+          </StyledBtnWrapper>
+          <div className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
+              Field step instructions
+            </span>
+          </div>
+          <StyledTextInput
+            id="field-step-instruction-textarea"
+            margin="none"
+            variant="outlined"
+            value={''}
+            placeholder={FIELD_STEP_INSTRUCTION_PLACEHOLDER}
+            multiline
+            rows={5}
+            disabled
+          />
+        </ColAlignDiv>
+      </StyledCard>
+    );
+  };
+
+  const renderSection3 = () => {
+    return (
+      <StyledCard style={{ margin: '24px 64px 34px' }} width="calc(100% - 160px)" height="fit-content">
+        <StyledCardTitle variant="h6" gutterBottom style={{ fontWeight: 600 }}>
+          <SpaceBetweenDiv withmargin={false}>Step 3: Summary & Comments</SpaceBetweenDiv>
+        </StyledCardTitle>
+        <div className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
+            Complete summary & submit step instructions
+          </span>
+        </div>
+        <StyledTextInput
+          id="summary-submit-textarea"
+          margin="none"
+          variant="outlined"
+          value={''}
+          placeholder={SUMMARY_SUBMIT_INSTRUCTION_PLACEHOLDER}
+          multiline
+          rows={5}
+          disabled
+        />
+      </StyledCard>
+    );
+  };
+
+  const renderButtons = () => {
+    return (
+      <RowAlignWrapper style={{ margin: '0 64px 32px', justifyContent: 'end' }}>
+        <StyleOutlinedBtn
+          data-testid="step-3-back-btn"
+          variant="outlined"
+          disableElevation
+          height={40}
+          onClick={handleSaveDraftExit}
+        >
+          {isAddTemplateStepLoading ? renderLoader(34) : 'Save draft & exit'}
+        </StyleOutlinedBtn>
+        <div style={{ marginLeft: '20px' }}>
+          <StyledCategoryBtn
+            data-testid="step-3-publish-btn"
+            variant="contained"
+            disableElevation
+            height={40}
+            disabled={true}
+          >
+            Activate
+          </StyledCategoryBtn>
+        </div>
+      </RowAlignWrapper>
+    );
+  };
+
   const renderContent = () => (
     <div>
       <StyledBreadcrumbs aria-label="breadcrumb" sx={{ padding: '0 64px 34px !important' }}>
@@ -98,6 +299,9 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       </StyledBreadcrumbs>
       {renderHeader()}
       {renderSection1()}
+      {renderSection2()}
+      {renderSection3()}
+      {renderButtons()}
     </div>
   );
 
