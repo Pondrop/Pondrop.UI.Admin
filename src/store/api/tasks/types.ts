@@ -85,6 +85,29 @@ export interface ICreateSubmissionTemplateResponse {
   updatedUtc: string;
 }
 
+export interface IStepField {
+  id: string;
+  label: string;
+  mandatory: boolean;
+  maxValue: number;
+}
+
+export interface IAddTemplateStep {
+  submissionId: string;
+  title: string;
+  instructions: string;
+  instructionsStep: string[];
+  instructionsContinueButton: string;
+  instructionsSkipButton: string;
+  instructionsIconFontFamily: string;
+  isSummary: boolean;
+  fieldDefinitions: IStepField[];
+}
+
+export interface IAddTemplateStepResponse extends ICreateSubmissionTemplateResponse {
+  deletedUtc: string;
+}
+
 export interface ICampaign {
   id: string;
   name: string;

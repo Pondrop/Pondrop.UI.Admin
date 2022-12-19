@@ -8,3 +8,15 @@ export const taskInitialState: IGridState = {
     sort: 'desc'
   }
 };
+
+export const addTemplateStepInitialState = {
+  submissionId: '',
+  title: '',
+  instructions: '',
+  instructionsStep: [],
+  instructionsContinueButton: '',
+  instructionsSkipButton: '',
+  instructionsIconFontFamily: 'MaterialIcons',
+  isSummary: true,
+  fieldDefinitions: []
+};

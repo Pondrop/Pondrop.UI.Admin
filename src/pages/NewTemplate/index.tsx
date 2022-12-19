@@ -1,12 +1,17 @@
-import { ChangeEvent, Fragment, FunctionComponent, useState } from 'react';
+import { ChangeEvent, Fragment, FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 import { Info } from '@mui/icons-material';
 
 // Components
 import Grid from 'components/Grid';
 import { selectedFieldsColumns } from 'components/Grid/constants';
 
+import { CircularLoaderWrapper } from 'pages/styles';
 import { INewTemplateState } from 'pages/types';
+import { useAddTemplateStepMutation } from 'store/api/tasks/api';
+import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
+import { IAddTemplateStep } from 'store/api/tasks/types';
 import {
   ColAlignDiv,
   ContentDetails,
@@ -38,9 +43,16 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   // States
   const [modalTitle, setModalTitle] = useState<string>('');
   const [modalInstructions, setModalInstructions] = useState<string>('');
+  const [requestData, setRequestData] = useState<IAddTemplateStep>(addTemplateStepInitialState);
 
   // API values
   const state = location?.state as INewTemplateState;
+
+  // API calls
+  const [
+    addTemplateStep,
+    { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep, isLoading: isAddTemplateStepLoading },
+  ] = useAddTemplateStepMutation({ fixedCacheKey: 'new-template-step-mutation' });
 
   // Handlers
   const handlePrevious = () => navigate(-1);
@@ -52,6 +64,38 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   const handleModalInstructionsOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setModalInstructions(e.target.value);
   };
+
+  const handleSaveDraftExit = () => {
+    if (modalTitle === '' && modalInstructions === '') navigate(-1);
+    else {
+      const requestBody = {
+        ...requestData,
+        title: modalTitle,
+        instructions: modalInstructions,
+      };
+      addTemplateStep(requestBody);
+    }
+  };
+
+  useEffect(() => {
+    setRequestData((oldValue) => ({
+      ...oldValue,
+      submissionId: state?.id,
+    }));
+  }, []);
+
+  useEffect(() => {
+    if (isAddTemplateStepSuccess) {
+      navigate(-1);
+      resetAddTemplateStep();
+    }
+  }, [isAddTemplateStepSuccess]);
+
+  const renderLoader = (height: number) => (
+    <CircularLoaderWrapper height={`${height}px`}>
+      <CircularProgress size={height / 2} thickness={6} />
+    </CircularLoaderWrapper>
+  );
 
   const renderHeader = () => {
     return (
@@ -221,8 +265,14 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   const renderButtons = () => {
     return (
       <RowAlignWrapper style={{ margin: '0 64px 32px', justifyContent: 'end' }}>
-        <StyleOutlinedBtn data-testid="step-3-back-btn" variant="outlined" disableElevation height={40}>
-          Save draft & exit
+        <StyleOutlinedBtn
+          data-testid="step-3-back-btn"
+          variant="outlined"
+          disableElevation
+          height={40}
+          onClick={handleSaveDraftExit}
+        >
+          {isAddTemplateStepLoading ? renderLoader(34) : 'Save draft & exit'}
         </StyleOutlinedBtn>
         <div style={{ marginLeft: '20px' }}>
           <StyledCategoryBtn
