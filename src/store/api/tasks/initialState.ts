@@ -16,6 +16,7 @@ export const addTemplateStepInitialState = {
   instructionsStep: [],
   instructionsContinueButton: '',
   instructionsSkipButton: '',
+  instructionsIconCodePoint: 0,
   instructionsIconFontFamily: 'MaterialIcons',
   isSummary: true,
   fieldDefinitions: []
