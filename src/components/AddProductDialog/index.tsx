@@ -8,9 +8,15 @@ import Chips from 'components/Chips';
 import { StyledChipWrapper } from 'components/Grid/styles';
 
 import { IValue } from 'store/api/types';
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
+import {
+  CircularLoaderWrapper,
+  MessageWrapper,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledDialog,
+  StyledTextInput,
+} from 'pages/styles';
 import { addProductTitles } from './constants';
-import { StyledTextInput } from './styles';
 import { IAddProductProps } from './types';
 
 const AddProductDialog = ({

@@ -11,9 +11,9 @@ import {
 import { Close } from '@mui/icons-material';
 
 import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
+import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog, StyledTextInput } from 'pages/styles';
 import { campaignTitles, campaignTypeData } from './constants';
-import { StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+import { StyledInputBase, StyledMenuItem, StyledSelect } from './styles';
 import { INewCampaignProps } from './types';
 
 const CampaignDialog = ({

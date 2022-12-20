@@ -9,9 +9,16 @@ import {
 } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
+import {
+  CircularLoaderWrapper,
+  MessageWrapper,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledDialog,
+  StyledTextInput,
+} from 'pages/styles';
 import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
-import { StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+import { StyledInputBase, StyledMenuItem, StyledSelect } from './styles';
 import { ICreateCategoryProps } from './types';
 
 const NewTemplateDialog = ({
