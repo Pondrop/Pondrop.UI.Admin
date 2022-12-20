@@ -10,10 +10,10 @@ import {
 } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
 import { useGetParentCategoriesQuery } from 'store/api/categories/api';
 import { categoryTitles } from './constants';
-import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+import { StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { ICreateCategoryProps } from './types';
 
 const CategoryDialog = ({
@@ -215,6 +215,7 @@ const CategoryDialog = ({
       transitionDuration={300}
       data-testid="add-category-modal"
       keepMounted
+      dialogWidth={560}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderCreateCategory()}</DialogContent>

@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
-import { Dialog } from "@mui/material";
 
-export const StyledDialog = styled(Dialog)`
+import { StyledDialog } from "pages/styles";
+
+export const StyledCustomDialog = styled(StyledDialog)`
   .MuiDialog-container{
     .MuiPaper-root {
       width: fit-content;
       height: fit-content;
-      max-width: 90vw;
+      max-width: 90vw !important;
       max-height: 90vh;
     }
   }
@@ -21,12 +22,6 @@ export const StyledDialog = styled(Dialog)`
   svg {
     height: 0.75em;
     width: 0.75em;
-  }
-
-  span {
-    font-size: 12px;
-    line-height: 16px;
-    color: #000000;
   }
 
   .dialog-title {

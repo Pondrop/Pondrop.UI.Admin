@@ -10,7 +10,7 @@ import { generateFilterInitState, handleFilterStateChange } from 'components/Gri
 import SearchField from 'components/SearchField';
 
 // Other variables / values
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
 import {
   useLazyGetAllProductFilterQuery,
   useLazyGetProductsQuery,
@@ -18,7 +18,7 @@ import {
 } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
-import { StyledDialog, StyledDialogContent } from './styles';
+import { StyledDialogContent } from './styles';
 import { IAddLinkedProductsProps } from './types';
 
 const AddLinkedProductsDialog = ({
@@ -263,6 +263,7 @@ const AddLinkedProductsDialog = ({
       transitionDuration={300}
       data-testid="add-linked-products-modal"
       keepMounted
+      dialogWidth={856}
     >
       {renderDialogTitle()}
       <StyledDialogContent className="dialog-content">{renderLinkedProducts()}</StyledDialogContent>

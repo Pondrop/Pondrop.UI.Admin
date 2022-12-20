@@ -11,9 +11,9 @@ import {
 import { Close } from '@mui/icons-material';
 
 import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
 import { campaignTitles, campaignTypeData } from './constants';
-import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+import { StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { INewCampaignProps } from './types';
 
 const CampaignDialog = ({
@@ -286,6 +286,7 @@ const CampaignDialog = ({
       transitionDuration={300}
       data-testid="new-campaign-modal"
       keepMounted
+      dialogWidth={560}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderFields()}</DialogContent>

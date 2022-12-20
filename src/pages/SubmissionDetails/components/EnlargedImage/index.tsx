@@ -1,7 +1,7 @@
 import { DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-import { StyledDialog } from './styles';
+import { StyledCustomDialog } from './styles';
 
 const EnlargedImageDialog = ({
   isOpen,
@@ -38,7 +38,7 @@ const EnlargedImageDialog = ({
   };
 
   return (
-    <StyledDialog
+    <StyledCustomDialog
       open={isOpen}
       onClose={handleClose}
       maxWidth="sm"
@@ -47,10 +47,11 @@ const EnlargedImageDialog = ({
       data-testid="new-campaign-modal"
       id={`${altLabel}-image`}
       keepMounted
+      dialogWidth={800}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderEnlargedImage()}</DialogContent>
-    </StyledDialog>
+    </StyledCustomDialog>
   );
 };
 

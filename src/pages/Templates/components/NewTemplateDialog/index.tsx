@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
 import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
-import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+import { StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
 import { ICreateCategoryProps } from './types';
 
 const NewTemplateDialog = ({
@@ -297,6 +297,7 @@ const NewTemplateDialog = ({
       transitionDuration={300}
       data-testid="new-template-modal"
       keepMounted
+      dialogWidth={560}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderCreateCategory()}</DialogContent>

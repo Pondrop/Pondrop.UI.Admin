@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { CircularProgress, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-import { IValue } from 'store/api/types';
+// Components
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
 import { StyledChipWrapper } from 'components/Grid/styles';
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { StyledDialog } from './styles';
+
+import { IValue } from 'store/api/types';
+import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
 import { IUpdateProductProps } from './types';
 
 const UpdateCategoriesDialog = ({
@@ -155,6 +156,7 @@ const UpdateCategoriesDialog = ({
       transitionDuration={300}
       data-testid="update-category-product-modal"
       keepMounted
+      dialogWidth={520}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderContent()}</DialogContent>

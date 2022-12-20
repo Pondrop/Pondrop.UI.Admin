@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Dialog, Tab, Tabs, TextField, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -391,5 +391,63 @@ export const StyledTextInput = styled(TextField)`
   .MuiOutlinedInput-root,.MuiPaper-root-MuiDialog-paper {
     border-color: rgba(0, 0, 0, 0.24) !important;
     border-radius: 8px !important;
+  }
+`;
+
+export const StyledDialog = styled(Dialog, {
+  shouldForwardProp: (prop) => prop !== 'dialogWidth'
+})<{ dialogWidth: number }>`
+  .MuiDialog-container{
+    .MuiPaper-root {
+      width: 100%;
+      max-width: ${({ dialogWidth }) => dialogWidth}px;
+      height: fit-content;
+    }
+  }
+
+  span, textarea {
+    font-size: 12px;
+    line-height: 16px;
+    color: #000000;
+  }
+
+  .row-label {
+    font-weight: 700;
+  }
+
+  .row-value {
+    font-weight: 400;
+    max-width: 300px;
+  }
+
+  .req-icon {
+    color: red;
+  }
+
+  .dialog-title {
+    padding: 32px 32px 24px;
+    font-weight: 400;
+    color: #1c1b1f,
+  }
+
+  .dialog-content {
+    padding: 0 32px 20px;
+  }
+
+  .dialog-actions {
+    padding: 12px 32px 32px;
+    justify-content: flex-start;
+  }
+
+  .label-div {
+    margin-bottom: 12px;
+  }
+
+  .placeholder {
+    color: #72787e;
+  }
+
+  & .MuiInputBase-root {
+    width: 100%;
   }
 `;
