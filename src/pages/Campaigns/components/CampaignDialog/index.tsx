@@ -16,11 +16,12 @@ import {
   RowAlignWrapper,
   StyledCategoryBtn,
   StyledDialog,
+  StyledInputBase,
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
 import { campaignTitles, campaignTypeData } from './constants';
-import { StyledInputBase, StyledMenuItem } from './styles';
+import { StyledMenuItem } from './styles';
 import { INewCampaignProps } from './types';
 
 const CampaignDialog = ({

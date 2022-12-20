@@ -16,12 +16,13 @@ import {
   RowAlignWrapper,
   StyledCategoryBtn,
   StyledDialog,
+  StyledInputBase,
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
 import { useGetParentCategoriesQuery } from 'store/api/categories/api';
 import { categoryTitles } from './constants';
-import { StyledInputBase, StyledMenuItem } from './styles';
+import { StyledMenuItem } from './styles';
 import { ICreateCategoryProps } from './types';
 
 const CategoryDialog = ({
