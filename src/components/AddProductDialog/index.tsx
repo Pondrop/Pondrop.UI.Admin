@@ -5,7 +5,6 @@ import { Close, Info } from '@mui/icons-material';
 // Components
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
 
 import { IValue } from 'store/api/types';
 import {
@@ -13,6 +12,7 @@ import {
   MessageWrapper,
   RowAlignWrapper,
   StyledCategoryBtn,
+  StyledChipWrapper,
   StyledDialog,
   StyledTextInput,
 } from 'pages/styles';

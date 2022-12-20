@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Button, Dialog, InputBase, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Dialog, InputBase, MenuItem, Paper, Select, Tab, Tabs, TextField, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -499,5 +499,16 @@ export const StyledMenuItem = styled(MenuItem)`
 
   &:hover {
     background-color: rgba(0,0,0,0.04);
+  }
+`;
+
+export const StyledChipWrapper = styled(Paper)`
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  background: transparent;
+
+  .chip-component {
+    margin: 4px;
   }
 `;

@@ -99,14 +99,3 @@ export const StyledCellContent = styled(Typography)`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
-
-export const StyledChipWrapper = styled(Paper)`
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  background: transparent;
-
-  .chip-component {
-    margin: 4px;
-  }
-`;

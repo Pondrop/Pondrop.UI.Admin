@@ -5,7 +5,6 @@ import { EditOutlined, Info } from '@mui/icons-material';
 
 // Components
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
 import UpdateCategoriesDialog from 'components/UpdateCategoriesDialog';
 
 import {
@@ -14,6 +13,7 @@ import {
   SpaceBetweenDiv,
   StyledCard,
   StyledCardTitle,
+  StyledChipWrapper,
   StyledTabContent,
 } from 'pages/styles';
 import { useAppDispatch, useAppSelector } from 'store';

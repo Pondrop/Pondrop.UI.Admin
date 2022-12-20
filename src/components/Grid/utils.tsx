@@ -4,9 +4,12 @@ import { Tooltip } from '@mui/material';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import moment from 'moment';
 
+// Components
 import Chips from 'components/Chips';
+
 import { ICategories } from 'store/api/types';
-import { StyledCellContent, StyledChipWrapper } from './styles';
+import { StyledChipWrapper } from 'pages/styles';
+import { StyledCellContent } from './styles';
 
 export const handleRenderCell = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);

@@ -5,10 +5,16 @@ import { Close } from '@mui/icons-material';
 // Components
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
 
 import { IValue } from 'store/api/types';
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
+import {
+  CircularLoaderWrapper,
+  MessageWrapper,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledChipWrapper,
+  StyledDialog,
+} from 'pages/styles';
 import { IUpdateProductProps } from './types';
 
 const UpdateCategoriesDialog = ({

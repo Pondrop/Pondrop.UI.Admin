@@ -7,7 +7,6 @@ import moment from 'moment';
 // Components
 import AddProductDialog from 'components/AddProductDialog';
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
 import UpdateCategoriesDialog from 'components/UpdateCategoriesDialog';
 
 import { useAppDispatch, useAppSelector } from 'store';
@@ -18,6 +17,7 @@ import {
   RowAlignWrapper,
   SpaceBetweenDiv,
   StyledCategoryBtn,
+  StyledChipWrapper,
 } from 'pages/styles';
 import {
   productsApi,
