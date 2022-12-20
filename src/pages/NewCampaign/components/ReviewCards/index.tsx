@@ -137,9 +137,12 @@ const ReviewCardsInfo = ({
         </RowAlignWrapper>
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <StyledDatePicker
-            renderInput={(props) => <TextField {...props} />}
+            renderInput={(props) => (
+              <TextField {...props} inputProps={{ ...props.inputProps, placeholder: 'dd/mm/yyyy hh:mm (a|p)m' }} />
+            )}
             value={startDate ? moment(startDate) : null}
             onChange={handleStartDateChange}
+            inputFormat="DD/MM/YYYY hh:mm a"
             disablePast
             PaperProps={{
               sx: {
@@ -166,9 +169,12 @@ const ReviewCardsInfo = ({
         </RowAlignWrapper>
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <StyledDatePicker
-            renderInput={(props) => <TextField {...props} />}
+            renderInput={(props) => (
+              <TextField {...props} inputProps={{ ...props.inputProps, placeholder: 'dd/mm/yyyy hh:mm (a|p)m' }} />
+            )}
             value={endDate}
             onChange={handleEndDateChange}
+            inputFormat="DD/MM/YYYY hh:mm a"
             minDate={startDate}
             PaperProps={{
               sx: {
