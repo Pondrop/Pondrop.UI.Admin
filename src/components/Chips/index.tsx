@@ -1,6 +1,9 @@
 import { MouseEvent } from 'react';
 
+// Styles
 import { StyledChip } from './styles';
+
+// Types
 import { IChipsProps } from './types';
 
 const Chips = ({ label, onChipClick, onChipDelete }: IChipsProps) => {

@@ -1,8 +1,10 @@
 import { MouseEvent } from 'react';
 import { GridCallbackDetails, GridColDef, GridFilterModel, GridInitialState, GridInputSelectionModel, GridRowParams, GridSelectionModel, GridSortModel, MuiEvent } from '@mui/x-data-grid-pro';
 
+// Types
 import { IFacetValue, IFilterItem } from "store/api/types";
 
+// Props passed to Grid component
 export interface IGridProps {
   data?: unknown[];
   columns: GridColDef[];

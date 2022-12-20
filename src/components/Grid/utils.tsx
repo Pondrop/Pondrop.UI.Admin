@@ -7,10 +7,14 @@ import moment from 'moment';
 // Components
 import Chips from 'components/Chips';
 
-import { ICategories } from 'store/api/types';
+// Styles
 import { StyledChipWrapper } from 'pages/styles';
 import { StyledCellContent } from './styles';
 
+// Types
+import { ICategories } from 'store/api/types';
+
+// Normal rendering of cell + tooltip
 export const handleRenderCell = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -30,6 +34,7 @@ export const handleRenderCell = (params: GridRenderCellParams) => {
   );
 };
 
+// Special handler for Provider field since field is an object
 export const handleRenderProvider = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -49,6 +54,7 @@ export const handleRenderProvider = (params: GridRenderCellParams) => {
   );
 };
 
+// Formatting of cell to capitalize first letter
 export const handleRenderCellFormat = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -70,6 +76,7 @@ export const handleRenderCellFormat = (params: GridRenderCellParams) => {
   );
 };
 
+// Formatting of cell to show formatted date
 export const handleRenderCellDate = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -90,6 +97,7 @@ export const handleRenderCellDate = (params: GridRenderCellParams) => {
   );
 };
 
+// Render chips based on categories field
 export const handleRenderChips = (params: GridRenderCellParams, isClickable: boolean) => {
   const navigate = useNavigate();
 
@@ -112,6 +120,7 @@ export const handleRenderChips = (params: GridRenderCellParams, isClickable: boo
   );
 };
 
+// Format cell depending on manual submission boolean type
 export const handleRenderManualSubmissions = (params: GridRenderCellParams) => {
   const tooltipTextRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);

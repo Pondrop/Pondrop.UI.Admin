@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Paper, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 
 export const StyledDataGrid = styled(DataGridPro, {

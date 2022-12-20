@@ -1,5 +1,6 @@
 import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid-pro';
 
+// Types
 import { IFacetValue, IFilterItem } from 'store/api/types';
 
 export interface IBasicFilter {
@@ -7,6 +8,7 @@ export interface IBasicFilter {
   value: string | string[];
 }
 
+// Props passed to GridMenu component
 export interface ICustomMenuProps extends GridColumnMenuProps {
   data?: GridRowsProp[];
   filterItems: IFilterItem[];

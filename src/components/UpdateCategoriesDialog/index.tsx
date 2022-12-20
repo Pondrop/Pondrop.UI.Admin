@@ -6,7 +6,7 @@ import { Close } from '@mui/icons-material';
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
 
-import { IValue } from 'store/api/types';
+// Styles
 import {
   CircularLoaderWrapper,
   MessageWrapper,
@@ -15,6 +15,9 @@ import {
   StyledChipWrapper,
   StyledDialog,
 } from 'pages/styles';
+
+// Types
+import { IValue } from 'store/api/types';
 import { IUpdateProductProps } from './types';
 
 const UpdateCategoriesDialog = ({
@@ -56,8 +59,6 @@ const UpdateCategoriesDialog = ({
   };
 
   const handleModalClose = () => {
-    setCurrCategories(categories);
-    setCurrCategoryChips(categoryChips);
     handleClose();
   };
 
@@ -70,6 +71,7 @@ const UpdateCategoriesDialog = ({
       <StyledChipWrapper>
         {currCategoryChips.map((val: IValue, index: number) => {
           const handleDeleteChip = () => {
+            // Remove deleted chip from states
             setCurrCategories((oldValue) => oldValue.filter((value) => value !== val.id));
             setCurrCategoryChips((oldValue) => oldValue.filter((value) => value.id !== val.id));
           };
@@ -79,6 +81,7 @@ const UpdateCategoriesDialog = ({
     );
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />

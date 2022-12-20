@@ -1,6 +1,9 @@
 import { ReportOutlined } from '@mui/icons-material';
 
+// Styles
 import { EmptyStateWrapper } from './styles';
+
+// Types
 import { IEmptyStateProps } from './types';
 
 const CustomEmptyState = ({ height, displayText, withIcon = true }: IEmptyStateProps) => {

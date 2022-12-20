@@ -6,7 +6,10 @@ import { Close, Info } from '@mui/icons-material';
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
 
-import { IValue } from 'store/api/types';
+// Constants
+import { addProductTitles } from './constants';
+
+// Styles
 import {
   CircularLoaderWrapper,
   MessageWrapper,
@@ -16,7 +19,9 @@ import {
   StyledDialog,
   StyledTextInput,
 } from 'pages/styles';
-import { addProductTitles } from './constants';
+
+// Types
+import { IValue } from 'store/api/types';
 import { IAddProductProps } from './types';
 
 const AddProductDialog = ({
@@ -29,15 +34,20 @@ const AddProductDialog = ({
   initialValue,
 }: IAddProductProps): JSX.Element => {
   const [productName, setProductName] = useState<string>(initialValue?.name ?? '');
+  // Barcode is given type string to allow resetting of barcode input to show placeholder
   const [barcode, setBarcode] = useState<string>(initialValue?.barcodeNumber ?? '');
   const [description, setDescription] = useState<string>('');
+  // categories state contain all categoryIds
   const [categories, setCategories] = useState<string[]>(initialValue?.categoryIds ?? []);
+  // categoryChips contain all info needed to render chips
   const [categoryChips, setCategoryChips] = useState<IValue[]>(initialValue?.categoryChips ?? []);
 
   useEffect(() => {
     if (isOpen) {
+      // After dialog is opened, values are reset / given their initial values
       setProductName(initialValue?.name ?? '');
       setBarcode(initialValue?.barcodeNumber ?? '');
+      setDescription('');
       setCategories(initialValue?.categoryIds ?? []);
       setCategoryChips(initialValue?.categoryChips ?? []);
     }
@@ -62,11 +72,6 @@ const AddProductDialog = ({
   };
 
   const handleModalClose = () => {
-    setProductName('');
-    setBarcode('');
-    setDescription('');
-    setCategories([]);
-    setCategoryChips([]);
     handleClose();
   };
 
@@ -75,6 +80,7 @@ const AddProductDialog = ({
       <StyledChipWrapper>
         {categoryChips.map((val: IValue, index: number) => {
           const handleDeleteChip = () => {
+            // Remove deleted chip from states
             setCategories((oldValue) => oldValue.filter((value) => value !== val.lowerLevelCategoryId));
             setCategoryChips((oldValue) => oldValue.filter((value) => value.id !== val.id));
           };
@@ -93,6 +99,7 @@ const AddProductDialog = ({
     });
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />

@@ -2,14 +2,15 @@ import { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { GridColumnMenuProps, GridRowsProp } from '@mui/x-data-grid-pro';
 import { FilterList } from '@mui/icons-material';
 
-// API Types
-import { IFacetValue, IFilterItem } from 'store/api/types';
-
 // Components
 import CustomEmptyState from 'components/EmptyState';
 import CustomMenu from 'components/GridMenu';
 
+// Styles
 import { StyledDataGrid } from './styles';
+
+// Types
+import { IFacetValue, IFilterItem } from 'store/api/types';
 import { IGridProps } from './types';
 
 const Grid: FunctionComponent<IGridProps> = ({
@@ -44,6 +45,8 @@ const Grid: FunctionComponent<IGridProps> = ({
 }: IGridProps): JSX.Element => {
   const [gridData, setGridData] = useState<GridRowsProp[]>([]);
   const [gridRowCount, setGridRowCount] = useState<number>(rowCount ?? gridData?.length);
+  // Local filter used to prevent re-rendering of Grid menu
+  // Grid menu uses local filter state instead
   const [localFilter, setLocalFilter] = useState<IFilterItem[]>([]);
 
   useEffect(() => {
@@ -54,7 +57,7 @@ const Grid: FunctionComponent<IGridProps> = ({
     setGridRowCount(rowCount ?? gridData?.length);
   }, [rowCount]);
 
-  // components
+  // Components
   const renderMenuIcon = () => {
     return <FilterList />;
   };
@@ -85,7 +88,6 @@ const Grid: FunctionComponent<IGridProps> = ({
     return <CustomEmptyState displayText="No data available." withIcon={false} />;
   };
 
-  // helper function
   const getFilterModel = () => {
     const filterModelItem = {
       items: [...filterItem],

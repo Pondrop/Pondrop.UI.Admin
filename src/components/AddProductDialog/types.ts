@@ -1,6 +1,7 @@
 import { IProductDialogData } from "store/api/products/types";
 import { IValue } from "store/api/types";
 
+// Add Product initial values type
 export interface IInitialValues {
   name: string;
   barcodeNumber: string;
@@ -8,6 +9,7 @@ export interface IInitialValues {
   categoryChips: IValue[];
 }
 
+// Props passed to Add Product Dialog
 export interface IAddProductProps {
   id: string;
   isOpen: boolean;

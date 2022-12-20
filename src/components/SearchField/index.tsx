@@ -2,7 +2,10 @@ import { ChangeEvent, KeyboardEvent, useState, useEffect } from 'react';
 import { InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
+// Styles
 import { StyledTextField } from './styles';
+
+// Types
 import { ISearchFieldProps } from './types';
 
 const SearchField = ({

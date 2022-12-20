@@ -9,6 +9,9 @@ import {
   Storefront,
 } from '@mui/icons-material';
 
+// Assets
+import pondrop from 'assets/images/pondrop.png';
+
 // Components
 import {
   campaignsColumns,
@@ -17,9 +20,8 @@ import {
   tasksColumns,
   templatesColumns,
 } from 'components/Grid/constants';
-import { generateFilterInitState } from 'components/GridMenu/utils';
 
-import pondrop from 'assets/images/pondrop.png';
+// Store / APIs
 import { useAppDispatch } from 'store';
 import { setCampaignsFilter, setCampaignsSearchValue } from 'store/api/campaigns/slice';
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
@@ -27,7 +29,11 @@ import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 import { setTasksFilter, setTasksSearchValue } from 'store/api/tasks/slice';
 import { setTemplatesFilter, setTemplatesSearchValue } from 'store/api/templates/slice';
 
+// Styles
 import { StyledButton, PanelWrapper } from './styles';
+
+// Utils
+import { generateFilterInitState } from 'components/GridMenu/utils';
 
 const SidePanel: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<string>('stores');
@@ -36,6 +42,7 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Retain button state based on current location path
   useEffect(() => {
     const currLoc = location.pathname.split('/');
     if (currLoc[1] === 'campaigns') setCurrentTab('campaigns');
