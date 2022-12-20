@@ -17,11 +17,11 @@ import {
   StyledCategoryBtn,
   StyledDialog,
   StyledInputBase,
+  StyledMenuItem,
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
 import { campaignTitles, campaignTypeData } from './constants';
-import { StyledMenuItem } from './styles';
 import { INewCampaignProps } from './types';
 
 const CampaignDialog = ({

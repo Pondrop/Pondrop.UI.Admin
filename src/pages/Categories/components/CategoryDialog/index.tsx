@@ -17,12 +17,12 @@ import {
   StyledCategoryBtn,
   StyledDialog,
   StyledInputBase,
+  StyledMenuItem,
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
 import { useGetParentCategoriesQuery } from 'store/api/categories/api';
 import { categoryTitles } from './constants';
-import { StyledMenuItem } from './styles';
 import { ICreateCategoryProps } from './types';
 
 const CategoryDialog = ({

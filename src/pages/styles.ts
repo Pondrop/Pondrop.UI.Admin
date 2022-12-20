@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { Breadcrumbs, Button, Dialog, InputBase, Select, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Dialog, InputBase, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@mui/material";
 
 export const ContentWrapper = styled.div`
   overflow-y: auto;
@@ -484,5 +484,20 @@ export const StyledInputBase = styled(InputBase)`
     .MuiSelect-select {
       padding: 0;
     }
+  }
+`;
+
+export const StyledMenuItem = styled(MenuItem)`
+  height: 32px;
+  font-size: 12px;
+  padding: 8px;
+  margin: 0 8px;
+
+  &:focus {
+    background-color: transparent;
+  }
+
+  &:hover {
+    background-color: rgba(0,0,0,0.04);
   }
 `;

@@ -16,11 +16,11 @@ import {
   StyledCategoryBtn,
   StyledDialog,
   StyledInputBase,
+  StyledMenuItem,
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
 import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
-import { StyledMenuItem } from './styles';
 import { ICreateCategoryProps } from './types';
 
 const NewTemplateDialog = ({
