@@ -1,5 +1,5 @@
-import { FunctionComponent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   CenterFocusStrongOutlined,
   FactCheckOutlined,
@@ -34,6 +34,16 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const currLoc = location.pathname.split('/');
+    if (currLoc[1] === 'campaigns') setCurrentTab('campaigns');
+    else if (currLoc[1] === 'products' || currLoc[1] === 'categories') setCurrentTab('products');
+    else if (currLoc[1] === 'stores') setCurrentTab('stores');
+    else if (currLoc[1] === 'submissions') setCurrentTab('submissions');
+    else if (currLoc[1] === 'templates') setCurrentTab('templates');
+  }, [location]);
 
   const handleCampaignsRedirect = () => {
     const campaignsFilterInitState = generateFilterInitState(campaignsColumns);
