@@ -15,10 +15,11 @@ import {
   RowAlignWrapper,
   StyledCategoryBtn,
   StyledDialog,
+  StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
 import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
-import { StyledInputBase, StyledMenuItem, StyledSelect } from './styles';
+import { StyledInputBase, StyledMenuItem } from './styles';
 import { ICreateCategoryProps } from './types';
 
 const NewTemplateDialog = ({

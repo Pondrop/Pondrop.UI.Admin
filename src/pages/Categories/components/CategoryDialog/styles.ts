@@ -1,19 +1,5 @@
 import styled from "@emotion/styled";
-import { InputBase, MenuItem, Select } from "@mui/material";
-
-export const StyledSelect = styled(Select, {
-  shouldForwardProp: (prop) => prop !== 'isOpen'
-})<{ isOpen: boolean }>`
-  & .MuiInputBase-input {
-    ${({ isOpen }) => isOpen ? `
-      border: 1px solid #006492 !important;
-      border-radius: 8px 8px 0 0 !important;
-    ` : `
-      border: 1px solid rgba(0, 0, 0, 0.24) !important;
-      border-radius: 8px !important;
-    `}
-  }
-`;
+import { InputBase, MenuItem } from "@mui/material";
 
 export const StyledInputBase = styled(InputBase)`
   & .MuiInputBase-input {
