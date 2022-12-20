@@ -71,8 +71,8 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
     const templateFilterInitState = generateFilterInitState(templatesColumns);
     setCurrentTab('templates');
     navigate('../templates', { replace: true });
-    // dispatch(setTemplatesFilter(templateFilterInitState));
-    // dispatch(setTemplatesSearchValue(''));
+    dispatch(setTemplatesFilter(templateFilterInitState));
+    dispatch(setTemplatesSearchValue(''));
   };
 
   return (
