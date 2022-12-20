@@ -1,3 +1,4 @@
+// Sample attributes chips values
 export const attributesChips = [
   { id: '1', name: 'Organic' },
   { id: '2', name: 'Reduced fat' },
@@ -5,6 +6,7 @@ export const attributesChips = [
   { id: '4', name: 'Lite' },
 ];
 
+// Product Details field helper values
 export const productDescTitles = [
   {
     label: 'Product name',
@@ -16,6 +18,7 @@ export const productDescTitles = [
   },
 ];
 
+// Product Packaging field helper values
 export const packagingTitles = [
   {
     label: 'Net contents',
@@ -35,6 +38,7 @@ export const packagingTitles = [
   }
 ];
 
+// Product Organisation field helper values
 export const organisationTitles = [
   {
     label: 'Company name',
@@ -58,6 +62,7 @@ export const organisationTitles = [
   }
 ];
 
+// Product Details tooltip contents
 export const tooltipContent = {
   categories: "All categories which this product is currently linked to. These categories are also visible to shoppers and able to be added as shopping list items.",
   attributes: "All attributes currently linked to this product. Attributes are available to Shoppers as product search filters via the Pondrop app.",

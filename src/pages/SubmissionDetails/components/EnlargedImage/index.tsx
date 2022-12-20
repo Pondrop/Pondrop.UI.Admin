@@ -1,6 +1,7 @@
 import { DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
+// Styles
 import { StyledCustomDialog } from './styles';
 
 const EnlargedImageDialog = ({

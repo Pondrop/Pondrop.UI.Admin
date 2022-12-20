@@ -4,13 +4,13 @@ import { GridFilterModel, GridRowParams, GridSortModel } from '@mui/x-data-grid-
 
 // Components
 import Grid from 'components/Grid';
-import { storeColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
-// Other variables / values
+// Constants
+import { storeColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem } from 'store/api/types';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
 import {
   selectStores,
@@ -19,7 +19,15 @@ import {
   setStoresSelectedProviders,
   setStoresSortValue,
 } from 'store/api/stores/slice';
+
+// Styles
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
+
+// Types
+import { IFacetValue, IFilterItem } from 'store/api/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Stores: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();

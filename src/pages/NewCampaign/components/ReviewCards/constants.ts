@@ -1,3 +1,4 @@
+// New Campaign Details field helper values
 export const campaignInfoTitles = [
   {
     field: 'name',
@@ -13,11 +14,13 @@ export const campaignInfoTitles = [
   },
 ];
 
+// Campaign Type mapping
 export const campaignTypeId = {
   'task': 'Task Campaign',
   'orchestration': 'Orchestration Campaign',
 };
 
+// Campaign Template mapping
 export const campaignTemplateId = {
   '68a1ddc7-4d18-4cad-9fa9-23fde3dea96c': 'Category Products',
   'b2a08e75-fb6a-4ad6-a0af-fe98f1f8de07': 'Shelf Stock Levels',
@@ -25,6 +28,7 @@ export const campaignTemplateId = {
   '3941f848-d07d-4876-92fc-3df89e3e73aa': 'Quick Price & Quantity'
 };
 
+// New Campaign tooltip contents
 export const tooltipContent = {
   campaign: 'Campaign title and type will not be visible to shoppers. If the details are incorrect, cancel and create a new campaign.',
   product: 'Click back to view or modify the products selected for this campaign',

@@ -10,6 +10,13 @@ import {
 } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
+// Constants
+import { categoryTitles } from './constants';
+
+// Store / APIs
+import { useGetParentCategoriesQuery } from 'store/api/categories/api';
+
+// Styles
 import {
   CircularLoaderWrapper,
   MessageWrapper,
@@ -21,8 +28,8 @@ import {
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
-import { useGetParentCategoriesQuery } from 'store/api/categories/api';
-import { categoryTitles } from './constants';
+
+// Types
 import { ICreateCategoryProps } from './types';
 
 const CategoryDialog = ({
@@ -65,8 +72,6 @@ const CategoryDialog = ({
   };
 
   const handleModalClose = () => {
-    setCategoryName('');
-    setParentCategory('');
     handleClose();
   };
 
@@ -74,6 +79,7 @@ const CategoryDialog = ({
     handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />

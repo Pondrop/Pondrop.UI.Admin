@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import { IValue } from 'store/api/types';
-import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
-import { ITabPanelProps } from 'pages/types';
+// Constants
 import { storeTitles } from './constants';
+
+// Styles
+import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
+
+// Types
+import { IValue } from 'store/api/types';
+import { ITabPanelProps } from 'pages/types';
 
 const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [storeInfo, setStoreInfo] = useState<IValue>({});

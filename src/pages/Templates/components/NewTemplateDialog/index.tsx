@@ -9,6 +9,10 @@ import {
 } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
+// Constants
+import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
+
+// Styles
 import {
   CircularLoaderWrapper,
   MessageWrapper,
@@ -20,8 +24,9 @@ import {
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
-import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
-import { ICreateCategoryProps } from './types';
+
+// Types
+import { INewTemplateProps } from './types';
 
 const NewTemplateDialog = ({
   isOpen,
@@ -29,7 +34,7 @@ const NewTemplateDialog = ({
   handleSubmit,
   errorMessage,
   isLoading,
-}: ICreateCategoryProps): JSX.Element => {
+}: INewTemplateProps): JSX.Element => {
   // Select component position variables
   const selectTypeComponent = useRef<HTMLInputElement>(null);
   const [typePosition, setTypePosition] = useState<DOMRect>({} as DOMRect);
@@ -52,6 +57,10 @@ const NewTemplateDialog = ({
     setFocusPosition(
       selectFocusComponent?.current ? selectFocusComponent?.current?.getBoundingClientRect() : ({} as DOMRect),
     );
+    setTemplateTitle('');
+    setTemplateType('');
+    setTemplateDescription('');
+    setTemplateFocusObject('');
   }, [isOpen]);
 
   const handleSelectTypeClose = () => {
@@ -87,10 +96,6 @@ const NewTemplateDialog = ({
   };
 
   const handleModalClose = () => {
-    setTemplateTitle('');
-    setTemplateType('');
-    setTemplateDescription('');
-    setTemplateFocusObject('');
     handleClose();
   };
 
@@ -103,6 +108,7 @@ const NewTemplateDialog = ({
     });
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />

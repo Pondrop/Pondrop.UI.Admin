@@ -5,11 +5,17 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import moment, { Moment } from 'moment';
 
+// Constants
+import { campaignInfoTitles, campaignTypeId, campaignTemplateId, tooltipContent } from './constants';
+
+// Store / APIs
 import { useAppSelector } from 'store';
 import { useGetCategoryInfoQuery } from 'store/api/categories/api';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
 import { selectStores } from 'store/api/stores/slice';
+
+// Styles
 import {
   ColAlignDiv,
   RowAlignWrapper,
@@ -18,9 +24,10 @@ import {
   StyledCardTitle,
   StyledTextInput,
 } from 'pages/styles';
-import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
-import { campaignInfoTitles, campaignTypeId, campaignTemplateId, tooltipContent } from './constants';
 import { StyledDatePicker } from './styles';
+
+// Types
+import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
 import { IReviewCardsInfo } from './types';
 
 const ReviewCardsInfo = ({

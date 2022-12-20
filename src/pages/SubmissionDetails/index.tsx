@@ -3,9 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 
-import { useGetSubmissionInfoQuery } from 'store/api/tasks/api';
+// Components
 import SubmissionInfoPanel from './components/SubmissionInfo';
 
+// Store / APIs
+import { useGetSubmissionInfoQuery } from 'store/api/tasks/api';
+
+// Styles
 import {
   CircularLoaderWrapper,
   ContentDetails,
@@ -30,6 +34,7 @@ const SubmissionDetails: FunctionComponent = (): JSX.Element => {
     setCurrentTab(newValue);
   };
 
+  // Loader shown when fetching API response
   const renderLoader = () => (
     <CircularLoaderWrapper height="calc(100vh - 36px)">
       <CircularProgress size={100} thickness={3} />

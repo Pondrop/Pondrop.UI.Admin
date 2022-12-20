@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import { IconButton } from '@mui/material';
 import { EditOutlined, Info } from '@mui/icons-material';
 
-import { IValue } from 'store/api/types';
-import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
-import { ITabPanelProps } from 'pages/types';
+// Constants
 import { activityValues } from './constants';
+
+// Styles
+import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
+
+// Types
+import { IValue } from 'store/api/types';
+import { ITabPanelProps } from 'pages/types';
 
 const ActivityInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [activityInfo, setActivityInfo] = useState<IValue>({});

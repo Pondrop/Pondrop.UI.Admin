@@ -5,11 +5,13 @@ import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from
 
 // Components
 import Grid from 'components/Grid';
-import { categoriesColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
+import CategoryDialog from './components/CategoryDialog';
 
-// Other variables / values
+// Constants
+import { categoriesColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   categoriesApi,
@@ -25,8 +27,8 @@ import {
   setCategoriesSearchValue,
   setCategoriesSortValue,
 } from 'store/api/categories/slice';
-import { ICategory, ICategoryDialogData } from 'store/api/categories/types';
-import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+
+// Styles
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -38,7 +40,13 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
-import CategoryDialog from './components/CategoryDialog';
+
+// Types
+import { ICategory, ICategoryDialogData } from 'store/api/categories/types';
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Categories: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
@@ -205,6 +213,8 @@ const Categories: FunctionComponent = (): JSX.Element => {
     }
   }, [isCreateCategGroupingSuccess]);
 
+  // When refresh categories is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {

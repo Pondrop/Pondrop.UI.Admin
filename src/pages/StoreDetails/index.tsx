@@ -2,10 +2,13 @@ import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
-import { IState } from 'pages/types';
-import { useGetStoreInfoQuery } from 'store/api/stores/api';
+// Components
 import StoreInfoPanel from './components/StoreInfo';
 
+// Store / APIs
+import { useGetStoreInfoQuery } from 'store/api/stores/api';
+
+// Styles
 import {
   CircularLoaderWrapper,
   ContentDetails,
@@ -16,7 +19,10 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
+
+// Types
 import { IValue } from 'store/api/types';
+import { IState } from 'pages/types';
 
 const StoreDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);

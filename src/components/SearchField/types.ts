@@ -1,6 +1,6 @@
 import { MouseEvent } from "react";
 
-// Props passed to SearchField component
+// Props passed to Search Field component
 export interface ISearchFieldProps {
   onEnterPress?: (searchValue: string) => void;
   value: string;

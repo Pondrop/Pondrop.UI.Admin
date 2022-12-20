@@ -8,17 +8,10 @@ import moment from 'moment';
 import AddProductDialog from 'components/AddProductDialog';
 import Chips from 'components/Chips';
 import UpdateCategoriesDialog from 'components/UpdateCategoriesDialog';
+import EnlargedImageDialog from '../EnlargedImage';
 
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
-import {
-  CategoryBtnWrapper,
-  CircularLoaderWrapper,
-  ColAlignDiv,
-  RowAlignWrapper,
-  SpaceBetweenDiv,
-  StyledCategoryBtn,
-  StyledChipWrapper,
-} from 'pages/styles';
 import {
   productsApi,
   useAddProductMutation,
@@ -28,11 +21,23 @@ import {
   useLazyRefreshProductsQuery,
 } from 'store/api/products/api';
 import { selectProducts } from 'store/api/products/slice';
+
+// Styles
+import {
+  CategoryBtnWrapper,
+  CircularLoaderWrapper,
+  ColAlignDiv,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCategoryBtn,
+  StyledChipWrapper,
+} from 'pages/styles';
+import { ImgWrapper } from './styles';
+
+// Types
 import { IProductDialogData } from 'store/api/products/types';
 import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
 import { IValue } from 'store/api/types';
-import EnlargedImageDialog from '../EnlargedImage';
-import { ImgWrapper } from './styles';
 import { IAddProductInitialValues, IFieldLabels, IManualChecker, ITaskRowProps, IValueTypeFields } from './types';
 
 const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
@@ -41,14 +46,18 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [errMsg, setErrMsg] = useState<string>('');
+  // Enlarged Image modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // Add Product modal
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
+  // Update Category modal
   const [isUpdateCategModalOpen, setIsUpdateCategModalOpen] = useState<boolean>(false);
   const [currCategories, setCurrCategories] = useState<string[]>([]);
   const [currCategoriesChips, setCurrCategoriesChips] = useState<IValue[]>([]);
   const [addProductInitialValues, setAddProductInitialValues] = useState<IAddProductInitialValues>(
     {} as IAddProductInitialValues,
   );
+  // Keeps track of manually added producrs
   const [manualTracker, setManualTracker] = useState<IManualChecker[]>([]);
   const [isFetchingUpdates, setIsFetchingUpdates] = useState<boolean>(false);
   const [isFetchingCategories, setIsFetchingCategories] = useState<boolean>(false);
@@ -128,6 +137,7 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
     resetAddProduct();
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={3} />
@@ -409,6 +419,8 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
     if (addProductError && 'data' in addProductError) setErrMsg(String(addProductError?.data));
   }, [addProductError]);
 
+  // When refresh products is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setIsFetchingUpdates(true);

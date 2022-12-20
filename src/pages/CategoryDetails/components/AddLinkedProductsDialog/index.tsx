@@ -5,21 +5,29 @@ import { Close } from '@mui/icons-material';
 
 // Components
 import Grid from 'components/Grid';
-import { addLinkedProductsColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
-// Other variables / values
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
+// Constants
+import { addLinkedProductsColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import {
   useLazyGetAllProductFilterQuery,
   useLazyGetProductsQuery,
   useUpdateLinkedProductsMutation,
 } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
-import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
+
+// Styles
+import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
 import { StyledDialogContent } from './styles';
+
+// Types
+import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 import { IAddLinkedProductsProps } from './types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const AddLinkedProductsDialog = ({
   isOpen,
@@ -32,6 +40,7 @@ const AddLinkedProductsDialog = ({
   const addProductsFilterInitState = generateFilterInitState(addLinkedProductsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
+  // Local states for Add Linked Products grid
   const [linkedProdSearchVal, setLinkedProdSearchVal] = useState<string>('');
   const [linkedProdSortVal, setLinkedProdSortVal] = useState<ISortItem>(productInitialState.sortValue);
   const [linkedProdFilterVal, setLinkedProdFilterVal] = useState<IFilterItem[]>(addProductsFilterInitState);
@@ -168,6 +177,7 @@ const AddLinkedProductsDialog = ({
     setLinkedProdSelectedProds(selectionModel as string[]);
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />

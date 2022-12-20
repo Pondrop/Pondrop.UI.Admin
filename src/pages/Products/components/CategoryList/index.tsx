@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 
+// Components
 import CustomEmptyState from 'components/EmptyState';
-import { CircularLoaderWrapper, SpaceBetweenDiv } from 'pages/styles';
+
+// Store / APIs
 import { useAppSelector } from 'store';
 import { useGetParentCategoriesQuery } from 'store/api/products/api';
 import { selectProducts } from 'store/api/products/slice';
-import { IValue } from 'store/api/types';
+
+// Styles
+import { CircularLoaderWrapper, SpaceBetweenDiv } from 'pages/styles';
 import { BtnWrapper, DivWrapper, ManageCategoriesBtn, StyledList, StyledListItemButton } from './styles';
+
+// Types
+import { IValue } from 'store/api/types';
 import { ICategoryListProps } from './types';
 
 const CategoryList = ({ onManageCategoriesClick, sortedData, handleParentCategoryClick }: ICategoryListProps) => {
@@ -25,6 +32,7 @@ const CategoryList = ({ onManageCategoriesClick, sortedData, handleParentCategor
     handleParentCategoryClick(category);
   };
 
+  // Loader shown when fetching API response
   const renderLoader = () => (
     <CircularLoaderWrapper height="400px">
       <CircularProgress size={100} thickness={3} />

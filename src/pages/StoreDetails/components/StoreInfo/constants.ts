@@ -1,3 +1,4 @@
+// Add Store Details field helper values
 export const storeTitles = [
   {
     field: 'retailer',

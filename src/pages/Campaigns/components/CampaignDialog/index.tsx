@@ -10,7 +10,13 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
+// Constants
+import { campaignTitles, campaignTypeData } from './constants';
+
+// Store / APIs
 import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
+
+// Styles
 import {
   CircularLoaderWrapper,
   RowAlignWrapper,
@@ -21,7 +27,8 @@ import {
   StyledSelect,
   StyledTextInput,
 } from 'pages/styles';
-import { campaignTitles, campaignTypeData } from './constants';
+
+// Types
 import { INewCampaignProps } from './types';
 
 const CampaignDialog = ({
@@ -92,9 +99,6 @@ const CampaignDialog = ({
   };
 
   const handleModalClose = () => {
-    setCampaignTitle('');
-    setCampaignType('');
-    setTemplate('');
     handleClose();
   };
 
@@ -106,12 +110,14 @@ const CampaignDialog = ({
     });
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />
     </CircularLoaderWrapper>
   );
 
+  // Shows loading state while data is fetching
   const renderStates = () => {
     if (isFetching) {
       return (

@@ -2,11 +2,18 @@ import { useEffect, useState } from 'react';
 import { Tooltip } from '@mui/material';
 import { Info } from '@mui/icons-material';
 
-import { ISubmissionDetailsResponse } from 'store/api/tasks/types';
-import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
-import { ISubmissionInfoPanelProps } from 'pages/types';
+// Components
 import TaskRow from '../TaskRow';
+
+// Constants
 import { CATEGORY_PRODUCT_ID, submissionTitles, tooltipContent } from './constants';
+
+// Styles
+import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTabContent } from 'pages/styles';
+
+// Types
+import { ISubmissionDetailsResponse } from 'store/api/tasks/types';
+import { ISubmissionInfoPanelProps } from 'pages/types';
 
 const SubmissionInfoPanel = ({ value, index, data }: ISubmissionInfoPanelProps): JSX.Element => {
   const [taskInfo, setTaskInfo] = useState<ISubmissionDetailsResponse>({} as ISubmissionDetailsResponse);

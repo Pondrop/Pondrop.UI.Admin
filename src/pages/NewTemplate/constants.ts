@@ -1,3 +1,4 @@
+// New Template Details field helper values
 export const templateTitles = [
   {
     label: 'Description',
@@ -16,6 +17,7 @@ export const templateTitles = [
   }
 ];
 
+// New Template - Section 2 field helper values
 export const selectedFieldsData = [
   {
     label: 'Modal title',
@@ -29,6 +31,7 @@ export const selectedFieldsData = [
   },
 ];
 
+// Input placeholders
 export const MANUAL_SUBMISSION_PLACEHOLDER = 'Enter comma separated list of instruction sentences for manual submissions';
 export const FIELD_STEP_INSTRUCTION_PLACEHOLDER = 'Enter comma separated list of instructions for completing the task';
 export const SUMMARY_SUBMIT_INSTRUCTION_PLACEHOLDER = 'Enter comma separated list of instruction sentences for reviewing task and submitting';

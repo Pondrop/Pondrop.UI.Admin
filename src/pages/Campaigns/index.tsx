@@ -5,15 +5,14 @@ import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-g
 
 // Components
 import Grid from 'components/Grid';
-import { campaignsColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import CampaignDialog from './components/CampaignDialog';
-import { initialModalData } from './components/CampaignDialog/constants';
-import { ICreateCampaignModalData, IModalData } from './components/CampaignDialog/types';
 
-// Other variables / values
-import { CATEGORY_FOCUS_ID } from 'pages/types';
+// Constants
+import { campaignsColumns } from 'components/Grid/constants';
+import { initialModalData } from './components/CampaignDialog/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import { categoriesApi } from 'store/api/categories/api';
 import { useGetAllCampaignFilterQuery, useGetCampaignsQuery } from 'store/api/campaigns/api';
@@ -35,7 +34,8 @@ import {
   useLazyRefreshCampaignsQuery,
   useUpdateCampaignMutation,
 } from 'store/api/tasks/api';
-import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+
+// Styles
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -45,6 +45,14 @@ import {
   StyledCategoryBtn,
   StyledTitle,
 } from '../styles';
+
+// Types
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+import { CATEGORY_FOCUS_ID } from 'pages/types';
+import { ICreateCampaignModalData, IModalData } from './components/CampaignDialog/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Campaigns: FunctionComponent = (): JSX.Element => {
   // States
@@ -82,6 +90,7 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     },
   ] = useCreateCampaignMutation();
 
+  // Fixed cache key allows us to access isSuccess and reset from the same API endpoint used in a separate file
   const [, { isSuccess: isUpdateCampaignSuccess, reset: resetUpdateCampaign }] = useUpdateCampaignMutation({
     fixedCacheKey: 'new-campaign-mutation',
   });
@@ -124,6 +133,8 @@ const Campaigns: FunctionComponent = (): JSX.Element => {
     if (isUpdateCampaignSuccess) refreshCampaigns();
   }, [isUpdateCampaignSuccess]);
 
+  // When refresh campaign is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if ((!isRefreshFetching && isRefreshSuccess) || didCreateCampaign) {
       setTimeout(() => {

@@ -1,3 +1,4 @@
+// New Template Modal field helper values
 export const newTemplateTitles = [
   {
     field: 'title',
@@ -21,6 +22,7 @@ export const newTemplateTitles = [
   },
 ];
 
+// New Template - Template Type field helper values
 export const templateTypeData = [
   {
     label: 'Task',
@@ -36,12 +38,14 @@ export const templateTypeData = [
   }
 ];
 
+// Mapping of Template type
 export const TEMPLATE_TYPE = {
   'type-1': 'task',
   'type-2': 'survey',
   'type-3': 'advert'
 };
 
+// New Template - Template Focus Object field helper values
 export const templateFocusObjectData = [
   {
     label: 'Product',
@@ -53,6 +57,7 @@ export const templateFocusObjectData = [
   },
 ];
 
+// Mapping of Template focus object
 export const FOCUS_TYPE = {
   'focus-1': 'product',
   'focus-2': 'category'

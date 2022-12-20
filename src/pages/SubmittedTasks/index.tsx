@@ -4,16 +4,24 @@ import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from
 
 // Components
 import Grid from 'components/Grid';
-import { tasksColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
-// Other variables / values
+// Constants
+import { tasksColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllTaskFilterQuery, useGetTasksQuery } from 'store/api/tasks/api';
 import { selectTasks, setTasksFilter, setTasksSearchValue, setTasksSortValue } from 'store/api/tasks/slice';
-import { IFacetValue, IFilterItem } from 'store/api/types';
+
+// Styles
 import { ColAlignDiv, MainContent, RowAlignDiv, StyledTitle } from '../styles';
+
+// Types
+import { IFacetValue, IFilterItem } from 'store/api/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const SubmittedTasks: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();

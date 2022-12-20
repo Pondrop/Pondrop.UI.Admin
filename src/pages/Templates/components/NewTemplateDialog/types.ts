@@ -1,3 +1,4 @@
+// Data passed when submitting
 export interface INewTemplateDialogData {
   title: string;
   type: string;
@@ -5,7 +6,8 @@ export interface INewTemplateDialogData {
   focus: string;
 }
 
-export interface ICreateCategoryProps {
+// Props passed to New Template modal
+export interface INewTemplateProps {
   isOpen: boolean;
   handleClose: () => void;
   handleSubmit: (newTemplateData: INewTemplateDialogData) => void;

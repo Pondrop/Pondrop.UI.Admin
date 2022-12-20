@@ -4,15 +4,21 @@ import moment, { Moment } from 'moment';
 import { CircularProgress, Tab } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 
+// Components
+import ReviewCardsInfo from './components/ReviewCards';
+import StepGrid from './components/StepGrid';
+import StoreGrid from './components/StoreGrid';
+
+// Store / APIs
 import { useAppSelector } from 'store';
 import { newCampaignInitialState } from 'store/api/campaigns/initialState';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
 import { selectStores } from 'store/api/stores/slice';
 import { useUpdateCampaignMutation } from 'store/api/tasks/api';
-import { IUpdateCampaignRequest } from 'store/api/tasks/types';
+
+// Styles
 import { CircularLoaderWrapper } from 'pages/styles';
-import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
 import {
   ColAlignDiv,
   ContentDetails,
@@ -25,10 +31,11 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
-import ReviewCardsInfo from './components/ReviewCards';
-import StepGrid from './components/StepGrid';
-import StoreGrid from './components/StoreGrid';
 import { CircleDiv, StyledBox, StyledSteps, TabLabelTypography } from './styles';
+
+// Types
+import { IUpdateCampaignRequest } from 'store/api/tasks/types';
+import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
 
 const NewCampaign: FunctionComponent = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -156,6 +163,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     else return 'store';
   };
 
+  // Loader shown when fetching API response
   const renderLoader = (height: number) => (
     <CircularLoaderWrapper height={`${height}px`}>
       <CircularProgress size={height / 2} thickness={6} />

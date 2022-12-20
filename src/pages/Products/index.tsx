@@ -6,14 +6,14 @@ import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from
 // Components
 import AddProductDialog from 'components/AddProductDialog';
 import Grid from 'components/Grid';
-import { productColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import CategoryList from './components/CategoryList';
 
-// Other variables / values
+// Constants
+import { productColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
-import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import {
   productsApi,
   productsMicroService,
@@ -33,7 +33,8 @@ import {
   setProductsSelectedParent,
   setProductsSortValue,
 } from 'store/api/products/slice';
-import { IProductDialogData } from 'store/api/products/types';
+
+// Styles
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -44,6 +45,13 @@ import {
   StyledSubtitle,
   StyledTitle,
 } from '../styles';
+
+// Types
+import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+import { IProductDialogData } from 'store/api/products/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Products: FunctionComponent = (): JSX.Element => {
   const navigate = useNavigate();
@@ -248,6 +256,8 @@ const Products: FunctionComponent = (): JSX.Element => {
     }
   }, [isAddProductSuccess]);
 
+  // When refresh products is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {

@@ -2,10 +2,14 @@ import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
-import { IState } from 'pages/types';
-import { useGetCategoryInfoQuery } from 'store/api/categories/api';
+// Components
 import ActivityInfoPanel from './components/ActivityInfoPanel';
 import CategoryInfoPanel from './components/CategoryInfoPanel';
+
+// Store / APIs
+import { useGetCategoryInfoQuery } from 'store/api/categories/api';
+
+// Styles
 import {
   CircularLoaderWrapper,
   ColAlignDiv,
@@ -18,6 +22,9 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
+
+// Types
+import { IState } from 'pages/types';
 
 const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -51,6 +58,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
     navigate('../products', { replace: true });
   };
 
+  // Loader shown when fetching API response
   const renderLoader = () => (
     <CircularLoaderWrapper height="calc(100vh - 36px)">
       <CircularProgress size={100} thickness={3} />

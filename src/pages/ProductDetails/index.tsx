@@ -3,12 +3,14 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 
-import { useGetFullProductInfoQuery } from 'store/api/products/api';
-import { IFullProductInfo } from 'store/api/products/types';
+// Components
 import ActivityInfoPanel from './components/ActivityInfoPanel';
 import ProductInfoPanel from './components/ProductInfoPanel';
-import { IState } from 'pages/types';
 
+// Store / APIs
+import { useGetFullProductInfoQuery } from 'store/api/products/api';
+
+// Styles
 import {
   CircularLoaderWrapper,
   ContentDetails,
@@ -19,6 +21,10 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
+
+// Types
+import { IFullProductInfo } from 'store/api/products/types';
+import { IState } from 'pages/types';
 
 const ProductDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -47,6 +53,7 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
     setCurrentTab(newValue);
   };
 
+  // Loader shown when fetching API response
   const renderLoader = () => (
     <CircularLoaderWrapper height="calc(100vh - 36px)">
       <CircularProgress size={100} thickness={3} />
