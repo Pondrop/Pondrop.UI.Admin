@@ -5,15 +5,23 @@ import moment from 'moment';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 
+// Store / APIs
 import { useAppDispatch } from 'store';
 import { categoriesApi, useGetCategoriesQuery } from 'store/api/categories/api';
-import { IValue } from 'store/api/types';
+
+// Styles
 import { StyledPaper, StyledPopper, StyledTextField } from './styles';
+
+// Types
+import { IValue } from 'store/api/types';
 import { IAutocompleteProps } from './types';
 
 const TextAutocomplete = ({ onOptionSelect, isModalOpen, disabledOptions = [] }: IAutocompleteProps) => {
+  // Autocomplete options to render
   const [options, setOptions] = useState<IValue[]>([]);
+  // Selected value is used to re-render Autocomplete component
   const [selectedValue, setSelectedValue] = useState<string>('');
+  // Search value used to get all options
   const [searchValue, setSearchValue] = useState<string>('');
 
   const dispatch = useAppDispatch();
@@ -31,6 +39,7 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen, disabledOptions = [] }:
     setOptions(data?.value ?? []);
   }, [data]);
 
+  // When search value length < 3, show no options
   useEffect(() => {
     if (searchValue.length < 3) setOptions([]);
   }, [searchValue]);
@@ -39,6 +48,7 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen, disabledOptions = [] }:
     if (!isModalOpen) {
       // Reset search value, selected value, and api
       // Selected value set to epoch moment so component rerenders and is set to default value
+      // Workaround to reset the Autocomplete component after every time user selects an option
       setSearchValue('');
       setSelectedValue(String(moment().unix()));
       dispatch(categoriesApi.util.resetApiState());
@@ -58,6 +68,7 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen, disabledOptions = [] }:
     }
   };
 
+  // Disabled options = options already selected / used
   const getOptionDisabled = (option: IValue) => disabledOptions.includes(String(option?.lowerLevelCategoryId));
 
   return (
@@ -68,6 +79,7 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen, disabledOptions = [] }:
         getOptionLabel={(option) => String(option?.categoryName)}
         getOptionDisabled={getOptionDisabled}
         renderOption={(props, option) => {
+          // Highlight matched parts
           const matches = match(String(option?.categoryName), searchValue, { insideWords: true });
           const parts = parse(String(option?.categoryName), matches);
 

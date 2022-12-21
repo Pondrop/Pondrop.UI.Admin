@@ -2,6 +2,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { IFacetDetails, IFilterItem } from 'store/api/types';
 
+// Gets all unique valid values
 export const getAllUniqueValues = (data: IFacetDetails[]) => {
   const completeValues: string[] = [];
 
@@ -15,6 +16,7 @@ export const getAllUniqueValues = (data: IFacetDetails[]) => {
   return [...new Set(completeValues)];
 };
 
+// Generates formatted initial filter state
 export const generateFilterInitState = (columns: GridColDef[]) => {
   const initialStateContainer: IFilterItem[] = [];
 
@@ -30,6 +32,7 @@ export const generateFilterInitState = (columns: GridColDef[]) => {
   return initialStateContainer;
 };
 
+// Removes or adds filter depending if it's already present
 export const handleFilterStateChange = (value: string, filterItem: string | string[]) => {
   if (!Array.isArray(filterItem)) return [];
   const newFilterItems = filterItem.includes(value)

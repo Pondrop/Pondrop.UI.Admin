@@ -1,13 +1,15 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 
-import { useGetSubmissionInfoQuery } from 'store/api/tasks/api';
+// Components
 import SubmissionInfoPanel from './components/SubmissionInfo';
 
+// Store / APIs
+import { useGetSubmissionInfoQuery } from 'store/api/tasks/api';
+
+// Styles
 import {
-  CircularLoaderWrapper,
   ContentDetails,
   StyledBreadcrumbs,
   StyledSubtitle,
@@ -16,6 +18,9 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const SubmissionDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -29,12 +34,6 @@ const SubmissionDetails: FunctionComponent = (): JSX.Element => {
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
   };
-
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="calc(100vh - 36px)">
-      <CircularProgress size={100} thickness={3} />
-    </CircularLoaderWrapper>
-  );
 
   const handlePrevious = () => navigate(-1);
 
@@ -59,7 +58,7 @@ const SubmissionDetails: FunctionComponent = (): JSX.Element => {
     </div>
   );
 
-  return <ContentDetails>{isFetching ? renderLoader() : renderContent()}</ContentDetails>;
+  return <ContentDetails>{isFetching ? renderLoader('calc(100vh - 36px)', 100, 3) : renderContent()}</ContentDetails>;
 };
 
 export default SubmissionDetails;

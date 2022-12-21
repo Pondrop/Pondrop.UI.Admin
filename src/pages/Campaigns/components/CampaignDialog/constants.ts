@@ -1,3 +1,4 @@
+// Add Campaign field helper values
 export const campaignTitles = [
   {
     field: 'title',
@@ -16,6 +17,7 @@ export const campaignTitles = [
   },
 ];
 
+// Campaign Type values
 export const campaignTypeData = [
   {
     id: 'task',
@@ -27,6 +29,7 @@ export const campaignTypeData = [
   }
 ];
 
+// Initial state of Add Campaign modal
 export const initialModalData = {
   name: '',
   campaignType: '',

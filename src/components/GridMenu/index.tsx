@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { CircularProgress } from '@mui/material';
 
+// Components
 import SearchField from 'components/SearchField';
-import { CircularLoaderWrapper } from 'pages/styles';
-import { IFilterItem } from 'store/api/types';
+
+// Styles
 import {
   LabelDiv,
   MenuListWrapper,
@@ -15,14 +15,22 @@ import {
   StyledCheckbox,
   StyledList,
 } from './styles';
+
+// Types
+import { IFilterItem } from 'store/api/types';
 import { ICustomMenuProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 import { getAllUniqueValues, handleFilterStateChange } from './utils';
 
 const CustomMenu = (props: ICustomMenuProps) => {
   const { filterItems, handleOnFilterClick, hideMenu, menuData, currentColumn, isMenuLoading = true, ...other } = props;
 
+  // Get string array of unique values based on menu data provided and current column
   const uniqueValues = getAllUniqueValues(menuData[currentColumn.field]);
   const [searchedData, setSearchedData] = useState<string[]>(uniqueValues);
+  // Local filter state
   const [appliedFilters, setAppliedFilters] = useState<IFilterItem[]>([...filterItems]);
 
   const handleOnGridFilterClick = (value: string) => () => {
@@ -69,12 +77,6 @@ const CustomMenu = (props: ICustomMenuProps) => {
     );
   };
 
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="270px">
-      <CircularProgress size={50} thickness={3} />
-    </CircularLoaderWrapper>
-  );
-
   const renderMenuItems = () => {
     if (uniqueValues.length === 0)
       return (
@@ -119,7 +121,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
       isLoading={isMenuLoading}
       {...other}
     >
-      {isMenuLoading ? renderLoader() : renderMenuItems()}
+      {isMenuLoading ? renderLoader('270px', 50, 3) : renderMenuItems()}
     </MenuWrapper>
   );
 };

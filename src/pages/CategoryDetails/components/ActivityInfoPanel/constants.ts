@@ -1,3 +1,4 @@
+// Activity Panel field helper values
 export const activityValues = [
   {
     label: 'Date created',

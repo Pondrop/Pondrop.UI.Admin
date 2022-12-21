@@ -1,5 +1,5 @@
-import { FunctionComponent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   CenterFocusStrongOutlined,
   FactCheckOutlined,
@@ -9,6 +9,9 @@ import {
   Storefront,
 } from '@mui/icons-material';
 
+// Assets
+import pondrop from 'assets/images/pondrop.png';
+
 // Components
 import {
   campaignsColumns,
@@ -17,9 +20,8 @@ import {
   tasksColumns,
   templatesColumns,
 } from 'components/Grid/constants';
-import { generateFilterInitState } from 'components/GridMenu/utils';
 
-import pondrop from 'assets/images/pondrop.png';
+// Store / APIs
 import { useAppDispatch } from 'store';
 import { setCampaignsFilter, setCampaignsSearchValue } from 'store/api/campaigns/slice';
 import { setProductsFilter, setProductsSearchValue } from 'store/api/products/slice';
@@ -27,13 +29,28 @@ import { setStoresFilter, setStoresSearchValue } from 'store/api/stores/slice';
 import { setTasksFilter, setTasksSearchValue } from 'store/api/tasks/slice';
 import { setTemplatesFilter, setTemplatesSearchValue } from 'store/api/templates/slice';
 
+// Styles
 import { StyledButton, PanelWrapper } from './styles';
+
+// Utils
+import { generateFilterInitState } from 'components/GridMenu/utils';
 
 const SidePanel: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<string>('stores');
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Retain button state based on current location path
+  useEffect(() => {
+    const currLoc = location.pathname.split('/');
+    if (currLoc[1] === 'campaigns') setCurrentTab('campaigns');
+    else if (currLoc[1] === 'products' || currLoc[1] === 'categories') setCurrentTab('products');
+    else if (currLoc[1] === 'stores') setCurrentTab('stores');
+    else if (currLoc[1] === 'submissions') setCurrentTab('submissions');
+    else if (currLoc[1] === 'templates') setCurrentTab('templates');
+  }, [location]);
 
   const handleCampaignsRedirect = () => {
     const campaignsFilterInitState = generateFilterInitState(campaignsColumns);
@@ -71,8 +88,8 @@ const SidePanel: FunctionComponent = (): JSX.Element => {
     const templateFilterInitState = generateFilterInitState(templatesColumns);
     setCurrentTab('templates');
     navigate('../templates', { replace: true });
-    // dispatch(setTemplatesFilter(templateFilterInitState));
-    // dispatch(setTemplatesSearchValue(''));
+    dispatch(setTemplatesFilter(templateFilterInitState));
+    dispatch(setTemplatesSearchValue(''));
   };
 
   return (

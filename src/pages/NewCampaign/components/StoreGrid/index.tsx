@@ -5,12 +5,12 @@ import { GridFilterModel, GridSelectionModel, GridSortModel } from '@mui/x-data-
 
 // Components
 import Grid from 'components/Grid';
-import { campaignStoreColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
-// Other variables / values
-import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+// Constants
+import { campaignStoreColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllStoreFilterQuery, useGetStoresQuery } from 'store/api/stores/api';
 import {
@@ -21,7 +21,15 @@ import {
   setStoresSelectedProviders,
   setStoresSortValue,
 } from 'store/api/stores/slice';
+
+// Styles
+import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+
+// Types
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const StoreGrid = (): JSX.Element => {
   // States

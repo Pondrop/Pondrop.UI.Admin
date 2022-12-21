@@ -5,12 +5,12 @@ import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel }
 
 // Components
 import Grid from 'components/Grid';
-import { categoriesColumns, productColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
-// Other variables / values
-import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+// Constants
+import { categoriesColumns, productColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllCategoriesFilterQuery, useGetCategoriesQuery } from 'store/api/categories/api';
 import {
@@ -29,8 +29,16 @@ import {
   setProductsSelectedIds,
   setProductsSortValue,
 } from 'store/api/products/slice';
+
+// Styles
+import { MessageWrapper, RowAlignWrapper, SpaceBetweenDiv, StyledCardTitle } from 'pages/styles';
+
+// Types
 import { IFacetValue, IFilterItem, IValue } from 'store/api/types';
 import { IStepGrid } from './types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const StepGrid = ({ stepType }: IStepGrid): JSX.Element => {
   // States

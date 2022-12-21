@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
-import { CircularProgress } from '@mui/material';
 
+// Components
 import CustomEmptyState from 'components/EmptyState';
-import { CircularLoaderWrapper, SpaceBetweenDiv } from 'pages/styles';
+
+// Store / APIs
 import { useAppSelector } from 'store';
 import { useGetParentCategoriesQuery } from 'store/api/products/api';
 import { selectProducts } from 'store/api/products/slice';
-import { IValue } from 'store/api/types';
+
+// Styles
+import { SpaceBetweenDiv } from 'pages/styles';
 import { BtnWrapper, DivWrapper, ManageCategoriesBtn, StyledList, StyledListItemButton } from './styles';
+
+// Types
+import { IValue } from 'store/api/types';
 import { ICategoryListProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const CategoryList = ({ onManageCategoriesClick, sortedData, handleParentCategoryClick }: ICategoryListProps) => {
   const { selectedParent } = useAppSelector(selectProducts);
@@ -25,14 +34,8 @@ const CategoryList = ({ onManageCategoriesClick, sortedData, handleParentCategor
     handleParentCategoryClick(category);
   };
 
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="400px">
-      <CircularProgress size={100} thickness={3} />
-    </CircularLoaderWrapper>
-  );
-
   const generateData = () => {
-    if (isFetching) return renderLoader();
+    if (isFetching) return renderLoader('400px', 100, 3);
     else if (parentCategoryData?.length === 0)
       return <CustomEmptyState height="400px" displayText="No Parent Categories found." />;
 

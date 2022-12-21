@@ -1,20 +1,29 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+// Constants
 import { campaignTitles, campaignTypeData } from './constants';
-import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+
+// Store / APIs
+import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
+
+// Styles
+import {
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledDialog,
+  StyledInputBase,
+  StyledMenuItem,
+  StyledSelect,
+  StyledTextInput,
+} from 'pages/styles';
+
+// Types
 import { INewCampaignProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const CampaignDialog = ({
   isOpen,
@@ -84,9 +93,6 @@ const CampaignDialog = ({
   };
 
   const handleModalClose = () => {
-    setCampaignTitle('');
-    setCampaignType('');
-    setTemplate('');
     handleClose();
   };
 
@@ -98,17 +104,12 @@ const CampaignDialog = ({
     });
   };
 
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
+  // Shows loading state while data is fetching
   const renderStates = () => {
     if (isFetching) {
       return (
         <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-          {renderLoader(100)}
+          {renderLoader('100px', 50, 6)}
         </MenuItem>
       );
     } else {
@@ -271,7 +272,7 @@ const CampaignDialog = ({
           onClick={handleModalSubmit}
           disabled={campaignTitle === '' || campaignType === '' || template === '' || isCreateCampaignLoading}
         >
-          {isCreateCampaignLoading ? renderLoader(34) : 'Next'}
+          {isCreateCampaignLoading ? renderLoader('34px', 17, 6) : 'Next'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );
@@ -286,6 +287,7 @@ const CampaignDialog = ({
       transitionDuration={300}
       data-testid="new-campaign-modal"
       keepMounted
+      dialogWidth={560}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderFields()}</DialogContent>

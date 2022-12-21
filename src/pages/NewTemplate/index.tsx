@@ -1,17 +1,25 @@
 import { ChangeEvent, Fragment, FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 import { Info } from '@mui/icons-material';
 
 // Components
 import Grid from 'components/Grid';
-import { selectedFieldsColumns } from 'components/Grid/constants';
 
-import { CircularLoaderWrapper } from 'pages/styles';
-import { INewTemplateState } from 'pages/types';
+// Constants
+import { selectedFieldsColumns } from 'components/Grid/constants';
+import {
+  FIELD_STEP_INSTRUCTION_PLACEHOLDER,
+  MANUAL_SUBMISSION_PLACEHOLDER,
+  selectedFieldsData,
+  SUMMARY_SUBMIT_INSTRUCTION_PLACEHOLDER,
+  templateTitles,
+} from './constants';
+
+// Store / APIs
 import { useAddTemplateStepMutation } from 'store/api/tasks/api';
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
-import { IAddTemplateStep } from 'store/api/tasks/types';
+
+// Styles
 import {
   ColAlignDiv,
   ContentDetails,
@@ -26,14 +34,14 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
-import {
-  FIELD_STEP_INSTRUCTION_PLACEHOLDER,
-  MANUAL_SUBMISSION_PLACEHOLDER,
-  selectedFieldsData,
-  SUMMARY_SUBMIT_INSTRUCTION_PLACEHOLDER,
-  templateTitles,
-} from './constants';
 import { StyledBtnWrapper, StyledTextInput } from './styles';
+
+// Types
+import { IAddTemplateStep } from 'store/api/tasks/types';
+import { INewTemplateState } from 'pages/types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const NewTemplate: FunctionComponent = (): JSX.Element => {
   // React router dom values
@@ -90,12 +98,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       resetAddTemplateStep();
     }
   }, [isAddTemplateStepSuccess]);
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderHeader = () => {
     return (
@@ -272,7 +274,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
           height={40}
           onClick={handleSaveDraftExit}
         >
-          {isAddTemplateStepLoading ? renderLoader(34) : 'Save draft & exit'}
+          {isAddTemplateStepLoading ? renderLoader('34px', 17, 6) : 'Save draft & exit'}
         </StyleOutlinedBtn>
         <div style={{ marginLeft: '20px' }}>
           <StyledCategoryBtn

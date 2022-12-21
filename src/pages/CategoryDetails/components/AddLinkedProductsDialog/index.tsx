@@ -1,25 +1,34 @@
 import { useEffect, useState } from 'react';
-import { CircularProgress, DialogActions, DialogTitle, IconButton } from '@mui/material';
+import { DialogActions, DialogTitle, IconButton } from '@mui/material';
 import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 import { Close } from '@mui/icons-material';
 
 // Components
 import Grid from 'components/Grid';
-import { addLinkedProductsColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 
-// Other variables / values
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+// Constants
+import { addLinkedProductsColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import {
   useLazyGetAllProductFilterQuery,
   useLazyGetProductsQuery,
   useUpdateLinkedProductsMutation,
 } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
+
+// Styles
+import { RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
+import { StyledDialogContent } from './styles';
+
+// Types
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
-import { StyledDialog, StyledDialogContent } from './styles';
 import { IAddLinkedProductsProps } from './types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
+import { renderLoader } from 'pages/utils';
 
 const AddLinkedProductsDialog = ({
   isOpen,
@@ -32,6 +41,7 @@ const AddLinkedProductsDialog = ({
   const addProductsFilterInitState = generateFilterInitState(addLinkedProductsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
+  // Local states for Add Linked Products grid
   const [linkedProdSearchVal, setLinkedProdSearchVal] = useState<string>('');
   const [linkedProdSortVal, setLinkedProdSortVal] = useState<ISortItem>(productInitialState.sortValue);
   const [linkedProdFilterVal, setLinkedProdFilterVal] = useState<IFilterItem[]>(addProductsFilterInitState);
@@ -168,12 +178,6 @@ const AddLinkedProductsDialog = ({
     setLinkedProdSelectedProds(selectionModel as string[]);
   };
 
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
   const renderLinkedProducts = () => {
     return (
       <div>
@@ -248,7 +252,7 @@ const AddLinkedProductsDialog = ({
           onClick={handleModalSubmit}
           disabled={linkedProdSelectedProds.length === 0 || isUpdateProductsLoading}
         >
-          {isUpdateProductsLoading ? renderLoader(34) : 'Done'}
+          {isUpdateProductsLoading ? renderLoader('34px', 17, 6) : 'Done'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );
@@ -263,6 +267,7 @@ const AddLinkedProductsDialog = ({
       transitionDuration={300}
       data-testid="add-linked-products-modal"
       keepMounted
+      dialogWidth={856}
     >
       {renderDialogTitle()}
       <StyledDialogContent className="dialog-content">{renderLinkedProducts()}</StyledDialogContent>

@@ -1,20 +1,30 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { useGetParentCategoriesQuery } from 'store/api/categories/api';
+// Constants
 import { categoryTitles } from './constants';
-import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
+
+// Store / APIs
+import { useGetParentCategoriesQuery } from 'store/api/categories/api';
+
+// Styles
+import {
+  MessageWrapper,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledDialog,
+  StyledInputBase,
+  StyledMenuItem,
+  StyledSelect,
+  StyledTextInput,
+} from 'pages/styles';
+
+// Types
 import { ICreateCategoryProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const CategoryDialog = ({
   isOpen,
@@ -56,8 +66,6 @@ const CategoryDialog = ({
   };
 
   const handleModalClose = () => {
-    setCategoryName('');
-    setParentCategory('');
     handleClose();
   };
 
@@ -65,17 +73,11 @@ const CategoryDialog = ({
     handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
   };
 
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
   const renderStates = () => {
     if (isFetching) {
       return (
         <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-          {renderLoader(100)}
+          {renderLoader('100px', 50, 6)}
         </MenuItem>
       );
     } else {
@@ -192,7 +194,7 @@ const CategoryDialog = ({
           onClick={handleModalSubmit}
           disabled={categoryName === '' || parentCategory === '' || isLoading}
         >
-          {isLoading ? renderLoader(34) : 'Create'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Create'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">
@@ -215,6 +217,7 @@ const CategoryDialog = ({
       transitionDuration={300}
       data-testid="add-category-modal"
       keepMounted
+      dialogWidth={560}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderCreateCategory()}</DialogContent>

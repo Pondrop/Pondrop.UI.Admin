@@ -1,5 +1,6 @@
 import { IValue } from "store/api/types";
 
+// Props passed to Update Products Dialog
 export interface IUpdateProductProps {
   isOpen: boolean;
   handleClose: () => void;

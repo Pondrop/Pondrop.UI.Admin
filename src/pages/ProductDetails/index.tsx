@@ -1,16 +1,16 @@
 import { FunctionComponent, SyntheticEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 
-import { useGetFullProductInfoQuery } from 'store/api/products/api';
-import { IFullProductInfo } from 'store/api/products/types';
+// Components
 import ActivityInfoPanel from './components/ActivityInfoPanel';
 import ProductInfoPanel from './components/ProductInfoPanel';
-import { IState } from 'pages/types';
 
+// Store / APIs
+import { useGetFullProductInfoQuery } from 'store/api/products/api';
+
+// Styles
 import {
-  CircularLoaderWrapper,
   ContentDetails,
   StyledBreadcrumbs,
   StyledSubtitle,
@@ -19,6 +19,13 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
+
+// Types
+import { IFullProductInfo } from 'store/api/products/types';
+import { IState } from 'pages/types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const ProductDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -47,12 +54,6 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
     setCurrentTab(newValue);
   };
 
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="calc(100vh - 36px)">
-      <CircularProgress size={100} thickness={3} />
-    </CircularLoaderWrapper>
-  );
-
   const handlePrevious = () => navigate(-1);
 
   const renderContent = () => (
@@ -79,7 +80,7 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
     </div>
   );
 
-  return <ContentDetails>{isLoading ? renderLoader() : renderContent()}</ContentDetails>;
+  return <ContentDetails>{isLoading ? renderLoader('calc(100vh - 36px)', 100, 3) : renderContent()}</ContentDetails>;
 };
 
 export default ProductDetails;

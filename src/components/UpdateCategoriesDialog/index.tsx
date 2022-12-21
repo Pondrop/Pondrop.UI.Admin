@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
-import { CircularProgress, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-import { IValue } from 'store/api/types';
+// Components
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
-import { StyledDialog } from './styles';
+
+// Styles
+import { MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledChipWrapper, StyledDialog } from 'pages/styles';
+
+// Types
+import { IValue } from 'store/api/types';
 import { IUpdateProductProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const UpdateCategoriesDialog = ({
   isOpen,
@@ -49,8 +55,6 @@ const UpdateCategoriesDialog = ({
   };
 
   const handleModalClose = () => {
-    setCurrCategories(categories);
-    setCurrCategoryChips(categoryChips);
     handleClose();
   };
 
@@ -63,6 +67,7 @@ const UpdateCategoriesDialog = ({
       <StyledChipWrapper>
         {currCategoryChips.map((val: IValue, index: number) => {
           const handleDeleteChip = () => {
+            // Remove deleted chip from states
             setCurrCategories((oldValue) => oldValue.filter((value) => value !== val.id));
             setCurrCategoryChips((oldValue) => oldValue.filter((value) => value.id !== val.id));
           };
@@ -71,12 +76,6 @@ const UpdateCategoriesDialog = ({
       </StyledChipWrapper>
     );
   };
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderFields = () => {
     return (
@@ -104,7 +103,7 @@ const UpdateCategoriesDialog = ({
   };
 
   const renderContent = () => {
-    if (isFetchingData) return renderLoader(50);
+    if (isFetchingData) return renderLoader('50px', 25, 6);
     else return renderFields();
   };
 
@@ -140,7 +139,7 @@ const UpdateCategoriesDialog = ({
           onClick={handleModalSubmit}
           disabled={currCategories.length === 0}
         >
-          {isLoading ? renderLoader(34) : 'Done'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Done'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );
@@ -155,6 +154,7 @@ const UpdateCategoriesDialog = ({
       transitionDuration={300}
       data-testid="update-category-product-modal"
       keepMounted
+      dialogWidth={520}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderContent()}</DialogContent>

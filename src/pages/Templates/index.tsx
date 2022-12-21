@@ -4,12 +4,13 @@ import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-g
 
 // Components
 import Grid from 'components/Grid';
-import { templatesColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
 import NewTemplateDialog from './components/NewTemplateDialog';
 
-// Other variables / values
+// Constants
+import { templatesColumns } from 'components/Grid/constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   useAddTemplateStepMutation,
@@ -24,8 +25,8 @@ import {
   setTemplatesSortValue,
   setDidCreateTemplate,
 } from 'store/api/templates/slice';
-import { IFacetValue, IFilterItem } from 'store/api/types';
-import { INewTemplateDialogData } from './components/NewTemplateDialog/types';
+
+// Styles
 import {
   CategoryBtnWrapper,
   ColAlignDiv,
@@ -35,6 +36,13 @@ import {
   StyledCategoryBtn,
   StyledTitle,
 } from '../styles';
+
+// Types
+import { IFacetValue, IFilterItem } from 'store/api/types';
+import { INewTemplateDialogData } from './components/NewTemplateDialog/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const Templates: FunctionComponent = (): JSX.Element => {
   // States
@@ -185,6 +193,8 @@ const Templates: FunctionComponent = (): JSX.Element => {
     }
   }, [isAddTemplateStepSuccess]);
 
+  // When refresh templates is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if ((!isRefreshFetching && isRefreshSuccess) || didCreateTemplate) {
       setTimeout(() => {

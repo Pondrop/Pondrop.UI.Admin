@@ -5,11 +5,17 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import moment, { Moment } from 'moment';
 
+// Constants
+import { campaignInfoTitles, campaignTypeId, campaignTemplateId, tooltipContent } from './constants';
+
+// Store / APIs
 import { useAppSelector } from 'store';
 import { useGetCategoryInfoQuery } from 'store/api/categories/api';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
 import { selectStores } from 'store/api/stores/slice';
+
+// Styles
 import {
   ColAlignDiv,
   RowAlignWrapper,
@@ -18,9 +24,10 @@ import {
   StyledCardTitle,
   StyledTextInput,
 } from 'pages/styles';
-import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
-import { campaignInfoTitles, campaignTypeId, campaignTemplateId, tooltipContent } from './constants';
 import { StyledDatePicker } from './styles';
+
+// Types
+import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
 import { IReviewCardsInfo } from './types';
 
 const ReviewCardsInfo = ({
@@ -137,9 +144,12 @@ const ReviewCardsInfo = ({
         </RowAlignWrapper>
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <StyledDatePicker
-            renderInput={(props) => <TextField {...props} />}
+            renderInput={(props) => (
+              <TextField {...props} inputProps={{ ...props.inputProps, placeholder: 'dd/mm/yyyy hh:mm (a|p)m' }} />
+            )}
             value={startDate ? moment(startDate) : null}
             onChange={handleStartDateChange}
+            inputFormat="DD/MM/YYYY hh:mm a"
             disablePast
             PaperProps={{
               sx: {
@@ -166,9 +176,12 @@ const ReviewCardsInfo = ({
         </RowAlignWrapper>
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <StyledDatePicker
-            renderInput={(props) => <TextField {...props} />}
+            renderInput={(props) => (
+              <TextField {...props} inputProps={{ ...props.inputProps, placeholder: 'dd/mm/yyyy hh:mm (a|p)m' }} />
+            )}
             value={endDate}
             onChange={handleEndDateChange}
+            inputFormat="DD/MM/YYYY hh:mm a"
             minDate={startDate}
             PaperProps={{
               sx: {

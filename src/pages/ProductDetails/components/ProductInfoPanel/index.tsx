@@ -5,17 +5,12 @@ import { EditOutlined, Info } from '@mui/icons-material';
 
 // Components
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
 import UpdateCategoriesDialog from 'components/UpdateCategoriesDialog';
 
-import {
-  ColAlignDiv,
-  RowAlignWrapper,
-  SpaceBetweenDiv,
-  StyledCard,
-  StyledCardTitle,
-  StyledTabContent,
-} from 'pages/styles';
+// Constants
+import { attributesChips, organisationTitles, packagingTitles, productDescTitles, tooltipContent } from './constants';
+
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   productsApi,
@@ -26,10 +21,22 @@ import {
   useUpdateLinkedCategoriesMutation,
 } from 'store/api/products/api';
 import { selectProducts } from 'store/api/products/slice';
+
+// Styles
+import {
+  ColAlignDiv,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCard,
+  StyledCardTitle,
+  StyledChipWrapper,
+  StyledTabContent,
+} from 'pages/styles';
+
+// Types
 import { IFullProductInfo } from 'store/api/products/types';
 import { ICategories, IValue } from 'store/api/types';
 import { IProductDetailTabProps } from '../types';
-import { attributesChips, organisationTitles, packagingTitles, productDescTitles, tooltipContent } from './constants';
 
 const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.Element => {
   const [productInfo, setProductInfo] = useState<IFullProductInfo>({} as IFullProductInfo);
@@ -202,6 +209,8 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
     if (isGetFullProductSuccess) refreshProducts();
   }, [isGetFullProductSuccess]);
 
+  // When refresh products is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setTimeout(() => {

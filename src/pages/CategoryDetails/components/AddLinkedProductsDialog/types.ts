@@ -1,3 +1,4 @@
+// Props passed to Add Linked Products modal
 export interface IAddLinkedProductsProps {
   isOpen: boolean;
   handleClose: () => void;

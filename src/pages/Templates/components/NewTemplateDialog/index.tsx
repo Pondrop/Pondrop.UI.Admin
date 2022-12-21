@@ -1,18 +1,27 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton, SelectChangeEvent } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+// Constants
 import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, templateTypeData } from './constants';
-import { StyledDialog, StyledInputBase, StyledMenuItem, StyledSelect, StyledTextInput } from './styles';
-import { ICreateCategoryProps } from './types';
+
+// Styles
+import {
+  MessageWrapper,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledDialog,
+  StyledInputBase,
+  StyledMenuItem,
+  StyledSelect,
+  StyledTextInput,
+} from 'pages/styles';
+
+// Types
+import { INewTemplateProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const NewTemplateDialog = ({
   isOpen,
@@ -20,7 +29,7 @@ const NewTemplateDialog = ({
   handleSubmit,
   errorMessage,
   isLoading,
-}: ICreateCategoryProps): JSX.Element => {
+}: INewTemplateProps): JSX.Element => {
   // Select component position variables
   const selectTypeComponent = useRef<HTMLInputElement>(null);
   const [typePosition, setTypePosition] = useState<DOMRect>({} as DOMRect);
@@ -43,6 +52,10 @@ const NewTemplateDialog = ({
     setFocusPosition(
       selectFocusComponent?.current ? selectFocusComponent?.current?.getBoundingClientRect() : ({} as DOMRect),
     );
+    setTemplateTitle('');
+    setTemplateType('');
+    setTemplateDescription('');
+    setTemplateFocusObject('');
   }, [isOpen]);
 
   const handleSelectTypeClose = () => {
@@ -78,10 +91,6 @@ const NewTemplateDialog = ({
   };
 
   const handleModalClose = () => {
-    setTemplateTitle('');
-    setTemplateType('');
-    setTemplateDescription('');
-    setTemplateFocusObject('');
     handleClose();
   };
 
@@ -93,12 +102,6 @@ const NewTemplateDialog = ({
       focus: FOCUS_TYPE[templateFocusObject as keyof typeof FOCUS_TYPE],
     });
   };
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderCreateCategory = () => {
     return (
@@ -274,7 +277,7 @@ const NewTemplateDialog = ({
             isLoading
           }
         >
-          {isLoading ? renderLoader(34) : 'Next'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Next'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">
@@ -297,6 +300,7 @@ const NewTemplateDialog = ({
       transitionDuration={300}
       data-testid="new-template-modal"
       keepMounted
+      dialogWidth={560}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderCreateCategory()}</DialogContent>

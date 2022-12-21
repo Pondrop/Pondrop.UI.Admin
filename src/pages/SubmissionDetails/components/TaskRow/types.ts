@@ -1,11 +1,13 @@
 import { IItemValue, ISteps } from "store/api/tasks/types";
 import { IValue } from "store/api/types";
 
+// Props passed to Task Row component
 export interface ITaskRowProps {
   stepData?: ISteps;
   categoryFocus: IItemValue | null;
 }
 
+// Mapping of Value Type Fields
 export enum IValueTypeFields {
   integer = "intValue",
   currency = "doubleValue",
@@ -18,6 +20,7 @@ export enum IValueTypeFields {
   date = "dateTimeValue"
 }
 
+// Mapping of step id to label
 export enum IFieldLabels {
   "4da32bd0-8fd7-49e7-9d78-185744cf650c" = "Product",
   "2ec0bcdf-340e-4876-89f3-799e6f00e7bb" = "Product",
@@ -42,6 +45,7 @@ export enum IFieldLabels {
   "91e11392-a444-496d-a161-0d191d8d60dd" = "Product issues"
 }
 
+// Initial value of Add Product
 export interface IAddProductInitialValues {
   name: string;
   barcodeNumber: string;
@@ -49,6 +53,7 @@ export interface IAddProductInitialValues {
   categoryChips: IValue[];
 }
 
+// Manual Checker
 export interface IManualChecker {
   name: string;
   id: string;

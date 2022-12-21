@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { IconButton } from '@mui/material';
 import { EditOutlined, Info } from '@mui/icons-material';
 
+// Components
+import LinkedProducts from '../LinkedProducts';
+
+// Constants
+import { categoryTitles } from './constants';
+
+// Styles
 import {
   ColAlignDiv,
   RowAlignWrapper,
@@ -10,10 +17,10 @@ import {
   StyledCardTitle,
   StyledTabContent,
 } from 'pages/styles';
-import { ITabPanelProps } from 'pages/types';
+
+// Types
 import { IValue } from 'store/api/types';
-import { categoryTitles } from './constants';
-import LinkedProducts from '../LinkedProducts';
+import { ITabPanelProps } from 'pages/types';
 
 const ProductInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [categoryInfo, setCategoryInfo] = useState<IValue>({});

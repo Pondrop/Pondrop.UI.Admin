@@ -1,18 +1,23 @@
 import { FunctionComponent, SyntheticEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import moment, { Moment } from 'moment';
-import { CircularProgress, Tab } from '@mui/material';
+import { Tab } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 
+// Components
+import ReviewCardsInfo from './components/ReviewCards';
+import StepGrid from './components/StepGrid';
+import StoreGrid from './components/StoreGrid';
+
+// Store / APIs
 import { useAppSelector } from 'store';
 import { newCampaignInitialState } from 'store/api/campaigns/initialState';
 import { selectCategories } from 'store/api/categories/slice';
 import { selectProducts } from 'store/api/products/slice';
 import { selectStores } from 'store/api/stores/slice';
 import { useUpdateCampaignMutation } from 'store/api/tasks/api';
-import { IUpdateCampaignRequest } from 'store/api/tasks/types';
-import { CircularLoaderWrapper } from 'pages/styles';
-import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
+
+// Styles
 import {
   ColAlignDiv,
   ContentDetails,
@@ -25,10 +30,14 @@ import {
   StyledTitle,
   StyledTypography,
 } from '../styles';
-import ReviewCardsInfo from './components/ReviewCards';
-import StepGrid from './components/StepGrid';
-import StoreGrid from './components/StoreGrid';
 import { CircleDiv, StyledBox, StyledSteps, TabLabelTypography } from './styles';
+
+// Types
+import { IUpdateCampaignRequest } from 'store/api/tasks/types';
+import { CATEGORY_FOCUS_ID, IModalState } from 'pages/types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const NewCampaign: FunctionComponent = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -156,12 +165,6 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
     else return 'store';
   };
 
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
   const renderHeader = () => {
     return (
       <>
@@ -171,7 +174,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
               {state?.name}
             </StyledTitle>
             <StyledTitle className="main-header" variant="caption" style={{ padding: '0 64px' }}>
-              {isUpdateCampaignLoading ? renderLoader(20) : 'Draft auto-saved'}
+              {isUpdateCampaignLoading ? renderLoader('20px', 10, 6) : 'Draft auto-saved'}
             </StyledTitle>
             <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={34}></StyledSubtitle>
           </ColAlignDiv>
@@ -261,7 +264,7 @@ const NewCampaign: FunctionComponent = (): JSX.Element => {
             onClick={handlePublishCampaign}
             disabled={isPublishDisabled}
           >
-            {isUpdateCampaignLoading && isPublish ? renderLoader(34) : 'Publish'}
+            {isUpdateCampaignLoading && isPublish ? renderLoader('34px', 17, 6) : 'Publish'}
           </StyledCategoryBtn>
         </SpaceBetweenDiv>
       );

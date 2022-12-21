@@ -1,24 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EditOutlined, FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
-import { Alert, CircularProgress, IconButton, Snackbar } from '@mui/material';
+import { Alert, IconButton, Snackbar } from '@mui/material';
 import moment from 'moment';
 
 // Components
 import AddProductDialog from 'components/AddProductDialog';
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
 import UpdateCategoriesDialog from 'components/UpdateCategoriesDialog';
+import EnlargedImageDialog from '../EnlargedImage';
 
+// Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
-import {
-  CategoryBtnWrapper,
-  CircularLoaderWrapper,
-  ColAlignDiv,
-  RowAlignWrapper,
-  SpaceBetweenDiv,
-  StyledCategoryBtn,
-} from 'pages/styles';
 import {
   productsApi,
   useAddProductMutation,
@@ -28,12 +21,26 @@ import {
   useLazyRefreshProductsQuery,
 } from 'store/api/products/api';
 import { selectProducts } from 'store/api/products/slice';
+
+// Styles
+import {
+  CategoryBtnWrapper,
+  ColAlignDiv,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCategoryBtn,
+  StyledChipWrapper,
+} from 'pages/styles';
+import { ImgWrapper } from './styles';
+
+// Types
 import { IProductDialogData } from 'store/api/products/types';
 import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
 import { IValue } from 'store/api/types';
-import EnlargedImageDialog from '../EnlargedImage';
-import { ImgWrapper } from './styles';
 import { IAddProductInitialValues, IFieldLabels, IManualChecker, ITaskRowProps, IValueTypeFields } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
   const navigate = useNavigate();
@@ -41,14 +48,18 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [errMsg, setErrMsg] = useState<string>('');
+  // Enlarged Image modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // Add Product modal
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
+  // Update Category modal
   const [isUpdateCategModalOpen, setIsUpdateCategModalOpen] = useState<boolean>(false);
   const [currCategories, setCurrCategories] = useState<string[]>([]);
   const [currCategoriesChips, setCurrCategoriesChips] = useState<IValue[]>([]);
   const [addProductInitialValues, setAddProductInitialValues] = useState<IAddProductInitialValues>(
     {} as IAddProductInitialValues,
   );
+  // Keeps track of manually added producrs
   const [manualTracker, setManualTracker] = useState<IManualChecker[]>([]);
   const [isFetchingUpdates, setIsFetchingUpdates] = useState<boolean>(false);
   const [isFetchingCategories, setIsFetchingCategories] = useState<boolean>(false);
@@ -127,12 +138,6 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
     setIsSnackbarOpen(false);
     resetAddProduct();
   };
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={3} />
-    </CircularLoaderWrapper>
-  );
 
   const renderImage = () => {
     const hasPhoto = !!stepData?.fields[0]?.values[0]?.photoUrl;
@@ -270,7 +275,7 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
       );
     } else if ((isProduct && isFetchingUpdates) || isCheckProductFetching) {
       const loaderHeight = Array.isArray(fieldValue) ? fieldValue?.length * 32 + 28 : 0;
-      return renderLoader(loaderHeight);
+      return renderLoader(`${loaderHeight}px`, loaderHeight, 3);
     } else if (focusData?.itemId && focusData?.itemType === 'category') {
       const handleChipClick = () => {
         navigate(`/products/categories/${focusData?.itemId}`);
@@ -409,6 +414,8 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
     if (addProductError && 'data' in addProductError) setErrMsg(String(addProductError?.data));
   }, [addProductError]);
 
+  // When refresh products is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setIsFetchingUpdates(true);

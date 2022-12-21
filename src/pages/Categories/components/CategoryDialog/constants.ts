@@ -1,3 +1,4 @@
+// Add Category field helper values
 export const categoryTitles = [
   {
     field: 'Category',

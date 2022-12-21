@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
-import { Alert, CircularProgress, IconButton, Snackbar, Tooltip } from '@mui/material';
+import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
 import {
   GridFilterModel,
   GridRowParams,
@@ -11,22 +11,14 @@ import {
 
 // Components
 import Grid from 'components/Grid';
-import { linkedProductsColumns } from 'components/Grid/constants';
-import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 import SearchField from 'components/SearchField';
-import { tooltipContent } from '../CategoryInfoPanel/constants';
 import AddLinkedProductsDialog from '../AddLinkedProductsDialog';
 
-// Other variables / values
-import {
-  CategoryBtnWrapper,
-  CircularLoaderWrapper,
-  MessageWrapper,
-  RowAlignWrapper,
-  SpaceBetweenDiv,
-  StyledCardTitle,
-  StyledCategoryBtn,
-} from 'pages/styles';
+// Constants
+import { linkedProductsColumns } from 'components/Grid/constants';
+import { tooltipContent } from '../CategoryInfoPanel/constants';
+
+// Store / APIs
 import { useAppDispatch } from 'store';
 import {
   productsApi,
@@ -36,7 +28,23 @@ import {
   useUpdateLinkedProductsMutation,
 } from 'store/api/products/api';
 import { productInitialState } from 'store/api/products/initialState';
+
+// Styles
+import {
+  CategoryBtnWrapper,
+  MessageWrapper,
+  RowAlignWrapper,
+  SpaceBetweenDiv,
+  StyledCardTitle,
+  StyledCategoryBtn,
+} from 'pages/styles';
+
+// Types
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
+
+// Utils
+import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
+import { renderLoader } from 'pages/utils';
 
 const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; categoryId: string }): JSX.Element => {
   // States
@@ -95,12 +103,6 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderSelectedCount = () => {
     if (linkedProdSelectedProds.length === 0) return;
@@ -228,6 +230,8 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
     }
   }, [isUpdateProductsSuccess]);
 
+  // When refresh linked products is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
   useEffect(() => {
     if (!isRefreshFetching && isRefreshSuccess) {
       setIsFetchingUpdates(true);
@@ -277,7 +281,7 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
                 onClick={handleRemoveProducts}
                 disabled={isUpdateProductsLoading}
               >
-                {isUpdateProductsLoading ? renderLoader(34) : 'Remove from category'}
+                {isUpdateProductsLoading ? renderLoader('34px', 17, 6) : 'Remove from category'}
               </StyledCategoryBtn>
             </CategoryBtnWrapper>
           )}

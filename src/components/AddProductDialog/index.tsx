@@ -1,15 +1,30 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { CircularProgress, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
-import { IValue } from 'store/api/types';
+// Components
 import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
-import { StyledChipWrapper } from 'components/Grid/styles';
-import { CircularLoaderWrapper, MessageWrapper, RowAlignWrapper, StyledCategoryBtn } from 'pages/styles';
+
+// Constants
 import { addProductTitles } from './constants';
-import { StyledDialog, StyledTextInput } from './styles';
+
+// Styles
+import {
+  MessageWrapper,
+  RowAlignWrapper,
+  StyledCategoryBtn,
+  StyledChipWrapper,
+  StyledDialog,
+  StyledTextInput,
+} from 'pages/styles';
+
+// Types
+import { IValue } from 'store/api/types';
 import { IAddProductProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const AddProductDialog = ({
   id,
@@ -21,15 +36,20 @@ const AddProductDialog = ({
   initialValue,
 }: IAddProductProps): JSX.Element => {
   const [productName, setProductName] = useState<string>(initialValue?.name ?? '');
+  // Barcode is given type string to allow resetting of barcode input to show placeholder
   const [barcode, setBarcode] = useState<string>(initialValue?.barcodeNumber ?? '');
   const [description, setDescription] = useState<string>('');
+  // categories state contain all categoryIds
   const [categories, setCategories] = useState<string[]>(initialValue?.categoryIds ?? []);
+  // categoryChips contain all info needed to render chips
   const [categoryChips, setCategoryChips] = useState<IValue[]>(initialValue?.categoryChips ?? []);
 
   useEffect(() => {
     if (isOpen) {
+      // After dialog is opened, values are reset / given their initial values
       setProductName(initialValue?.name ?? '');
       setBarcode(initialValue?.barcodeNumber ?? '');
+      setDescription('');
       setCategories(initialValue?.categoryIds ?? []);
       setCategoryChips(initialValue?.categoryChips ?? []);
     }
@@ -54,11 +74,6 @@ const AddProductDialog = ({
   };
 
   const handleModalClose = () => {
-    setProductName('');
-    setBarcode('');
-    setDescription('');
-    setCategories([]);
-    setCategoryChips([]);
     handleClose();
   };
 
@@ -67,6 +82,7 @@ const AddProductDialog = ({
       <StyledChipWrapper>
         {categoryChips.map((val: IValue, index: number) => {
           const handleDeleteChip = () => {
+            // Remove deleted chip from states
             setCategories((oldValue) => oldValue.filter((value) => value !== val.lowerLevelCategoryId));
             setCategoryChips((oldValue) => oldValue.filter((value) => value.id !== val.id));
           };
@@ -84,12 +100,6 @@ const AddProductDialog = ({
       categoryIds: categories,
     });
   };
-
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderFields = () => {
     return (
@@ -193,7 +203,7 @@ const AddProductDialog = ({
           onClick={handleModalSubmit}
           disabled={productName === '' || isLoading}
         >
-          {isLoading ? renderLoader(34) : 'Create'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Create'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">
@@ -217,6 +227,7 @@ const AddProductDialog = ({
       data-testid={id}
       id={id}
       keepMounted
+      dialogWidth={560}
     >
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderFields()}</DialogContent>
