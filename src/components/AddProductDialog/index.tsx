@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { CircularProgress, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
 // Components
@@ -11,7 +11,6 @@ import { addProductTitles } from './constants';
 
 // Styles
 import {
-  CircularLoaderWrapper,
   MessageWrapper,
   RowAlignWrapper,
   StyledCategoryBtn,
@@ -23,6 +22,9 @@ import {
 // Types
 import { IValue } from 'store/api/types';
 import { IAddProductProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const AddProductDialog = ({
   id,
@@ -98,13 +100,6 @@ const AddProductDialog = ({
       categoryIds: categories,
     });
   };
-
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderFields = () => {
     return (
@@ -208,7 +203,7 @@ const AddProductDialog = ({
           onClick={handleModalSubmit}
           disabled={productName === '' || isLoading}
         >
-          {isLoading ? renderLoader(34) : 'Create'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Create'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">

@@ -1,13 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 // Constants
@@ -18,7 +10,6 @@ import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
 
 // Styles
 import {
-  CircularLoaderWrapper,
   RowAlignWrapper,
   StyledCategoryBtn,
   StyledDialog,
@@ -30,6 +21,9 @@ import {
 
 // Types
 import { INewCampaignProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const CampaignDialog = ({
   isOpen,
@@ -110,19 +104,12 @@ const CampaignDialog = ({
     });
   };
 
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
   // Shows loading state while data is fetching
   const renderStates = () => {
     if (isFetching) {
       return (
         <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-          {renderLoader(100)}
+          {renderLoader('100px', 50, 6)}
         </MenuItem>
       );
     } else {
@@ -285,7 +272,7 @@ const CampaignDialog = ({
           onClick={handleModalSubmit}
           disabled={campaignTitle === '' || campaignType === '' || template === '' || isCreateCampaignLoading}
         >
-          {isCreateCampaignLoading ? renderLoader(34) : 'Next'}
+          {isCreateCampaignLoading ? renderLoader('34px', 17, 6) : 'Next'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );

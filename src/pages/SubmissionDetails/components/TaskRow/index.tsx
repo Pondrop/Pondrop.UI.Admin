@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EditOutlined, FormatAlignJustifyOutlined, ImageNotSupportedOutlined } from '@mui/icons-material';
-import { Alert, CircularProgress, IconButton, Snackbar } from '@mui/material';
+import { Alert, IconButton, Snackbar } from '@mui/material';
 import moment from 'moment';
 
 // Components
@@ -25,7 +25,6 @@ import { selectProducts } from 'store/api/products/slice';
 // Styles
 import {
   CategoryBtnWrapper,
-  CircularLoaderWrapper,
   ColAlignDiv,
   RowAlignWrapper,
   SpaceBetweenDiv,
@@ -39,6 +38,9 @@ import { IProductDialogData } from 'store/api/products/types';
 import { IFields, IItemValue, IValueTypes } from 'store/api/tasks/types';
 import { IValue } from 'store/api/types';
 import { IAddProductInitialValues, IFieldLabels, IManualChecker, ITaskRowProps, IValueTypeFields } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
   const navigate = useNavigate();
@@ -136,13 +138,6 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
     setIsSnackbarOpen(false);
     resetAddProduct();
   };
-
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={3} />
-    </CircularLoaderWrapper>
-  );
 
   const renderImage = () => {
     const hasPhoto = !!stepData?.fields[0]?.values[0]?.photoUrl;
@@ -280,7 +275,7 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
       );
     } else if ((isProduct && isFetchingUpdates) || isCheckProductFetching) {
       const loaderHeight = Array.isArray(fieldValue) ? fieldValue?.length * 32 + 28 : 0;
-      return renderLoader(loaderHeight);
+      return renderLoader(`${loaderHeight}px`, loaderHeight, 3);
     } else if (focusData?.itemId && focusData?.itemType === 'category') {
       const handleChipClick = () => {
         navigate(`/products/categories/${focusData?.itemId}`);

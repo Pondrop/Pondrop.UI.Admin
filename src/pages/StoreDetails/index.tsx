@@ -1,6 +1,5 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 
 // Components
 import StoreInfoPanel from './components/StoreInfo';
@@ -10,7 +9,6 @@ import { useGetStoreInfoQuery } from 'store/api/stores/api';
 
 // Styles
 import {
-  CircularLoaderWrapper,
   ContentDetails,
   StyledBreadcrumbs,
   StyledSubtitle,
@@ -23,6 +21,9 @@ import {
 // Types
 import { IValue } from 'store/api/types';
 import { IState } from 'pages/types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const StoreDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -42,12 +43,6 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
   };
-
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="calc(100vh - 36px)">
-      <CircularProgress size={100} thickness={3} />
-    </CircularLoaderWrapper>
-  );
 
   const handlePrevious = () => navigate(-1);
 
@@ -72,7 +67,7 @@ const StoreDetails: FunctionComponent = (): JSX.Element => {
     </div>
   );
 
-  return <ContentDetails>{isLoading ? renderLoader() : renderContent()}</ContentDetails>;
+  return <ContentDetails>{isLoading ? renderLoader('calc(100vh - 36px)', 100, 3) : renderContent()}</ContentDetails>;
 };
 
 export default StoreDetails;

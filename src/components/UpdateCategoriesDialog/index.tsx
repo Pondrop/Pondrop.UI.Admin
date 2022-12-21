@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CircularProgress, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 // Components
@@ -7,18 +7,14 @@ import TextAutocomplete from 'components/Autocomplete';
 import Chips from 'components/Chips';
 
 // Styles
-import {
-  CircularLoaderWrapper,
-  MessageWrapper,
-  RowAlignWrapper,
-  StyledCategoryBtn,
-  StyledChipWrapper,
-  StyledDialog,
-} from 'pages/styles';
+import { MessageWrapper, RowAlignWrapper, StyledCategoryBtn, StyledChipWrapper, StyledDialog } from 'pages/styles';
 
 // Types
 import { IValue } from 'store/api/types';
 import { IUpdateProductProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const UpdateCategoriesDialog = ({
   isOpen,
@@ -81,13 +77,6 @@ const UpdateCategoriesDialog = ({
     );
   };
 
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
   const renderFields = () => {
     return (
       <div>
@@ -114,7 +103,7 @@ const UpdateCategoriesDialog = ({
   };
 
   const renderContent = () => {
-    if (isFetchingData) return renderLoader(50);
+    if (isFetchingData) return renderLoader('50px', 25, 6);
     else return renderFields();
   };
 
@@ -150,7 +139,7 @@ const UpdateCategoriesDialog = ({
           onClick={handleModalSubmit}
           disabled={currCategories.length === 0}
         >
-          {isLoading ? renderLoader(34) : 'Done'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Done'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );

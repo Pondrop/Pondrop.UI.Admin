@@ -1,6 +1,5 @@
 import { FunctionComponent, SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 
 // Components
 import ActivityInfoPanel from './components/ActivityInfoPanel';
@@ -11,7 +10,6 @@ import { useGetCategoryInfoQuery } from 'store/api/categories/api';
 
 // Styles
 import {
-  CircularLoaderWrapper,
   ColAlignDiv,
   ContentDetails,
   SpaceBetweenDiv,
@@ -25,6 +23,9 @@ import {
 
 // Types
 import { IState } from 'pages/types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -57,13 +58,6 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
   const handleProductsRedirect = () => {
     navigate('../products', { replace: true });
   };
-
-  // Loader shown when fetching API response
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="calc(100vh - 36px)">
-      <CircularProgress size={100} thickness={3} />
-    </CircularLoaderWrapper>
-  );
 
   const renderHeader = () => {
     return (
@@ -104,7 +98,7 @@ const CategoryDetails: FunctionComponent = (): JSX.Element => {
     </div>
   );
 
-  return <ContentDetails>{isLoading ? renderLoader() : renderContent()}</ContentDetails>;
+  return <ContentDetails>{isLoading ? renderLoader('calc(100vh - 36px)', 100, 3) : renderContent()}</ContentDetails>;
 };
 
 export default CategoryDetails;

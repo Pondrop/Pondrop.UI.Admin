@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { CircularProgress } from '@mui/material';
 
 // Components
 import SearchField from 'components/SearchField';
 
 // Styles
-import { CircularLoaderWrapper } from 'pages/styles';
 import {
   LabelDiv,
   MenuListWrapper,
@@ -23,6 +21,7 @@ import { IFilterItem } from 'store/api/types';
 import { ICustomMenuProps } from './types';
 
 // Utils
+import { renderLoader } from 'pages/utils';
 import { getAllUniqueValues, handleFilterStateChange } from './utils';
 
 const CustomMenu = (props: ICustomMenuProps) => {
@@ -78,12 +77,6 @@ const CustomMenu = (props: ICustomMenuProps) => {
     );
   };
 
-  const renderLoader = () => (
-    <CircularLoaderWrapper height="270px">
-      <CircularProgress size={50} thickness={3} />
-    </CircularLoaderWrapper>
-  );
-
   const renderMenuItems = () => {
     if (uniqueValues.length === 0)
       return (
@@ -128,7 +121,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
       isLoading={isMenuLoading}
       {...other}
     >
-      {isMenuLoading ? renderLoader() : renderMenuItems()}
+      {isMenuLoading ? renderLoader('270px', 50, 3) : renderMenuItems()}
     </MenuWrapper>
   );
 };

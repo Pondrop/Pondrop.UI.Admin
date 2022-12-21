@@ -1,6 +1,5 @@
 import { ChangeEvent, Fragment, FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 import { Info } from '@mui/icons-material';
 
 // Components
@@ -21,7 +20,6 @@ import { useAddTemplateStepMutation } from 'store/api/tasks/api';
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
 
 // Styles
-import { CircularLoaderWrapper } from 'pages/styles';
 import {
   ColAlignDiv,
   ContentDetails,
@@ -41,6 +39,9 @@ import { StyledBtnWrapper, StyledTextInput } from './styles';
 // Types
 import { IAddTemplateStep } from 'store/api/tasks/types';
 import { INewTemplateState } from 'pages/types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const NewTemplate: FunctionComponent = (): JSX.Element => {
   // React router dom values
@@ -97,13 +98,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       resetAddTemplateStep();
     }
   }, [isAddTemplateStepSuccess]);
-
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderHeader = () => {
     return (
@@ -280,7 +274,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
           height={40}
           onClick={handleSaveDraftExit}
         >
-          {isAddTemplateStepLoading ? renderLoader(34) : 'Save draft & exit'}
+          {isAddTemplateStepLoading ? renderLoader('34px', 17, 6) : 'Save draft & exit'}
         </StyleOutlinedBtn>
         <div style={{ marginLeft: '20px' }}>
           <StyledCategoryBtn

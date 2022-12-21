@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Info, PlaylistAdd } from '@mui/icons-material';
-import { Alert, CircularProgress, IconButton, Snackbar, Tooltip } from '@mui/material';
+import { Alert, IconButton, Snackbar, Tooltip } from '@mui/material';
 import {
   GridFilterModel,
   GridRowParams,
@@ -32,7 +32,6 @@ import { productInitialState } from 'store/api/products/initialState';
 // Styles
 import {
   CategoryBtnWrapper,
-  CircularLoaderWrapper,
   MessageWrapper,
   RowAlignWrapper,
   SpaceBetweenDiv,
@@ -45,6 +44,7 @@ import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
 
 // Utils
 import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
+import { renderLoader } from 'pages/utils';
 
 const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; categoryId: string }): JSX.Element => {
   // States
@@ -103,13 +103,6 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'name', sort: 'asc' as GridSortDirection }] },
   };
-
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderSelectedCount = () => {
     if (linkedProdSelectedProds.length === 0) return;
@@ -288,7 +281,7 @@ const LinkedProducts = ({ categoryName, categoryId }: { categoryName: string; ca
                 onClick={handleRemoveProducts}
                 disabled={isUpdateProductsLoading}
               >
-                {isUpdateProductsLoading ? renderLoader(34) : 'Remove from category'}
+                {isUpdateProductsLoading ? renderLoader('34px', 17, 6) : 'Remove from category'}
               </StyledCategoryBtn>
             </CategoryBtnWrapper>
           )}

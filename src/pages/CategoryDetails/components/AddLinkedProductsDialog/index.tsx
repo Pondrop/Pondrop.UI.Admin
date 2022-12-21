@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CircularProgress, DialogActions, DialogTitle, IconButton } from '@mui/material';
+import { DialogActions, DialogTitle, IconButton } from '@mui/material';
 import { GridFilterModel, GridSelectionModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 import { Close } from '@mui/icons-material';
 
@@ -19,7 +19,7 @@ import {
 import { productInitialState } from 'store/api/products/initialState';
 
 // Styles
-import { CircularLoaderWrapper, RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
+import { RowAlignWrapper, StyledCategoryBtn, StyledDialog } from 'pages/styles';
 import { StyledDialogContent } from './styles';
 
 // Types
@@ -28,6 +28,7 @@ import { IAddLinkedProductsProps } from './types';
 
 // Utils
 import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
+import { renderLoader } from 'pages/utils';
 
 const AddLinkedProductsDialog = ({
   isOpen,
@@ -177,13 +178,6 @@ const AddLinkedProductsDialog = ({
     setLinkedProdSelectedProds(selectionModel as string[]);
   };
 
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
   const renderLinkedProducts = () => {
     return (
       <div>
@@ -258,7 +252,7 @@ const AddLinkedProductsDialog = ({
           onClick={handleModalSubmit}
           disabled={linkedProdSelectedProds.length === 0 || isUpdateProductsLoading}
         >
-          {isUpdateProductsLoading ? renderLoader(34) : 'Done'}
+          {isUpdateProductsLoading ? renderLoader('34px', 17, 6) : 'Done'}
         </StyledCategoryBtn>
       </RowAlignWrapper>
     );

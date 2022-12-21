@@ -1,13 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
 // Constants
@@ -18,7 +10,6 @@ import { useGetParentCategoriesQuery } from 'store/api/categories/api';
 
 // Styles
 import {
-  CircularLoaderWrapper,
   MessageWrapper,
   RowAlignWrapper,
   StyledCategoryBtn,
@@ -31,6 +22,9 @@ import {
 
 // Types
 import { ICreateCategoryProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const CategoryDialog = ({
   isOpen,
@@ -79,18 +73,11 @@ const CategoryDialog = ({
     handleSubmit({ name: categoryName, higherLevelCategoryId: parentCategory });
   };
 
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
-
   const renderStates = () => {
     if (isFetching) {
       return (
         <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-          {renderLoader(100)}
+          {renderLoader('100px', 50, 6)}
         </MenuItem>
       );
     } else {
@@ -207,7 +194,7 @@ const CategoryDialog = ({
           onClick={handleModalSubmit}
           disabled={categoryName === '' || parentCategory === '' || isLoading}
         >
-          {isLoading ? renderLoader(34) : 'Create'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Create'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">

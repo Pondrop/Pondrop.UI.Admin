@@ -1,12 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {
-  CircularProgress,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, DialogTitle, IconButton, SelectChangeEvent } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
 // Constants
@@ -14,7 +7,6 @@ import { FOCUS_TYPE, newTemplateTitles, TEMPLATE_TYPE, templateFocusObjectData, 
 
 // Styles
 import {
-  CircularLoaderWrapper,
   MessageWrapper,
   RowAlignWrapper,
   StyledCategoryBtn,
@@ -27,6 +19,9 @@ import {
 
 // Types
 import { INewTemplateProps } from './types';
+
+// Utils
+import { renderLoader } from 'pages/utils';
 
 const NewTemplateDialog = ({
   isOpen,
@@ -107,13 +102,6 @@ const NewTemplateDialog = ({
       focus: FOCUS_TYPE[templateFocusObject as keyof typeof FOCUS_TYPE],
     });
   };
-
-  // Loader shown when fetching API response
-  const renderLoader = (height: number) => (
-    <CircularLoaderWrapper height={`${height}px`}>
-      <CircularProgress size={height / 2} thickness={6} />
-    </CircularLoaderWrapper>
-  );
 
   const renderCreateCategory = () => {
     return (
@@ -289,7 +277,7 @@ const NewTemplateDialog = ({
             isLoading
           }
         >
-          {isLoading ? renderLoader(34) : 'Next'}
+          {isLoading ? renderLoader('34px', 17, 6) : 'Next'}
         </StyledCategoryBtn>
         {errorMessage !== '' && !isLoading && (
           <MessageWrapper color="red">
