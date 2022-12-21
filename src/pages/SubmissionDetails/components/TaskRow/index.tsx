@@ -318,7 +318,7 @@ const TaskRow = ({ stepData, categoryFocus }: ITaskRowProps) => {
       fieldValue =
         step?.values[0]?.[IValueTypeFields[step?.type as keyof typeof IValueTypeFields] as keyof IValueTypes];
 
-    if (isCurrency) fieldValue = '$ ' + Number(fieldValue).toFixed(2);
+    if (isCurrency) fieldValue = fieldValue ? '$ ' + Number(fieldValue).toFixed(2) : null;
     if (isDate) fieldValue = fieldValue ? moment(String(fieldValue)).format('DD/MM/YYYY') : null;
 
     return (
