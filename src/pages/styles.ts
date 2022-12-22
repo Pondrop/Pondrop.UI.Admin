@@ -447,6 +447,14 @@ export const StyledDialog = styled(Dialog, {
     color: #72787e;
   }
 
+  .button-with-icon {
+    svg {
+      fill: #006492;
+    }
+  }
+`;
+
+export const StyledDialogWSelect = styled(StyledDialog)`
   & .MuiInputBase-root {
     width: 100%;
   }

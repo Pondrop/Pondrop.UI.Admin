@@ -13,7 +13,7 @@ import {
   MessageWrapper,
   RowAlignWrapper,
   StyledCategoryBtn,
-  StyledDialog,
+  StyledDialogWSelect,
   StyledInputBase,
   StyledMenuItem,
   StyledSelect,
@@ -209,7 +209,7 @@ const CategoryDialog = ({
   };
 
   return (
-    <StyledDialog
+    <StyledDialogWSelect
       open={isOpen}
       onClose={handleModalClose}
       maxWidth="sm"
@@ -222,7 +222,7 @@ const CategoryDialog = ({
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderCreateCategory()}</DialogContent>
       <DialogActions className="dialog-actions">{renderActionButtons()}</DialogActions>
-    </StyledDialog>
+    </StyledDialogWSelect>
   );
 };
 
