@@ -36,7 +36,7 @@ const StoreGrid = (): JSX.Element => {
   const storeFilterInitState = generateFilterInitState(campaignStoreColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [storeFilterItemState, setStoreFilterItemState] = useState<IFilterItem[]>(storeFilterInitState);
-  const [storePageSize, setStorePageSize] = useState<number>(10);
+  const [storePageSize, setStorePageSize] = useState<number>(100);
   const [storePageSkip, setStorePageSkip] = useState<number>(0);
 
   const dispatch = useAppDispatch();

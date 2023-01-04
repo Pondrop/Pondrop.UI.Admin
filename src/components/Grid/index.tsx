@@ -106,7 +106,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       rows={gridData ?? []}
       columns={columns}
       autoHeight
-      rowsPerPageOptions={[10, 20, 30, 40]}
+      rowsPerPageOptions={[10, 20, 30, 40, 100, 200]}
       initialState={{
         ...initialState,
       }}
