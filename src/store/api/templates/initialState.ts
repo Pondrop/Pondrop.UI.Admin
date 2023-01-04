@@ -8,7 +8,7 @@ export interface ITemplateState extends IGridState {
 export const templateInitialState: ITemplateState = {
   ...initialState,
   sortValue: {
-    field: 'status',
+    field: 'fieldStatus',
     sort: 'asc'
   },
   didCreateTemplate: false

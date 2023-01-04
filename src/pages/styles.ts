@@ -520,3 +520,17 @@ export const StyledChipWrapper = styled(Paper)`
     margin: 4px;
   }
 `;
+
+export const InfoIconWrapper = styled.div`
+  display: flex;
+  align-self: center;
+  margin-left: 8px;
+  svg {
+    fill: #006492;
+  }
+
+  .MuiSvgIcon-root {
+    height: 13px;
+    width: 13px;
+  }
+`;

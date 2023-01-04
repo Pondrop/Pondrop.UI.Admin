@@ -72,7 +72,7 @@ const CustomMenu = (props: ICustomMenuProps) => {
         onClick={handleOnGridFilterClick(searchedData[index])}
       >
         <StyledCheckbox value={idValue} checked={isChecked} />
-        <LabelDiv>{searchedData[index][0].toUpperCase() + searchedData[index].slice(1)}</LabelDiv>
+        <LabelDiv>{String(searchedData[index])[0].toUpperCase() + String(searchedData[index]).slice(1)}</LabelDiv>
       </RowDiv>
     );
   };
