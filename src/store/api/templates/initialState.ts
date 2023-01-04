@@ -8,6 +8,15 @@ export interface ITemplateState extends IGridState {
 export const templateInitialState: ITemplateState = {
   ...initialState,
   sortValue: {
+    field: 'status',
+    sort: 'asc'
+  },
+  didCreateTemplate: false
+};
+
+export const selectedFieldsInitialState: ITemplateState = {
+  ...initialState,
+  sortValue: {
     field: 'fieldStatus',
     sort: 'asc'
   },
