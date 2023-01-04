@@ -8,7 +8,6 @@ const useGlobalStyles = makeStyles(() =>
         margin: '0',
         '& .MuiPaper-root': {
           borderRadius: '12px',
-          boxShadow: 'none',
         },
       },
       main: {

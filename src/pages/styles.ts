@@ -507,6 +507,7 @@ export const StyledChipWrapper = styled(Paper)`
   flex-wrap: wrap;
   list-style: none;
   background: transparent;
+  box-shadow: none;
 
   .chip-component {
     margin: 4px;
