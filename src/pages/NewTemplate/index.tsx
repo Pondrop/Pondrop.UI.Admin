@@ -4,6 +4,7 @@ import { Info } from '@mui/icons-material';
 
 // Components
 import Grid from 'components/Grid';
+import SelectTemplateDialog from './SelectTemplateDialog';
 
 // Constants
 import { selectedFieldsColumns } from 'components/Grid/constants';
@@ -52,6 +53,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   const [modalTitle, setModalTitle] = useState<string>('');
   const [modalInstructions, setModalInstructions] = useState<string>('');
   const [requestData, setRequestData] = useState<IAddTemplateStep>(addTemplateStepInitialState);
+  const [isSelectTemplateOpen, setIsSelectTemplateOpen] = useState<boolean>(false);
 
   // API values
   const state = location?.state as INewTemplateState;
@@ -83,6 +85,14 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       };
       addTemplateStep(requestBody);
     }
+  };
+
+  const handleSelectTemplateOpen = () => {
+    setIsSelectTemplateOpen(true);
+  };
+
+  const handleSelectTemplateClose = () => {
+    setIsSelectTemplateOpen(false);
   };
 
   useEffect(() => {
@@ -215,10 +225,12 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
               variant="contained"
               disableElevation
               height={40}
+              onClick={handleSelectTemplateOpen}
             >
               + Additional fields
             </StyledCategoryBtn>
           </StyledBtnWrapper>
+          <SelectTemplateDialog isOpen={isSelectTemplateOpen} handleClose={handleSelectTemplateClose} />
           <div className="label-div" style={{ alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontWeight: 600, color: '#000000', fontSize: '12px', lineHeight: '16px' }}>
               Field step instructions

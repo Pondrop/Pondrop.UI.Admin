@@ -447,6 +447,14 @@ export const StyledDialog = styled(Dialog, {
     color: #72787e;
   }
 
+  .button-with-icon {
+    svg {
+      fill: #006492;
+    }
+  }
+`;
+
+export const StyledDialogWSelect = styled(StyledDialog)`
   & .MuiInputBase-root {
     width: 100%;
   }
@@ -511,5 +519,19 @@ export const StyledChipWrapper = styled(Paper)`
 
   .chip-component {
     margin: 4px;
+  }
+`;
+
+export const InfoIconWrapper = styled.div`
+  display: flex;
+  align-self: center;
+  margin-left: 8px;
+  svg {
+    fill: #006492;
+  }
+
+  .MuiSvgIcon-root {
+    height: 13px;
+    width: 13px;
   }
 `;

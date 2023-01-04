@@ -12,7 +12,7 @@ import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
 import {
   RowAlignWrapper,
   StyledCategoryBtn,
-  StyledDialog,
+  StyledDialogWSelect,
   StyledInputBase,
   StyledMenuItem,
   StyledSelect,
@@ -279,7 +279,7 @@ const CampaignDialog = ({
   };
 
   return (
-    <StyledDialog
+    <StyledDialogWSelect
       open={isOpen}
       onClose={handleModalClose}
       maxWidth="sm"
@@ -292,7 +292,7 @@ const CampaignDialog = ({
       {renderDialogTitle()}
       <DialogContent className="dialog-content">{renderFields()}</DialogContent>
       <DialogActions className="dialog-actions">{renderActionButtons()}</DialogActions>
-    </StyledDialog>
+    </StyledDialogWSelect>
   );
 };
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tooltip } from '@mui/material';
+import { Info } from '@mui/icons-material';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import moment from 'moment';
 
@@ -8,8 +9,8 @@ import moment from 'moment';
 import Chips from 'components/Chips';
 
 // Styles
-import { StyledChipWrapper } from 'pages/styles';
-import { StyledCellContent } from './styles';
+import { InfoIconWrapper, StyledChipWrapper } from 'pages/styles';
+import { StyledCellContent, StyledCellContentWrapper } from './styles';
 
 // Types
 import { ICategories } from 'store/api/types';
@@ -139,5 +140,42 @@ export const handleRenderManualSubmissions = (params: GridRenderCellParams) => {
         {isManualSubmission}
       </StyledCellContent>
     </Tooltip>
+  );
+};
+
+// Format cell if value is a picker
+export const handleRenderFieldType = (params: GridRenderCellParams) => {
+  const tooltipTextRef = useRef<HTMLDivElement>(null);
+
+  const capitalizedValue = params.value[0].toUpperCase() + params.value.slice(1);
+  const isPicker = params.value === 'picker';
+
+  const renderPickerList = () => {
+    return (
+      <div>
+        <ul style={{ paddingInlineStart: '16px' }}>
+          {params.row.pickerValues.map((pickerValue: string, index: string) => (
+            <li key={`picker-${index}`}>{pickerValue}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  return (
+    <StyledCellContentWrapper
+      ref={tooltipTextRef}
+      id={`styled-content-${params.id}-${params.field}`}
+      style={{ display: 'flex', flexDirection: 'row' }}
+    >
+      {capitalizedValue}
+      {isPicker && (
+        <Tooltip title={renderPickerList()} placement="right" key={params.id} arrow>
+          <InfoIconWrapper>
+            <Info />
+          </InfoIconWrapper>
+        </Tooltip>
+      )}
+    </StyledCellContentWrapper>
   );
 };

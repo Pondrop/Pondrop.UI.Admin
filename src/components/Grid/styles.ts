@@ -99,3 +99,12 @@ export const StyledCellContent = styled(Typography)`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+
+export const StyledCellContentWrapper = styled.div`
+  .p {
+    overflow: hidden;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;

@@ -57,8 +57,48 @@ export const templatesApi = createApi({
           method: 'GET',
         };
       },
-    })
+    }),
+    getFields: builder.query<IApiResponse, { searchString: string, sortValue: ISortItem, filterItem: IFilterItem[], prevPageItems: number, pageSize: number }>({
+      query: (arg) => {
+        const { searchString, sortValue, filterItem, prevPageItems = 0, pageSize = 10 } = arg;
+        
+        let filterQuery = '';
+        let sortQuery = '';
+
+        // FUTURE ENHANCEMENT: Take into account operatorValues other than isAnyOf
+        // Currently limited to isAnyOf
+        if (Array.isArray(filterItem) && filterItem.length > 0) {
+          filterItem.forEach((filter, filterIndex) => {
+            const filterValues = filter.value;
+            if (Array.isArray(filterValues) && filter.columnField !== 'retailer') filterValues?.forEach((filterValue, index) => {
+              if (filterIndex > 0 && filterQuery[filterQuery.length - 1] === ')') filterQuery = filterQuery.concat(' and ');
+              if (index === 0) filterQuery = filterQuery.concat('(');
+              if (index !== 0) filterQuery = filterQuery.concat(' or ');
+              if (filter.columnField === 'maxValue') filterQuery = filterQuery.concat(`${filter.columnField} eq ${filterValue}`);
+              else filterQuery = filterQuery.concat(`${filter.columnField} eq '${filterValue}'`);
+              if (index === filterValues.length - 1) filterQuery = filterQuery.concat(')');
+            });
+          });
+        }
+
+        if (sortValue.sort) sortQuery = sortQuery.concat(`${sortValue.field} ${sortValue.sort}`);
+
+        return {
+          url: `/indexes/cosmosdb-index-fields/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*${filterQuery && `&$filter=${encodeURIComponent(filterQuery)}`}&$count=true&$skip=${prevPageItems}&$top=${pageSize}${sortQuery && `&$orderby=${sortQuery}`}`,
+          method: 'GET',
+        };
+      },
+    }),
+    getAllFieldFilter: builder.query<IApiResponse, { searchString: string }>({
+      query: (arg) => {
+        const { searchString } = arg;
+        return {
+          url: `/indexes/cosmosdb-index-fields/docs?api-version=2021-04-30-Preview&search=${searchString && encodeURIComponent(searchString)}*&$count=true&facet=label,count:0,sort:value&facet=fieldType,count:0,sort:value&facet=maxValue,count:0,sort:value`,
+          method: 'GET',
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetAllTemplateFilterQuery, useGetTemplatesQuery } = templatesApi;
+export const { useGetAllFieldFilterQuery, useGetAllTemplateFilterQuery, useGetFieldsQuery, useGetTemplatesQuery } = templatesApi;
