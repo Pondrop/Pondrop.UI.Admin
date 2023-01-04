@@ -18,7 +18,7 @@ import { selectedFieldsColumns } from 'components/Grid/constants';
 
 // Store / APIs
 import { useGetAllFieldFilterQuery, useGetFieldsQuery } from 'store/api/templates/api';
-import { templateInitialState } from 'store/api/templates/initialState';
+import { selectedFieldsInitialState } from 'store/api/templates/initialState';
 
 // Styles
 import { SpaceBetweenDiv, StyledCategoryBtn, StyledDialog, StyleOutlinedBtn } from 'pages/styles';
@@ -40,7 +40,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   const [pageSkip, setPageSkip] = useState<number>(0);
   // Local states for Add Linked Products grid
   const [selectTemplateSearchVal, setSelectTemplateSearchVal] = useState<string>('');
-  const [selectTemplateSortVal, setSelectTemplateSortVal] = useState<ISortItem>(templateInitialState.sortValue);
+  const [selectTemplateSortVal, setSelectTemplateSortVal] = useState<ISortItem>(selectedFieldsInitialState.sortValue);
   const [selectTemplateFilterVal, setSelectTemplateFilterVal] = useState<IFilterItem[]>(selectTemplateFilterInitState);
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
 
@@ -69,7 +69,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   useEffect(() => {
     if (!isOpen) {
       setSelectTemplateSearchVal('');
-      setSelectTemplateSortVal(templateInitialState.sortValue);
+      setSelectTemplateSortVal(selectedFieldsInitialState.sortValue);
       setSelectedFields([]);
     } else {
       setGridData(data?.value ?? []);
