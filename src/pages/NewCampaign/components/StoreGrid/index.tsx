@@ -111,18 +111,17 @@ const StoreGrid = (): JSX.Element => {
     setStorePageSkip(0);
 
     if (currColumn === 'retailer') dispatch(setStoresSelectedProviders(combinedValue));
-    else {
-      const newAppliedFilters = currFilterItems.map((filter) => {
-        if (filter.columnField === currColumn)
-          return {
-            ...filter,
-            value: combinedValue,
-          };
-        else return filter;
-      });
-      dispatch(setStoresSelectedProviders([]));
-      dispatch(setStoresFilter(newAppliedFilters));
-    }
+
+    const newAppliedFilters = currFilterItems.map((filter) => {
+      if (filter.columnField === currColumn)
+        return {
+          ...filter,
+          value: combinedValue,
+        };
+      else return filter;
+    });
+
+    dispatch(setStoresFilter(newAppliedFilters));
   };
 
   const onPageChange = (page: number) => {
