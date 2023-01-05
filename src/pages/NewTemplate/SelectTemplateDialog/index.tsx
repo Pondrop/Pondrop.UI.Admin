@@ -14,11 +14,13 @@ import Grid from 'components/Grid';
 import SearchField from 'components/SearchField';
 
 // Constants
-import { selectedFieldsColumns } from 'components/Grid/constants';
+import { availableFieldsColumns } from 'components/Grid/constants';
 
 // Store / APIs
+import { useAppDispatch } from 'store';
 import { useGetAllFieldFilterQuery, useGetFieldsQuery } from 'store/api/templates/api';
 import { selectedFieldsInitialState } from 'store/api/templates/initialState';
+import { setSelectedFields } from 'store/api/templates/slice';
 
 // Styles
 import { SpaceBetweenDiv, StyledCategoryBtn, StyledDialog, StyleOutlinedBtn } from 'pages/styles';
@@ -32,8 +34,10 @@ import { ISelectTemplatesProps } from './types';
 import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): JSX.Element => {
+  const dispatch = useAppDispatch();
+
   // States
-  const selectTemplateFilterInitState = generateFilterInitState(selectedFieldsColumns);
+  const selectTemplateFilterInitState = generateFilterInitState(availableFieldsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -42,7 +46,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   const [selectTemplateSearchVal, setSelectTemplateSearchVal] = useState<string>('');
   const [selectTemplateSortVal, setSelectTemplateSortVal] = useState<ISortItem>(selectedFieldsInitialState.sortValue);
   const [selectTemplateFilterVal, setSelectTemplateFilterVal] = useState<IFilterItem[]>(selectTemplateFilterInitState);
-  const [selectedFields, setSelectedFields] = useState<string[]>([]);
+  const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>([]);
 
   const { data, isFetching } = useGetFieldsQuery({
     searchString: selectTemplateSearchVal,
@@ -70,7 +74,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
     if (!isOpen) {
       setSelectTemplateSearchVal('');
       setSelectTemplateSortVal(selectedFieldsInitialState.sortValue);
-      setSelectedFields([]);
+      setSelectedFieldIds([]);
     } else {
       setGridData(data?.value ?? []);
       setRowCount(data?.['@odata.count'] ?? 0);
@@ -88,6 +92,8 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   };
 
   const handleModalSubmit = () => {
+    const selectedRows = gridData.filter((row) => selectedFieldIds.includes(String(row?.id)));
+    dispatch(setSelectedFields(selectedRows));
     handleModalClose();
   };
 
@@ -133,7 +139,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   };
 
   const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
-    setSelectedFields(selectionModel as string[]);
+    setSelectedFieldIds(selectionModel as string[]);
   };
 
   const handleDisabledFields = (params: GridRowParams) => {
@@ -156,7 +162,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
         </div>
         <Grid
           data={gridData}
-          columns={selectedFieldsColumns}
+          columns={availableFieldsColumns}
           id="select-template-grid"
           dataIdKey="id"
           isFetching={isFetching}
@@ -174,7 +180,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           withCheckboxSelection={true}
           withBorder={false}
           onSelectionModelChange={onSelectionModelChange}
-          selectionModel={selectedFields}
+          selectionModel={selectedFieldIds}
           rowHeight={48}
           isRowSelectable={handleDisabledFields}
         />
@@ -211,7 +217,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           variant="outlined"
           disableElevation
           height={40}
-          onClick={handleModalClose}
+          onClick={handleModalSubmit}
           startIcon={<ArrowBack />}
         >
           Done

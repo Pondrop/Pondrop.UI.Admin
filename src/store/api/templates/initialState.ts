@@ -1,8 +1,9 @@
 import { initialState } from '../constants';
-import { IGridState } from "../types";
+import { IGridState, IValue } from "../types";
 
 export interface ITemplateState extends IGridState {
   didCreateTemplate: boolean;
+  selectedFields: IValue[];
 }
 
 export const templateInitialState: ITemplateState = {
@@ -11,7 +12,8 @@ export const templateInitialState: ITemplateState = {
     field: 'status',
     sort: 'asc'
   },
-  didCreateTemplate: false
+  didCreateTemplate: false,
+  selectedFields: []
 };
 
 export const selectedFieldsInitialState: ITemplateState = {
@@ -20,5 +22,6 @@ export const selectedFieldsInitialState: ITemplateState = {
     field: 'fieldStatus',
     sort: 'asc'
   },
-  didCreateTemplate: false
+  didCreateTemplate: false,
+  selectedFields: []
 };

@@ -17,8 +17,10 @@ import {
 } from './constants';
 
 // Store / APIs
+import { useAppSelector } from 'store';
 import { useAddTemplateStepMutation } from 'store/api/tasks/api';
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
+import { selectTemplates } from 'store/api/templates/slice';
 
 // Styles
 import {
@@ -54,6 +56,8 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   const [modalInstructions, setModalInstructions] = useState<string>('');
   const [requestData, setRequestData] = useState<IAddTemplateStep>(addTemplateStepInitialState);
   const [isSelectTemplateOpen, setIsSelectTemplateOpen] = useState<boolean>(false);
+
+  const { selectedFields } = useAppSelector(selectTemplates);
 
   // API values
   const state = location?.state as INewTemplateState;
@@ -208,7 +212,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
           />
           <div style={{ marginBottom: '12px' }}>
             <Grid
-              data={[]}
+              data={selectedFields}
               columns={selectedFieldsColumns}
               id="current-selected-fields-grid"
               dataIdKey="id"

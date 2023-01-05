@@ -73,4 +73,11 @@ export const selectedFieldsColumns: GridColDef[] = [
   { field: 'label', headerName: 'Field label name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'fieldType', headerName: 'Field type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderFieldType },
   { field: 'maxValue', headerName: 'Max value', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'mandatory', headerName: 'Mandatory', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderManualSubmissions },
+];
+
+export const availableFieldsColumns: GridColDef[] = [
+  { field: 'label', headerName: 'Field label name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
+  { field: 'fieldType', headerName: 'Field type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderFieldType },
+  { field: 'maxValue', headerName: 'Max value', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
 ];
