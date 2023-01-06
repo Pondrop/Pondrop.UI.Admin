@@ -11,6 +11,11 @@ export const newTemplateTitles = [
     placeholder: '- Select template type -'
   },
   {
+    field: 'initiatedBy',
+    label: 'Initiated by',
+    placeholder: '- Select template initiated by value -'
+  },
+  {
     field: 'decription',
     label: 'Description',
     placeholder: 'Template description (subheading)'
@@ -43,6 +48,29 @@ export const TEMPLATE_TYPE = {
   'type-1': 'task',
   'type-2': 'survey',
   'type-3': 'advert'
+};
+
+// New Template - Template Initiated By field helper values
+export const templateInitiatedByData = [
+  {
+    label: 'Shopper',
+    id: 'initiatedBy-1'
+  },
+  {
+    label: 'Brand',
+    id: 'initiatedBy-2'
+  },
+  {
+    label: 'Pondrop',
+    id: 'initiatedBy-3'
+  }
+];
+
+// Mapping of Template type
+export const TEMPLATE_INITIATED_BY = {
+  'initiatedBy-1': 'shopper',
+  'initiatedBy-2': 'brand',
+  'initiatedBy-3': 'pondrop'
 };
 
 // New Template - Template Focus Object field helper values
