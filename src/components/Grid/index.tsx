@@ -147,6 +147,7 @@ const Grid: FunctionComponent<IGridProps> = ({
       hideFooter={hideFooter}
       borderColor={borderColor}
       pagination={typeof onPageChange === 'function'}
+      disableSelectionOnClick={!withCheckboxSelection}
     />
   );
 };

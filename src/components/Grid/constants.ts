@@ -1,5 +1,5 @@
 import { getGridStringOperators, GridColDef } from '@mui/x-data-grid-pro';
-import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips, handleRenderFieldType, handleRenderManualSubmissions, handleRenderProvider } from './utils';
+import { handleRenderCell, handleRenderCellDate, handleRenderCellFormat, handleRenderChips, handleRenderDeleteButton, handleRenderDropdown, handleRenderFieldType, handleRenderManualSubmissions, handleRenderProvider } from './utils';
 
 // filterOperators to be updated to make way for ssr filters, disabled most operators for now
 
@@ -70,6 +70,14 @@ export const templatesColumns: GridColDef[] = [
 ];
 
 export const selectedFieldsColumns: GridColDef[] = [
+  { field: 'label', headerName: 'Field label name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
+  { field: 'fieldType', headerName: 'Field type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderFieldType },
+  { field: 'maxValue', headerName: 'Max value', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'mandatory', headerName: 'Mandatory', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderDropdown },
+  { field: 'delete', headerName: '', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), width: 50, renderCell: handleRenderDeleteButton, disableColumnMenu: true, sortable: false },
+];
+
+export const availableFieldsColumns: GridColDef[] = [
   { field: 'label', headerName: 'Field label name', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'fieldType', headerName: 'Field type', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderFieldType },
   { field: 'maxValue', headerName: 'Max value', filterOperators: getGridStringOperators().filter((op) => String(op) === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },

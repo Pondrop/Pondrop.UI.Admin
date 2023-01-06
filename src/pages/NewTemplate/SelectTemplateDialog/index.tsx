@@ -14,11 +14,13 @@ import Grid from 'components/Grid';
 import SearchField from 'components/SearchField';
 
 // Constants
-import { selectedFieldsColumns } from 'components/Grid/constants';
+import { availableFieldsColumns } from 'components/Grid/constants';
 
 // Store / APIs
+import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllFieldFilterQuery, useGetFieldsQuery } from 'store/api/templates/api';
 import { selectedFieldsInitialState } from 'store/api/templates/initialState';
+import { selectTemplates, setNewTemplateSelectedFieldIds, setSelectedFields } from 'store/api/templates/slice';
 
 // Styles
 import { SpaceBetweenDiv, StyledCategoryBtn, StyledDialog, StyleOutlinedBtn } from 'pages/styles';
@@ -32,8 +34,11 @@ import { ISelectTemplatesProps } from './types';
 import { generateFilterInitState, handleFilterStateChange } from 'components/GridMenu/utils';
 
 const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { selectedIds: globalSelectedFieldIds } = useAppSelector(selectTemplates);
+
   // States
-  const selectTemplateFilterInitState = generateFilterInitState(selectedFieldsColumns);
+  const selectTemplateFilterInitState = generateFilterInitState(availableFieldsColumns);
   const [gridData, setGridData] = useState<IValue[]>([]);
   const [menuData, setMenuData] = useState<IFacetValue>({} as IFacetValue);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -42,7 +47,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   const [selectTemplateSearchVal, setSelectTemplateSearchVal] = useState<string>('');
   const [selectTemplateSortVal, setSelectTemplateSortVal] = useState<ISortItem>(selectedFieldsInitialState.sortValue);
   const [selectTemplateFilterVal, setSelectTemplateFilterVal] = useState<IFilterItem[]>(selectTemplateFilterInitState);
-  const [selectedFields, setSelectedFields] = useState<string[]>([]);
+  const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>(globalSelectedFieldIds as string[]);
 
   const { data, isFetching } = useGetFieldsQuery({
     searchString: selectTemplateSearchVal,
@@ -70,7 +75,6 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
     if (!isOpen) {
       setSelectTemplateSearchVal('');
       setSelectTemplateSortVal(selectedFieldsInitialState.sortValue);
-      setSelectedFields([]);
     } else {
       setGridData(data?.value ?? []);
       setRowCount(data?.['@odata.count'] ?? 0);
@@ -83,11 +87,19 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
     }
   }, [data, filterOptionsData, isOpen]);
 
+  useEffect(() => {
+    dispatch(setNewTemplateSelectedFieldIds(globalSelectedFieldIds as string[]));
+    setSelectedFieldIds(globalSelectedFieldIds as string[]);
+  }, [globalSelectedFieldIds]);
+
   const handleModalClose = () => {
     handleClose();
   };
 
   const handleModalSubmit = () => {
+    const selectedRows = gridData.filter((row) => selectedFieldIds?.includes(String(row?.id)));
+    dispatch(setSelectedFields(selectedRows));
+    dispatch(setNewTemplateSelectedFieldIds(selectedFieldIds));
     handleModalClose();
   };
 
@@ -133,7 +145,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   };
 
   const onSelectionModelChange = (selectionModel: GridSelectionModel) => {
-    setSelectedFields(selectionModel as string[]);
+    setSelectedFieldIds(selectionModel as string[]);
   };
 
   const handleDisabledFields = (params: GridRowParams) => {
@@ -156,7 +168,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
         </div>
         <Grid
           data={gridData}
-          columns={selectedFieldsColumns}
+          columns={availableFieldsColumns}
           id="select-template-grid"
           dataIdKey="id"
           isFetching={isFetching}
@@ -174,9 +186,10 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           withCheckboxSelection={true}
           withBorder={false}
           onSelectionModelChange={onSelectionModelChange}
-          selectionModel={selectedFields}
+          selectionModel={selectedFieldIds}
           rowHeight={48}
           isRowSelectable={handleDisabledFields}
+          hideFooterSelectedRowCount={true}
         />
       </div>
     );
@@ -211,7 +224,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           variant="outlined"
           disableElevation
           height={40}
-          onClick={handleModalClose}
+          onClick={handleModalSubmit}
           startIcon={<ArrowBack />}
         >
           Done

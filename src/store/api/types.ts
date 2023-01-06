@@ -1,7 +1,7 @@
 import { GridSortDirection } from '@mui/x-data-grid-pro';
 
 export interface IValue {
-  [key: string]: number | string | string[];
+  [key: string]: number | boolean | string | string[];
 }
 
 export interface IFacetDetails {

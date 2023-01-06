@@ -474,12 +474,15 @@ export const StyledSelect = styled(Select, {
   }
 `;
 
-export const StyledInputBase = styled(InputBase)`
+export const StyledInputBase = styled(InputBase, {
+  shouldForwardProp: (prop) => prop !== 'paddingTop'
+})<{ paddingTop?: number }>`
   & .MuiInputBase-input {
     line-height: 16px;
     font-size: 12px;
-    padding: 16px 12px;
+    padding: ${({ paddingTop = 16 }) => paddingTop}px 12px;
     color: #001f2a;
+    min-width: 26px;
 
     & legend {
       display: none;

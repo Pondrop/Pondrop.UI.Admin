@@ -1,19 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Tooltip } from '@mui/material';
-import { Info } from '@mui/icons-material';
+import { IconButton, SelectChangeEvent, Tooltip } from '@mui/material';
+import { DeleteOutline, Info } from '@mui/icons-material';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import moment from 'moment';
 
 // Components
 import Chips from 'components/Chips';
 
+// Store / APIs
+import { useAppDispatch, useAppSelector } from 'store';
+import { selectTemplates, setNewTemplateSelectedFieldIds, setSelectedFields } from 'store/api/templates/slice';
+
 // Styles
-import { InfoIconWrapper, StyledChipWrapper } from 'pages/styles';
+import { InfoIconWrapper, StyledChipWrapper, StyledInputBase, StyledMenuItem, StyledSelect } from 'pages/styles';
 import { StyledCellContent, StyledCellContentWrapper } from './styles';
 
 // Types
-import { ICategories } from 'store/api/types';
+import { ICategories, IValue } from 'store/api/types';
 
 // Normal rendering of cell + tooltip
 export const handleRenderCell = (params: GridRenderCellParams) => {
@@ -177,5 +181,80 @@ export const handleRenderFieldType = (params: GridRenderCellParams) => {
         </Tooltip>
       )}
     </StyledCellContentWrapper>
+  );
+};
+
+// Render dropdown
+export const handleRenderDropdown = (params: GridRenderCellParams) => {
+  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
+  const [dropdownValue, setDropdownValue] = useState<string>(params.value ? 'yes' : 'no');
+  const dispatch = useAppDispatch();
+  const { selectedFields } = useAppSelector(selectTemplates);
+
+  const handleSelectClose = () => {
+    setIsSelectOpen(false);
+  };
+
+  const handleSelectOpen = () => {
+    setIsSelectOpen(true);
+  };
+
+  const handleDropdownChange = (event: SelectChangeEvent<unknown>) => {
+    const newSelectedFields = selectedFields.map((field) => {
+      if (field.id === params.row.id)
+        return {
+          ...field,
+          mandatory: event.target.value === 'yes' ? true : false,
+        };
+      else return field;
+    });
+    dispatch(setSelectedFields(newSelectedFields));
+    setDropdownValue(String(event.target.value));
+  };
+
+  return (
+    <StyledSelect
+      id={`mandatory-${params.row.id}`}
+      value={dropdownValue}
+      onChange={handleDropdownChange}
+      MenuProps={{
+        PaperProps: {
+          sx: {
+            border: '1px solid #006492 !important',
+            borderRadius: '0 0 8px 8px !important',
+          },
+        },
+      }}
+      input={<StyledInputBase paddingTop={8} />}
+      onClose={handleSelectClose}
+      onOpen={handleSelectOpen}
+      isOpen={isSelectOpen}
+    >
+      <StyledMenuItem key="yes" value="yes">
+        Yes
+      </StyledMenuItem>
+      <StyledMenuItem key="no" value="no">
+        No
+      </StyledMenuItem>
+    </StyledSelect>
+  );
+};
+
+// Render delete icon
+export const handleRenderDeleteButton = (params: GridRenderCellParams) => {
+  const dispatch = useAppDispatch();
+  const { selectedFields, selectedIds } = useAppSelector(selectTemplates);
+
+  const handleDeleteRow = () => {
+    const newSelectedFields = selectedFields.filter((field: IValue) => field.id !== params.row.id);
+    const newSelectedIds = (selectedIds as string[])?.filter((id: string) => id !== params.row.id);
+    dispatch(setSelectedFields(newSelectedFields));
+    dispatch(setNewTemplateSelectedFieldIds(newSelectedIds));
+  };
+
+  return (
+    <IconButton aria-label="delete" size="small" onClick={handleDeleteRow}>
+      <DeleteOutline fontSize="inherit" />
+    </IconButton>
   );
 };

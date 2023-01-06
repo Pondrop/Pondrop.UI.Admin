@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 
 import { ITemplateState } from "./initialState";
 import { initialState } from "../constants";
-import { IFilterItem, ISortItem } from "../types";
+import { IFilterItem, ISortItem, IValue } from "../types";
 
 const setTemplatesFilter = (state: ITemplateState, action: PayloadAction<IFilterItem[]>) => {
   return {
@@ -42,4 +42,18 @@ const setDidCreateTemplate = (state: ITemplateState, action: PayloadAction<boole
   };
 };
 
-export const actions = { resetTemplatesToInitialState, setDidCreateTemplate, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue };
+const setSelectedFields = (state: ITemplateState, action: PayloadAction<IValue[]>) => {
+  return {
+    ...state,
+    selectedFields: action.payload
+  };
+};
+
+const setNewTemplateSelectedFieldIds = (state: ITemplateState, action: PayloadAction<string[]>) => {
+  return {
+    ...state,
+    selectedIds: action.payload
+  };
+};
+
+export const actions = { resetTemplatesToInitialState, setDidCreateTemplate, setNewTemplateSelectedFieldIds, setSelectedFields, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue };
