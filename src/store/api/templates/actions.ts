@@ -49,4 +49,11 @@ const setSelectedFields = (state: ITemplateState, action: PayloadAction<IValue[]
   };
 };
 
-export const actions = { resetTemplatesToInitialState, setDidCreateTemplate, setSelectedFields, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue };
+const setNewTemplateSelectedFieldIds = (state: ITemplateState, action: PayloadAction<string[]>) => {
+  return {
+    ...state,
+    selectedIds: action.payload
+  };
+};
+
+export const actions = { resetTemplatesToInitialState, setDidCreateTemplate, setNewTemplateSelectedFieldIds, setSelectedFields, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue };

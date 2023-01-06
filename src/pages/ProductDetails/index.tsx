@@ -1,6 +1,6 @@
 import { FunctionComponent, SyntheticEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import moment from 'moment';
+import moment, { MomentInput } from 'moment';
 
 // Components
 import ActivityInfoPanel from './components/ActivityInfoPanel';
@@ -68,7 +68,7 @@ const ProductDetails: FunctionComponent = (): JSX.Element => {
         {productData?.name}
       </StyledTitle>
       <StyledTitle className="main-header" variant="caption">
-        Last updated: {moment(state?.rowData?.updatedUtc).format('Do MMMM YYYY @ h:mm:ss a')}
+        Last updated: {moment(state?.rowData?.updatedUtc as MomentInput).format('Do MMMM YYYY @ h:mm:ss a')}
       </StyledTitle>
       <StyledSubtitle variant="subtitle1" gutterBottom paddingBottom={50}></StyledSubtitle>
       <StyledTabs value={currentTab} onChange={handleChange}>

@@ -17,10 +17,10 @@ import SearchField from 'components/SearchField';
 import { availableFieldsColumns } from 'components/Grid/constants';
 
 // Store / APIs
-import { useAppDispatch } from 'store';
+import { useAppDispatch, useAppSelector } from 'store';
 import { useGetAllFieldFilterQuery, useGetFieldsQuery } from 'store/api/templates/api';
 import { selectedFieldsInitialState } from 'store/api/templates/initialState';
-import { setSelectedFields } from 'store/api/templates/slice';
+import { selectTemplates, setNewTemplateSelectedFieldIds, setSelectedFields } from 'store/api/templates/slice';
 
 // Styles
 import { SpaceBetweenDiv, StyledCategoryBtn, StyledDialog, StyleOutlinedBtn } from 'pages/styles';
@@ -35,6 +35,7 @@ import { generateFilterInitState, handleFilterStateChange } from 'components/Gri
 
 const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): JSX.Element => {
   const dispatch = useAppDispatch();
+  const { selectedIds: globalSelectedFieldIds } = useAppSelector(selectTemplates);
 
   // States
   const selectTemplateFilterInitState = generateFilterInitState(availableFieldsColumns);
@@ -46,7 +47,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   const [selectTemplateSearchVal, setSelectTemplateSearchVal] = useState<string>('');
   const [selectTemplateSortVal, setSelectTemplateSortVal] = useState<ISortItem>(selectedFieldsInitialState.sortValue);
   const [selectTemplateFilterVal, setSelectTemplateFilterVal] = useState<IFilterItem[]>(selectTemplateFilterInitState);
-  const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>([]);
+  const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>(globalSelectedFieldIds as string[]);
 
   const { data, isFetching } = useGetFieldsQuery({
     searchString: selectTemplateSearchVal,
@@ -74,7 +75,6 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
     if (!isOpen) {
       setSelectTemplateSearchVal('');
       setSelectTemplateSortVal(selectedFieldsInitialState.sortValue);
-      setSelectedFieldIds([]);
     } else {
       setGridData(data?.value ?? []);
       setRowCount(data?.['@odata.count'] ?? 0);
@@ -87,13 +87,19 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
     }
   }, [data, filterOptionsData, isOpen]);
 
+  useEffect(() => {
+    dispatch(setNewTemplateSelectedFieldIds(globalSelectedFieldIds as string[]));
+    setSelectedFieldIds(globalSelectedFieldIds as string[]);
+  }, [globalSelectedFieldIds]);
+
   const handleModalClose = () => {
     handleClose();
   };
 
   const handleModalSubmit = () => {
-    const selectedRows = gridData.filter((row) => selectedFieldIds.includes(String(row?.id)));
+    const selectedRows = gridData.filter((row) => selectedFieldIds?.includes(String(row?.id)));
     dispatch(setSelectedFields(selectedRows));
+    dispatch(setNewTemplateSelectedFieldIds(selectedFieldIds));
     handleModalClose();
   };
 
@@ -183,6 +189,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           selectionModel={selectedFieldIds}
           rowHeight={48}
           isRowSelectable={handleDisabledFields}
+          hideFooterSelectedRowCount={true}
         />
       </div>
     );

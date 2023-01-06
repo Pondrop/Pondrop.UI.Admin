@@ -11,6 +11,6 @@ export const templateSlice = createSlice({
 
 export const selectTemplates = (state: RootState) => state.templates;
 
-export const { resetTemplatesToInitialState, setDidCreateTemplate, setSelectedFields, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue } = templateSlice.actions;
+export const { resetTemplatesToInitialState, setDidCreateTemplate, setNewTemplateSelectedFieldIds, setSelectedFields, setTemplatesFilter, setTemplatesSearchValue, setTemplatesSortValue } = templateSlice.actions;
 
 export default templateSlice.reducer;
