@@ -65,6 +65,7 @@ export interface ICreateSubmissionTemplate {
   description: string;
   type: string;
   focus: string;
+  initiatedBy: string;
   isForManualSubmissions: boolean;
   status: string;
   steps: ISteps[];
@@ -75,6 +76,7 @@ export interface ICreateSubmissionTemplateResponse {
   id: string;
   title: string;
   description: string;
+  initiatedBy: string;
   iconCodePoint: number;
   iconFontFamily: string;
   type: string;

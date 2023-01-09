@@ -32,6 +32,7 @@ export interface INewTemplateState {
   title: string;
   type: string;
   description: string;
+  initiatedBy: string;
   focus: string;
   id: string;
 }

@@ -2,6 +2,7 @@
 export interface INewTemplateDialogData {
   title: string;
   type: string;
+  initiatedBy: string;
   description: string;
   focus: string;
 }

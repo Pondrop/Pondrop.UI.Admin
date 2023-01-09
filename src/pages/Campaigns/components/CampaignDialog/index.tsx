@@ -6,6 +6,7 @@ import { Close } from '@mui/icons-material';
 import { campaignTitles, campaignTypeData } from './constants';
 
 // Store / APIs
+import { IValue } from 'store/api/types';
 import { useGetSubmissionTemplatesQuery } from 'store/api/tasks/api';
 
 // Styles
@@ -41,6 +42,7 @@ const CampaignDialog = ({
   const [campaignTitle, setCampaignTitle] = useState<string>('');
   const [campaignType, setCampaignType] = useState<string>('');
   const [template, setTemplate] = useState<string>('');
+  const [templateOptions, setTemplateOptions] = useState<IValue[]>([]);
 
   // Select component open state
   const [isTypeSelectOpen, setIsTypeSelectOpen] = useState<boolean>(false);
@@ -61,6 +63,15 @@ const CampaignDialog = ({
       setTemplate('');
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    // Only active templates and those initiated by shopper can be accessible in the campaign dialog
+    const activeTemplates = data?.items?.filter(
+      (template) => template.status === 'active' && template.initiatedBy === 'shopper',
+    );
+
+    setTemplateOptions(activeTemplates ?? []);
+  }, [data]);
 
   const handleTypeSelectClose = () => {
     setIsTypeSelectOpen(false);
@@ -229,7 +240,7 @@ const CampaignDialog = ({
           >
             {isFetching || data?.items?.length === 0
               ? renderStates()
-              : data?.items?.map((template) => (
+              : templateOptions.map((template) => (
                   <StyledMenuItem key={String(template.id)} value={String(template.id)}>
                     {template.title}
                   </StyledMenuItem>

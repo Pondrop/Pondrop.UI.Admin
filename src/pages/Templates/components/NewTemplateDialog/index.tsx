@@ -6,6 +6,7 @@ import { Close, Info } from '@mui/icons-material';
 import {
   FOCUS_TYPE,
   newTemplateTitles,
+  TEMPLATE_INITIATED_BY,
   TEMPLATE_TYPE,
   templateFocusObjectData,
   templateInitiatedByData,
@@ -127,6 +128,7 @@ const NewTemplateDialog = ({
     handleSubmit({
       title: templateTitle,
       type: TEMPLATE_TYPE[templateType as keyof typeof TEMPLATE_TYPE],
+      initiatedBy: TEMPLATE_INITIATED_BY[templateInitiatedBy as keyof typeof TEMPLATE_INITIATED_BY],
       description: templateDescription,
       focus: FOCUS_TYPE[templateFocusObject as keyof typeof FOCUS_TYPE],
     });
