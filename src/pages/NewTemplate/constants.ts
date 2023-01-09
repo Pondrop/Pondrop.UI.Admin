@@ -11,6 +11,11 @@ export const templateTitles = [
     value: 'Sample type'
   },
   {
+    label: 'Initiated by',
+    field: 'initiatedBy',
+    value: 'Sample initiated by'
+  },
+  {
     label: 'Focus object',
     field: 'focus',
     value: 'Sample focus object'
