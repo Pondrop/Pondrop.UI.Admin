@@ -9,6 +9,7 @@ import NewTemplateDialog from './components/NewTemplateDialog';
 
 // Constants
 import { templatesColumns } from 'components/Grid/constants';
+import { categoryFocusStep, productFocusStep } from 'pages/NewTemplate/constants';
 
 // Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
@@ -18,6 +19,7 @@ import {
   useLazyRefreshTemplatesQuery,
 } from 'store/api/tasks/api';
 import { templatesApi, useGetAllTemplateFilterQuery, useGetTemplatesQuery } from 'store/api/templates/api';
+import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
 import {
   selectTemplates,
   setTemplatesFilter,
@@ -87,9 +89,10 @@ const Templates: FunctionComponent = (): JSX.Element => {
     },
   ] = useCreateSubmissionTemplateMutation();
 
-  const [, { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep }] = useAddTemplateStepMutation({
-    fixedCacheKey: 'new-template-step-mutation',
-  });
+  const [addTemplateStep, { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep }] =
+    useAddTemplateStepMutation({
+      fixedCacheKey: 'new-template-step-mutation',
+    });
 
   const [refreshTemplates, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
     useLazyRefreshTemplatesQuery();
@@ -211,6 +214,14 @@ const Templates: FunctionComponent = (): JSX.Element => {
       dispatch(setDidCreateTemplate(true));
       resetCreateTemplate();
       handleNewTemplateModalClose();
+
+      const focusStep = newTemplateData?.focus === 'product' ? productFocusStep : categoryFocusStep;
+      const focusRequestBody = {
+        ...addTemplateStepInitialState,
+        submissionId: createTemplateResponse?.id ?? '',
+        ...focusStep,
+      };
+      addTemplateStep(focusRequestBody);
 
       navigate('new', {
         replace: false,

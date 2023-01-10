@@ -89,9 +89,9 @@ export interface ICreateSubmissionTemplateResponse {
 
 export interface IStepField {
   id: string;
-  label: string;
-  mandatory: boolean;
-  maxValue: number;
+  label?: string;
+  mandatory?: boolean;
+  maxValue?: number;
 }
 
 export interface IAddTemplateStep {

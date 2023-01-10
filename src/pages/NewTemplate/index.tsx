@@ -9,6 +9,7 @@ import SelectTemplateDialog from './SelectTemplateDialog';
 // Constants
 import { selectedFieldsColumns } from 'components/Grid/constants';
 import {
+  commentsStep,
   FIELD_STEP_INSTRUCTION_PLACEHOLDER,
   MANUAL_SUBMISSION_PLACEHOLDER,
   selectedFieldsData,
@@ -57,6 +58,9 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   const [requestData, setRequestData] = useState<IAddTemplateStep>(addTemplateStepInitialState);
   const [isSelectTemplateOpen, setIsSelectTemplateOpen] = useState<boolean>(false);
 
+  const [isAddingFields, setIsAddingFields] = useState<boolean>(false);
+  const [isAddingComments, setIsAddingComments] = useState<boolean>(false);
+
   const { selectedFields } = useAppSelector(selectTemplates);
 
   // API values
@@ -80,14 +84,25 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   };
 
   const handleSaveDraftExit = () => {
-    if (modalTitle === '' && modalInstructions === '') navigate(-1);
+    if (modalTitle === '' && modalInstructions === '' && selectedFields.length === 0) navigate(-1);
     else {
+      const fieldSteps = selectedFields.map((field) => {
+        return {
+          id: field?.id as string,
+          label: field?.label as string,
+          mandatory: field?.mandatory as boolean,
+          maxValue: field?.maxValue as number,
+        };
+      });
       const requestBody = {
         ...requestData,
+        isSummary: false,
         title: modalTitle,
         instructions: modalInstructions,
+        fieldDefinitions: fieldSteps,
       };
       addTemplateStep(requestBody);
+      setIsAddingFields(true);
     }
   };
 
@@ -107,9 +122,21 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    if (isAddTemplateStepSuccess) {
-      navigate(-1);
-      resetAddTemplateStep();
+    if (isAddTemplateStepSuccess && !isAddTemplateStepLoading) {
+      if (isAddingFields && !isAddingComments) {
+        const commentsRequestBody = {
+          ...requestData,
+          ...commentsStep,
+        };
+        addTemplateStep(commentsRequestBody);
+        setIsAddingComments(true);
+        setIsAddingFields(false);
+      } else if (isAddingComments && !isAddingFields) {
+        setIsAddingComments(false);
+        // insert setting active here
+        navigate(-1);
+        resetAddTemplateStep();
+      }
     }
   }, [isAddTemplateStepSuccess]);
 
@@ -298,7 +325,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
             variant="contained"
             disableElevation
             height={40}
-            disabled={true}
+            disabled={selectedFields.length === 0}
           >
             Activate
           </StyledCategoryBtn>

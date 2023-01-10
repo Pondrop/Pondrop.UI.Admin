@@ -83,7 +83,7 @@ export const submissionsMicroService = createApi({
     getSubmissionTemplates: builder.query<IViewResponse, void>({
       query: () => {
         return {
-          url: `/SubmissionTemplate?limit=-1`,
+          url: `/SubmissionTemplate/active?limit=-1`,
           method: 'GET',
         };
       },

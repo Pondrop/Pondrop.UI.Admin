@@ -66,9 +66,7 @@ const CampaignDialog = ({
 
   useEffect(() => {
     // Only active templates and those initiated by shopper can be accessible in the campaign dialog
-    const activeTemplates = data?.items?.filter(
-      (template) => template.status === 'active' && template.initiatedBy === 'shopper',
-    );
+    const activeTemplates = data?.items?.filter((template) => template.initiatedBy === 'shopper');
 
     setTemplateOptions(activeTemplates ?? []);
   }, [data]);
