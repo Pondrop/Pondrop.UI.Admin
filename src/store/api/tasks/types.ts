@@ -27,6 +27,7 @@ export interface ISteps {
   id: string;
   templateStepId: string;
   title: string;
+  [key: string]: unknown;
 }
 
 export interface ISubmissionDetailsResponse {
@@ -87,11 +88,27 @@ export interface ICreateSubmissionTemplateResponse {
   updatedUtc: string;
 }
 
+export interface IUpdateSubmissionTemplate {
+  id: string;
+  title: string;
+  description: string;
+  iconFontFamily: string;
+  type: string;
+  focus: string;
+  status: string;
+  initiatedBy: string;
+  isForManualSubmissions: boolean;
+}
+
+export interface IUpdateSubmissionTemplateResponse extends ICreateSubmissionTemplateResponse {
+  deletedUtc: string | null;
+}
+
 export interface IStepField {
   id: string;
-  label: string;
-  mandatory: boolean;
-  maxValue: number;
+  label?: string;
+  mandatory?: boolean;
+  maxValue?: number;
 }
 
 export interface IAddTemplateStep {
@@ -108,6 +125,11 @@ export interface IAddTemplateStep {
 
 export interface IAddTemplateStepResponse extends ICreateSubmissionTemplateResponse {
   deletedUtc: string;
+}
+
+export interface IRemoveTemplateStep {
+  id: string;
+  submissionTemplateId: string;
 }
 
 export interface ICampaign {

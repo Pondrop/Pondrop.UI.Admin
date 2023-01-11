@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import moment from 'moment';
 
 import { IApiResponse, IFilterItem, ISortItem, IViewResponse } from '../types';
-import { IAddTemplateStep, IAddTemplateStepResponse, ICampaign, ICreateCampaignRequest, ICreateSubmissionTemplate, ICreateSubmissionTemplateResponse, ISubmissionDetailsResponse, IUpdateCampaignRequest } from './types';
+import { IAddTemplateStep, IAddTemplateStepResponse, ICampaign, ICreateCampaignRequest, ICreateSubmissionTemplate, ICreateSubmissionTemplateResponse, IRemoveTemplateStep, ISubmissionDetailsResponse, IUpdateCampaignRequest, IUpdateSubmissionTemplate, IUpdateSubmissionTemplateResponse } from './types';
 
 export const tasksApi = createApi({
   reducerPath: 'tasksApi',
@@ -71,6 +71,14 @@ export const submissionsMicroService = createApi({
     },
   }),
   endpoints: (builder) => ({
+    getFields: builder.query<IViewResponse, void>({
+      query: () => {
+        return {
+          url: `/Field?limit=-1`,
+          method: 'GET',
+        };
+      },
+    }),
     getSubmissionInfo: builder.query<ISubmissionDetailsResponse, { submissionId: string }>({
       query: (arg) => {
         const { submissionId } = arg;
@@ -83,7 +91,16 @@ export const submissionsMicroService = createApi({
     getSubmissionTemplates: builder.query<IViewResponse, void>({
       query: () => {
         return {
-          url: `/SubmissionTemplate?limit=-1`,
+          url: `/SubmissionTemplate/active?limit=-1`,
+          method: 'GET',
+        };
+      },
+    }),
+    getSubmissionTemplateInfo: builder.query<ICreateSubmissionTemplateResponse, { submissionId: string }>({
+      query: (arg) => {
+        const { submissionId } = arg;
+        return {
+          url: `/SubmissionTemplate/${submissionId}`,
           method: 'GET',
         };
       },
@@ -102,6 +119,24 @@ export const submissionsMicroService = createApi({
         return {
           url: `/SubmissionTemplate/step/add`,
           method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
+    removeTemplateStep: builder.mutation<IAddTemplateStepResponse, IRemoveTemplateStep>({
+      query: (arg) => {
+        return {
+          url: `/SubmissionTemplate/step/remove`,
+          method: 'DELETE',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
+    updateTemplate: builder.mutation<IUpdateSubmissionTemplateResponse, IUpdateSubmissionTemplate>({
+      query: (arg) => {
+        return {
+          url: `/SubmissionTemplate/update`,
+          method: 'PUT',
           body: JSON.stringify(arg),
         };
       },
@@ -144,4 +179,4 @@ export const submissionsMicroService = createApi({
 });
 
 export const { useGetAllTaskFilterQuery, useGetTasksQuery } = tasksApi;
-export const { useAddTemplateStepMutation, useCreateCampaignMutation, useCreateSubmissionTemplateMutation, useGetSubmissionInfoQuery, useGetSubmissionTemplatesQuery, useLazyRefreshCampaignsQuery, useLazyRefreshTemplatesQuery, useUpdateCampaignMutation } = submissionsMicroService;
+export const { useAddTemplateStepMutation, useCreateCampaignMutation, useCreateSubmissionTemplateMutation, useGetFieldsQuery, useGetSubmissionInfoQuery, useGetSubmissionTemplateInfoQuery, useGetSubmissionTemplatesQuery, useLazyRefreshCampaignsQuery, useLazyRefreshTemplatesQuery, useRemoveTemplateStepMutation, useUpdateCampaignMutation, useUpdateTemplateMutation } = submissionsMicroService;

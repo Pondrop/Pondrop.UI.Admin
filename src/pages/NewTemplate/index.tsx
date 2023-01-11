@@ -9,6 +9,7 @@ import SelectTemplateDialog from './SelectTemplateDialog';
 // Constants
 import { selectedFieldsColumns } from 'components/Grid/constants';
 import {
+  commentsStep,
   FIELD_STEP_INSTRUCTION_PLACEHOLDER,
   MANUAL_SUBMISSION_PLACEHOLDER,
   selectedFieldsData,
@@ -17,10 +18,16 @@ import {
 } from './constants';
 
 // Store / APIs
-import { useAppSelector } from 'store';
-import { useAddTemplateStepMutation } from 'store/api/tasks/api';
+import { useAppDispatch, useAppSelector } from 'store';
+import {
+  useAddTemplateStepMutation,
+  useGetFieldsQuery,
+  useGetSubmissionTemplateInfoQuery,
+  useRemoveTemplateStepMutation,
+  useUpdateTemplateMutation,
+} from 'store/api/tasks/api';
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
-import { selectTemplates } from 'store/api/templates/slice';
+import { selectTemplates, setNewTemplateSelectedFieldIds, setSelectedFields } from 'store/api/templates/slice';
 
 // Styles
 import {
@@ -40,7 +47,8 @@ import {
 import { StyledBtnWrapper, StyledTextInput } from './styles';
 
 // Types
-import { IAddTemplateStep } from 'store/api/tasks/types';
+import { IAddTemplateStep, ISteps } from 'store/api/tasks/types';
+import { IValue } from 'store/api/types';
 import { INewTemplateState } from 'pages/types';
 
 // Utils
@@ -50,6 +58,34 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   // React router dom values
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // API values
+  const state = location?.state as INewTemplateState;
+  const isEditTemplate = state?.isEdit;
+
+  // API calls
+  const [
+    addTemplateStep,
+    { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep, isLoading: isAddTemplateStepLoading },
+  ] = useAddTemplateStepMutation({ fixedCacheKey: 'new-template-step-mutation' });
+
+  const [updateTemplate, { isSuccess: isUpdateTemplateSuccess, isLoading: isUpdateTemplateLoading }] =
+    useUpdateTemplateMutation({ fixedCacheKey: 'update-template-mutation' });
+
+  const [
+    removeTemplateStep,
+    {
+      data: removeTemplateResponse,
+      isSuccess: isRemoveTemplateStepSuccess,
+      reset: resetRemoveTemplateStep,
+      isLoading: isRemoveTemplateStepLoading,
+    },
+  ] = useRemoveTemplateStepMutation();
+
+  const { data: fieldData } = useGetFieldsQuery();
+
+  const { data } = useGetSubmissionTemplateInfoQuery({ submissionId: state?.id }, { skip: !isEditTemplate });
 
   // States
   const [modalTitle, setModalTitle] = useState<string>('');
@@ -57,16 +93,13 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   const [requestData, setRequestData] = useState<IAddTemplateStep>(addTemplateStepInitialState);
   const [isSelectTemplateOpen, setIsSelectTemplateOpen] = useState<boolean>(false);
 
+  const [isAddingFields, setIsAddingFields] = useState<boolean>(false);
+  const [isAddingComments, setIsAddingComments] = useState<boolean>(false);
+  const [isActivateTemplate, setIsActivateTemplate] = useState<boolean>(false);
+  const [isRemovingStep2, setIsRemovingStep2] = useState<boolean>(false);
+  const [isRemovingStep3, setIsRemovingStep3] = useState<boolean>(false);
+
   const { selectedFields } = useAppSelector(selectTemplates);
-
-  // API values
-  const state = location?.state as INewTemplateState;
-
-  // API calls
-  const [
-    addTemplateStep,
-    { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep, isLoading: isAddTemplateStepLoading },
-  ] = useAddTemplateStepMutation({ fixedCacheKey: 'new-template-step-mutation' });
 
   // Handlers
   const handlePrevious = () => navigate(-1);
@@ -79,15 +112,71 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
     setModalInstructions(e.target.value);
   };
 
+  const handleRemoveTemplates = () => {
+    setIsRemovingStep2(true);
+    removeTemplateStep({
+      id: data?.steps[1]?.id as string,
+      submissionTemplateId: state?.id,
+    });
+  };
+
+  const handleUpdateDraft = () => {
+    setIsActivateTemplate(false);
+    handleRemoveTemplates();
+  };
+
+  const handleUpdateActive = () => {
+    setIsActivateTemplate(true);
+    handleRemoveTemplates();
+  };
+
   const handleSaveDraftExit = () => {
-    if (modalTitle === '' && modalInstructions === '') navigate(-1);
+    if (state?.isEdit) handleUpdateDraft();
     else {
+      if (modalTitle === '' && modalInstructions === '' && selectedFields.length === 0) navigate(-1);
+      else {
+        const fieldSteps = selectedFields.map((field) => {
+          return {
+            id: field?.id as string,
+            label: field?.label as string,
+            mandatory: field?.mandatory as boolean,
+            maxValue: field?.maxValue as number,
+          };
+        });
+        const requestBody = {
+          ...requestData,
+          isSummary: false,
+          title: modalTitle,
+          instructions: modalInstructions,
+          fieldDefinitions: fieldSteps,
+        };
+        addTemplateStep(requestBody);
+        setIsAddingFields(true);
+      }
+    }
+  };
+
+  const handleActivateTemplate = () => {
+    if (state?.isEdit) handleUpdateActive();
+    else {
+      const fieldSteps = selectedFields.map((field) => {
+        return {
+          id: field?.id as string,
+          label: field?.label as string,
+          mandatory: field?.mandatory as boolean,
+          maxValue: field?.maxValue as number,
+        };
+      });
       const requestBody = {
         ...requestData,
+        isSummary: false,
         title: modalTitle,
         instructions: modalInstructions,
+        fieldDefinitions: fieldSteps,
       };
       addTemplateStep(requestBody);
+      setIsAddingFields(true);
+      setIsActivateTemplate(true);
     }
   };
 
@@ -100,18 +189,90 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   };
 
   useEffect(() => {
+    const initialFields = (data?.steps[1]?.fieldDefinitions as ISteps[]) ?? [];
+    const initialSelectedFields: IValue[] = [];
+    const initialSelectedIds: string[] = [];
+
+    initialFields.forEach((initField) => {
+      const matchField = fieldData?.items.find((field) => field.id === initField.id);
+      initialSelectedFields.push(matchField ?? {});
+      initialSelectedIds.push(matchField?.id as string);
+    });
+
+    setModalTitle(data?.steps[1]?.title ?? '');
+    setModalInstructions((data?.steps[1]?.instructions as string) ?? '');
+    dispatch(setNewTemplateSelectedFieldIds(initialSelectedIds));
+    dispatch(setSelectedFields(initialSelectedFields));
     setRequestData((oldValue) => ({
       ...oldValue,
       submissionId: state?.id,
     }));
-  }, []);
+  }, [data, fieldData]);
 
   useEffect(() => {
-    if (isAddTemplateStepSuccess) {
-      navigate(-1);
-      resetAddTemplateStep();
+    if (isAddTemplateStepSuccess && !isAddTemplateStepLoading) {
+      if (isAddingFields && !isAddingComments) {
+        const commentsRequestBody = {
+          ...requestData,
+          ...commentsStep,
+        };
+        addTemplateStep(commentsRequestBody);
+        setIsAddingComments(true);
+        setIsAddingFields(false);
+      } else if (isAddingComments && !isAddingFields) {
+        setIsAddingComments(false);
+        if (isActivateTemplate) {
+          const { isEdit, ...otherState } = state;
+          updateTemplate({
+            ...otherState,
+            iconFontFamily: 'MaterialIcons',
+            status: 'active',
+            isForManualSubmissions: state?.initiatedBy === 'shopper' ? true : false,
+          });
+          resetAddTemplateStep();
+        } else navigate(-1);
+      }
     }
-  }, [isAddTemplateStepSuccess]);
+  }, [isAddTemplateStepSuccess, isAddTemplateStepLoading]);
+
+  useEffect(() => {
+    if (isUpdateTemplateSuccess && !isUpdateTemplateLoading) {
+      setIsActivateTemplate(false);
+      navigate(-1);
+    }
+  }, [isUpdateTemplateSuccess, isUpdateTemplateLoading]);
+
+  useEffect(() => {
+    if (isRemoveTemplateStepSuccess && !isRemoveTemplateStepLoading) {
+      if (isRemovingStep2) {
+        removeTemplateStep({
+          id: removeTemplateResponse?.steps[1]?.id as string,
+          submissionTemplateId: state?.id,
+        });
+        setIsRemovingStep2(false);
+        setIsRemovingStep3(true);
+      } else if (isRemovingStep3) {
+        const fieldSteps = selectedFields.map((field) => {
+          return {
+            id: field?.id as string,
+            label: field?.label as string,
+            mandatory: field?.mandatory as boolean,
+            maxValue: field?.maxValue as number,
+          };
+        });
+        const requestBody = {
+          ...requestData,
+          isSummary: false,
+          title: modalTitle,
+          instructions: modalInstructions,
+          fieldDefinitions: fieldSteps,
+        };
+        addTemplateStep(requestBody);
+        setIsAddingFields(true);
+        resetRemoveTemplateStep();
+      }
+    }
+  }, [isRemoveTemplateStepSuccess, isRemoveTemplateStepLoading]);
 
   const renderHeader = () => {
     return (
@@ -149,7 +310,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
                   className="row-value singleline card-details"
                   style={{ fontSize: '12px', lineHeight: '16px', marginBottom: '12px' }}
                 >
-                  {tempValue ? tempValue[0].toUpperCase() + tempValue.slice(1) : ''}
+                  {tempValue ? String(tempValue)[0].toUpperCase() + String(tempValue).slice(1) : ''}
                 </span>
               </Fragment>
             );
@@ -289,8 +450,11 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
           disableElevation
           height={40}
           onClick={handleSaveDraftExit}
+          disabled={(isRemoveTemplateStepLoading || isAddTemplateStepLoading) && !isActivateTemplate}
         >
-          {isAddTemplateStepLoading ? renderLoader('34px', 17, 6) : 'Save draft & exit'}
+          {(isRemoveTemplateStepLoading || isAddTemplateStepLoading) && !isActivateTemplate
+            ? renderLoader('34px', 17, 6)
+            : 'Save draft & exit'}
         </StyleOutlinedBtn>
         <div style={{ marginLeft: '20px' }}>
           <StyledCategoryBtn
@@ -298,9 +462,14 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
             variant="contained"
             disableElevation
             height={40}
-            disabled={true}
+            disabled={
+              selectedFields.length === 0 ||
+              isUpdateTemplateLoading ||
+              ((isRemoveTemplateStepLoading || isAddTemplateStepLoading) && isActivateTemplate)
+            }
+            onClick={handleActivateTemplate}
           >
-            Activate
+            {isActivateTemplate ? renderLoader('34px', 17, 6) : 'Activate'}
           </StyledCategoryBtn>
         </div>
       </RowAlignWrapper>
