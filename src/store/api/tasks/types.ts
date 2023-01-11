@@ -127,6 +127,11 @@ export interface IAddTemplateStepResponse extends ICreateSubmissionTemplateRespo
   deletedUtc: string;
 }
 
+export interface IRemoveTemplateStep {
+  id: string;
+  submissionTemplateId: string;
+}
+
 export interface ICampaign {
   id: string;
   name: string;

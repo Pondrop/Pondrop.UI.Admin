@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import moment from 'moment';
 
 import { IApiResponse, IFilterItem, ISortItem, IViewResponse } from '../types';
-import { IAddTemplateStep, IAddTemplateStepResponse, ICampaign, ICreateCampaignRequest, ICreateSubmissionTemplate, ICreateSubmissionTemplateResponse, ISubmissionDetailsResponse, IUpdateCampaignRequest, IUpdateSubmissionTemplate, IUpdateSubmissionTemplateResponse } from './types';
+import { IAddTemplateStep, IAddTemplateStepResponse, ICampaign, ICreateCampaignRequest, ICreateSubmissionTemplate, ICreateSubmissionTemplateResponse, IRemoveTemplateStep, ISubmissionDetailsResponse, IUpdateCampaignRequest, IUpdateSubmissionTemplate, IUpdateSubmissionTemplateResponse } from './types';
 
 export const tasksApi = createApi({
   reducerPath: 'tasksApi',
@@ -123,6 +123,15 @@ export const submissionsMicroService = createApi({
         };
       },
     }),
+    removeTemplateStep: builder.mutation<IAddTemplateStepResponse, IRemoveTemplateStep>({
+      query: (arg) => {
+        return {
+          url: `/SubmissionTemplate/step/remove`,
+          method: 'DELETE',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
     updateTemplate: builder.mutation<IUpdateSubmissionTemplateResponse, IUpdateSubmissionTemplate>({
       query: (arg) => {
         return {
@@ -170,4 +179,4 @@ export const submissionsMicroService = createApi({
 });
 
 export const { useGetAllTaskFilterQuery, useGetTasksQuery } = tasksApi;
-export const { useAddTemplateStepMutation, useCreateCampaignMutation, useCreateSubmissionTemplateMutation, useGetFieldsQuery, useGetSubmissionInfoQuery, useGetSubmissionTemplateInfoQuery, useGetSubmissionTemplatesQuery, useLazyRefreshCampaignsQuery, useLazyRefreshTemplatesQuery, useUpdateCampaignMutation, useUpdateTemplateMutation } = submissionsMicroService;
+export const { useAddTemplateStepMutation, useCreateCampaignMutation, useCreateSubmissionTemplateMutation, useGetFieldsQuery, useGetSubmissionInfoQuery, useGetSubmissionTemplateInfoQuery, useGetSubmissionTemplatesQuery, useLazyRefreshCampaignsQuery, useLazyRefreshTemplatesQuery, useRemoveTemplateStepMutation, useUpdateCampaignMutation, useUpdateTemplateMutation } = submissionsMicroService;

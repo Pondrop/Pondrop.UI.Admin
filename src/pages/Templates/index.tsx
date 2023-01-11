@@ -15,6 +15,7 @@ import { categoryFocusStep, productFocusStep } from 'pages/NewTemplate/constants
 // Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
 import {
+  submissionsMicroService,
   useAddTemplateStepMutation,
   useCreateSubmissionTemplateMutation,
   useLazyRefreshTemplatesQuery,
@@ -24,8 +25,6 @@ import { templatesApi, useGetAllTemplateFilterQuery, useGetTemplatesQuery } from
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
 import {
   selectTemplates,
-  setNewTemplateSelectedFieldIds,
-  setSelectedFields,
   setTemplatesFilter,
   setTemplatesSearchValue,
   setTemplatesSortValue,
@@ -236,6 +235,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
     if ((!isRefreshFetching && isRefreshSuccess) || didCreateTemplate) {
       setTimeout(() => {
         dispatch(templatesApi.util.resetApiState());
+        dispatch(submissionsMicroService.util.resetApiState());
         refetch();
         dispatch(setDidCreateTemplate(false));
       }, 7000);
