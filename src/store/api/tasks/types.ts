@@ -87,6 +87,22 @@ export interface ICreateSubmissionTemplateResponse {
   updatedUtc: string;
 }
 
+export interface IUpdateSubmissionTemplate {
+  id: string;
+  title: string;
+  description: string;
+  iconFontFamily: string;
+  type: string;
+  focus: string;
+  status: string;
+  initiatedBy: string;
+  isForManualSubmissions: boolean;
+}
+
+export interface IUpdateSubmissionTemplateResponse extends ICreateSubmissionTemplateResponse {
+  deletedUtc: string | null;
+}
+
 export interface IStepField {
   id: string;
   label?: string;

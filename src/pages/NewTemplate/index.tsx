@@ -19,7 +19,7 @@ import {
 
 // Store / APIs
 import { useAppSelector } from 'store';
-import { useAddTemplateStepMutation } from 'store/api/tasks/api';
+import { useAddTemplateStepMutation, useUpdateTemplateMutation } from 'store/api/tasks/api';
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
 import { selectTemplates } from 'store/api/templates/slice';
 
@@ -60,6 +60,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
 
   const [isAddingFields, setIsAddingFields] = useState<boolean>(false);
   const [isAddingComments, setIsAddingComments] = useState<boolean>(false);
+  const [isActivateTemplate, setIsActivateTemplate] = useState<boolean>(false);
 
   const { selectedFields } = useAppSelector(selectTemplates);
 
@@ -71,6 +72,9 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
     addTemplateStep,
     { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep, isLoading: isAddTemplateStepLoading },
   ] = useAddTemplateStepMutation({ fixedCacheKey: 'new-template-step-mutation' });
+
+  const [updateTemplate, { isSuccess: isUpdateTemplateSuccess, isLoading: isUpdateTemplateLoading }] =
+    useUpdateTemplateMutation({ fixedCacheKey: 'update-template-mutation' });
 
   // Handlers
   const handlePrevious = () => navigate(-1);
@@ -106,6 +110,27 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
     }
   };
 
+  const handleActivateTemplate = () => {
+    const fieldSteps = selectedFields.map((field) => {
+      return {
+        id: field?.id as string,
+        label: field?.label as string,
+        mandatory: field?.mandatory as boolean,
+        maxValue: field?.maxValue as number,
+      };
+    });
+    const requestBody = {
+      ...requestData,
+      isSummary: false,
+      title: modalTitle,
+      instructions: modalInstructions,
+      fieldDefinitions: fieldSteps,
+    };
+    addTemplateStep(requestBody);
+    setIsAddingFields(true);
+    setIsActivateTemplate(true);
+  };
+
   const handleSelectTemplateOpen = () => {
     setIsSelectTemplateOpen(true);
   };
@@ -134,11 +159,25 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       } else if (isAddingComments && !isAddingFields) {
         setIsAddingComments(false);
         // insert setting active here
-        navigate(-1);
+        if (isActivateTemplate) {
+          updateTemplate({
+            ...state,
+            iconFontFamily: 'MaterialIcons',
+            status: 'active',
+            isForManualSubmissions: state?.initiatedBy === 'shopper' ? true : false,
+          });
+        } else navigate(-1);
         resetAddTemplateStep();
       }
     }
-  }, [isAddTemplateStepSuccess]);
+  }, [isAddTemplateStepSuccess, isAddTemplateStepLoading]);
+
+  useEffect(() => {
+    if (isUpdateTemplateSuccess && !isUpdateTemplateLoading) {
+      setIsActivateTemplate(false);
+      navigate(-1);
+    }
+  }, [isUpdateTemplateSuccess, isUpdateTemplateLoading]);
 
   const renderHeader = () => {
     return (
@@ -316,8 +355,9 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
           disableElevation
           height={40}
           onClick={handleSaveDraftExit}
+          disabled={isAddTemplateStepLoading && !isActivateTemplate}
         >
-          {isAddTemplateStepLoading ? renderLoader('34px', 17, 6) : 'Save draft & exit'}
+          {isAddTemplateStepLoading && !isActivateTemplate ? renderLoader('34px', 17, 6) : 'Save draft & exit'}
         </StyleOutlinedBtn>
         <div style={{ marginLeft: '20px' }}>
           <StyledCategoryBtn
@@ -325,9 +365,12 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
             variant="contained"
             disableElevation
             height={40}
-            disabled={selectedFields.length === 0}
+            disabled={
+              selectedFields.length === 0 || isUpdateTemplateLoading || (isAddTemplateStepLoading && isActivateTemplate)
+            }
+            onClick={handleActivateTemplate}
           >
-            Activate
+            {isActivateTemplate ? renderLoader('34px', 17, 6) : 'Activate'}
           </StyledCategoryBtn>
         </div>
       </RowAlignWrapper>

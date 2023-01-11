@@ -1,6 +1,7 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GridFilterModel, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
+import { Alert, Snackbar } from '@mui/material';
+import { GridFilterModel, GridRowParams, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 // Components
 import Grid from 'components/Grid';
@@ -17,6 +18,7 @@ import {
   useAddTemplateStepMutation,
   useCreateSubmissionTemplateMutation,
   useLazyRefreshTemplatesQuery,
+  useUpdateTemplateMutation,
 } from 'store/api/tasks/api';
 import { templatesApi, useGetAllTemplateFilterQuery, useGetTemplatesQuery } from 'store/api/templates/api';
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
@@ -53,6 +55,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageSkip, setPageSkip] = useState<number>(0);
   const [newTemplateData, setNewTemplateData] = useState<INewTemplateDialogData>({} as INewTemplateDialogData);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -93,6 +96,10 @@ const Templates: FunctionComponent = (): JSX.Element => {
     useAddTemplateStepMutation({
       fixedCacheKey: 'new-template-step-mutation',
     });
+
+  const [, { isSuccess: isUpdateTemplateSuccess, reset: resetUpdateTemplate }] = useUpdateTemplateMutation({
+    fixedCacheKey: 'update-template-mutation',
+  });
 
   const [refreshTemplates, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] =
     useLazyRefreshTemplatesQuery();
@@ -145,7 +152,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
     setNewTemplateData(newTemplateData);
     createTemplate({
       ...newTemplateData,
-      isForManualSubmissions: true,
+      isForManualSubmissions: newTemplateData?.initiatedBy === 'shopper' ? true : false,
       status: 'draft',
       steps: [],
       iconFontFamily: 'MaterialIcons',
@@ -180,6 +187,23 @@ const Templates: FunctionComponent = (): JSX.Element => {
     dispatch(setTemplatesFilter(newAppliedFilters));
   };
 
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    resetUpdateTemplate();
+  };
+
+  const handleOnRowClick = (params: GridRowParams) => {
+    const templateData = {
+      title: params.row.title,
+      type: params.row.type,
+      description: params.row.description,
+      initiatedBy: params.row.initiatedBy,
+      focus: params.row.focus,
+      id: params.id,
+    };
+    navigate('new', { replace: false, state: { ...templateData } });
+  };
+
   // Use Effects
   useEffect(() => {
     if (filterItem.length !== 0) setTemplateFilterItem(filterItem);
@@ -195,6 +219,11 @@ const Templates: FunctionComponent = (): JSX.Element => {
       refreshTemplates();
     }
   }, [isAddTemplateStepSuccess]);
+
+  useEffect(() => {
+    setIsSnackbarOpen(isUpdateTemplateSuccess);
+    if (isUpdateTemplateSuccess) refreshTemplates();
+  }, [isUpdateTemplateSuccess]);
 
   // When refresh templates is called and is finished, reset API and refetch data after 7s
   // 7s was determined to be the time it takes to get the correct values from the search index
@@ -281,7 +310,18 @@ const Templates: FunctionComponent = (): JSX.Element => {
         initialState={initialGridState}
         isMenuLoading={isFilterOptionsFetching}
         searchValue={searchValue}
+        onRowClick={handleOnRowClick}
       />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSnackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          Template activated successfully
+        </Alert>
+      </Snackbar>
       <NewTemplateDialog
         isOpen={isNewTemplateModalOpen}
         handleClose={handleNewTemplateModalClose}
