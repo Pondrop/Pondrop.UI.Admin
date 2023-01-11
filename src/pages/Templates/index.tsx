@@ -24,6 +24,8 @@ import { templatesApi, useGetAllTemplateFilterQuery, useGetTemplatesQuery } from
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
 import {
   selectTemplates,
+  setNewTemplateSelectedFieldIds,
+  setSelectedFields,
   setTemplatesFilter,
   setTemplatesSearchValue,
   setTemplatesSortValue,
@@ -193,15 +195,18 @@ const Templates: FunctionComponent = (): JSX.Element => {
   };
 
   const handleOnRowClick = (params: GridRowParams) => {
-    const templateData = {
-      title: params.row.title,
-      type: params.row.type,
-      description: params.row.description,
-      initiatedBy: params.row.initiatedBy,
-      focus: params.row.focus,
-      id: params.id,
-    };
-    navigate('new', { replace: false, state: { ...templateData } });
+    if (params.row.status === 'draft') {
+      const templateData = {
+        title: params.row.title,
+        type: params.row.type,
+        description: params.row.description,
+        initiatedBy: params.row.initiatedBy,
+        focus: params.row.focus,
+        id: params.id,
+        isEdit: true,
+      };
+      navigate('new', { replace: false, state: { ...templateData } });
+    }
   };
 
   // Use Effects
@@ -254,7 +259,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
 
       navigate('new', {
         replace: false,
-        state: { ...newTemplateData, id: createTemplateResponse?.id },
+        state: { ...newTemplateData, id: createTemplateResponse?.id, isEdit: false },
       });
     }
   }, [isCreateTemplateSuccess]);

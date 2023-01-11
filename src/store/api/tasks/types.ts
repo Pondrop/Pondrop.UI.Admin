@@ -27,6 +27,7 @@ export interface ISteps {
   id: string;
   templateStepId: string;
   title: string;
+  [key: string]: unknown;
 }
 
 export interface ISubmissionDetailsResponse {

@@ -18,10 +18,15 @@ import {
 } from './constants';
 
 // Store / APIs
-import { useAppSelector } from 'store';
-import { useAddTemplateStepMutation, useUpdateTemplateMutation } from 'store/api/tasks/api';
+import { useAppDispatch, useAppSelector } from 'store';
+import {
+  useAddTemplateStepMutation,
+  useGetFieldsQuery,
+  useGetSubmissionTemplateInfoQuery,
+  useUpdateTemplateMutation,
+} from 'store/api/tasks/api';
 import { addTemplateStepInitialState } from 'store/api/tasks/initialState';
-import { selectTemplates } from 'store/api/templates/slice';
+import { selectTemplates, setNewTemplateSelectedFieldIds, setSelectedFields } from 'store/api/templates/slice';
 
 // Styles
 import {
@@ -41,7 +46,8 @@ import {
 import { StyledBtnWrapper, StyledTextInput } from './styles';
 
 // Types
-import { IAddTemplateStep } from 'store/api/tasks/types';
+import { IAddTemplateStep, ISteps } from 'store/api/tasks/types';
+import { IValue } from 'store/api/types';
 import { INewTemplateState } from 'pages/types';
 
 // Utils
@@ -51,6 +57,24 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   // React router dom values
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // API values
+  const state = location?.state as INewTemplateState;
+  const isEditTemplate = state?.isEdit;
+
+  // API calls
+  const [
+    addTemplateStep,
+    { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep, isLoading: isAddTemplateStepLoading },
+  ] = useAddTemplateStepMutation({ fixedCacheKey: 'new-template-step-mutation' });
+
+  const [updateTemplate, { isSuccess: isUpdateTemplateSuccess, isLoading: isUpdateTemplateLoading }] =
+    useUpdateTemplateMutation({ fixedCacheKey: 'update-template-mutation' });
+
+  const { data: fieldData } = useGetFieldsQuery();
+
+  const { data } = useGetSubmissionTemplateInfoQuery({ submissionId: state?.id }, { skip: !isEditTemplate });
 
   // States
   const [modalTitle, setModalTitle] = useState<string>('');
@@ -63,18 +87,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   const [isActivateTemplate, setIsActivateTemplate] = useState<boolean>(false);
 
   const { selectedFields } = useAppSelector(selectTemplates);
-
-  // API values
-  const state = location?.state as INewTemplateState;
-
-  // API calls
-  const [
-    addTemplateStep,
-    { isSuccess: isAddTemplateStepSuccess, reset: resetAddTemplateStep, isLoading: isAddTemplateStepLoading },
-  ] = useAddTemplateStepMutation({ fixedCacheKey: 'new-template-step-mutation' });
-
-  const [updateTemplate, { isSuccess: isUpdateTemplateSuccess, isLoading: isUpdateTemplateLoading }] =
-    useUpdateTemplateMutation({ fixedCacheKey: 'update-template-mutation' });
 
   // Handlers
   const handlePrevious = () => navigate(-1);
@@ -140,11 +152,25 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   };
 
   useEffect(() => {
+    const initialFields = (data?.steps[1]?.fieldDefinitions as ISteps[]) ?? [];
+    const initialSelectedFields: IValue[] = [];
+    const initialSelectedIds: string[] = [];
+
+    initialFields.forEach((initField) => {
+      const matchField = fieldData?.items.find((field) => field.id === initField.id);
+      initialSelectedFields.push(matchField ?? {});
+      initialSelectedIds.push(matchField?.id as string);
+    });
+
+    setModalTitle(data?.steps[1]?.title ?? '');
+    setModalInstructions((data?.steps[1]?.instructions as string) ?? '');
+    dispatch(setNewTemplateSelectedFieldIds(initialSelectedIds));
+    dispatch(setSelectedFields(initialSelectedFields));
     setRequestData((oldValue) => ({
       ...oldValue,
       submissionId: state?.id,
     }));
-  }, []);
+  }, [data, fieldData]);
 
   useEffect(() => {
     if (isAddTemplateStepSuccess && !isAddTemplateStepLoading) {
@@ -160,8 +186,9 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
         setIsAddingComments(false);
         // insert setting active here
         if (isActivateTemplate) {
+          const { isEdit, ...otherState } = state;
           updateTemplate({
-            ...state,
+            ...otherState,
             iconFontFamily: 'MaterialIcons',
             status: 'active',
             isForManualSubmissions: state?.initiatedBy === 'shopper' ? true : false,
@@ -215,7 +242,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
                   className="row-value singleline card-details"
                   style={{ fontSize: '12px', lineHeight: '16px', marginBottom: '12px' }}
                 >
-                  {tempValue ? tempValue[0].toUpperCase() + tempValue.slice(1) : ''}
+                  {tempValue ? String(tempValue)[0].toUpperCase() + String(tempValue).slice(1) : ''}
                 </span>
               </Fragment>
             );

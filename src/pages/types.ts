@@ -35,6 +35,7 @@ export interface INewTemplateState {
   initiatedBy: string;
   focus: string;
   id: string;
+  isEdit: boolean;
 }
 
 export const CATEGORY_FOCUS_ID = '68a1ddc7-4d18-4cad-9fa9-23fde3dea96c';
