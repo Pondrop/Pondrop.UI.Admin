@@ -61,8 +61,9 @@ export const campaignsColumns: GridColDef[] = [
 ];
 
 export const templatesColumns: GridColDef[] = [
-  { field: 'title', headerName: 'Title', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCell },
+  { field: 'title', headerName: 'Title', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1.5, renderCell: handleRenderCell },
   { field: 'type', headerName: 'Type', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCellFormat },
+  { field: 'initiatedBy', headerName: 'Initiated by', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), flex: 1, renderCell: handleRenderCellFormat },
   { field: 'isForManualSubmissions', headerName: 'Manual Submissions', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderManualSubmissions },
   { field: 'focus', headerName: 'Focus', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 140, renderCell: handleRenderCellFormat },
   { field: 'createdUtc', headerName: 'Date created', filterOperators: getGridStringOperators().filter((op) => op.value === 'isAnyOf'), width: 180, renderCell: handleRenderCellDate },
