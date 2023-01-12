@@ -18,6 +18,7 @@ import { availableFieldsColumns } from 'components/Grid/constants';
 
 // Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
+import { useGetFieldsQuery as useGetAllFieldsQuery } from 'store/api/tasks/api';
 import { useGetAllFieldFilterQuery, useGetFieldsQuery } from 'store/api/templates/api';
 import { selectedFieldsInitialState } from 'store/api/templates/initialState';
 import { selectTemplates, setNewTemplateSelectedFieldIds, setSelectedFields } from 'store/api/templates/slice';
@@ -48,6 +49,8 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   const [selectTemplateSortVal, setSelectTemplateSortVal] = useState<ISortItem>(selectedFieldsInitialState.sortValue);
   const [selectTemplateFilterVal, setSelectTemplateFilterVal] = useState<IFilterItem[]>(selectTemplateFilterInitState);
   const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>(globalSelectedFieldIds as string[]);
+
+  const { data: fieldData } = useGetAllFieldsQuery();
 
   const { data, isFetching } = useGetFieldsQuery({
     searchString: selectTemplateSearchVal,
@@ -88,16 +91,20 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   }, [data, filterOptionsData, isOpen]);
 
   useEffect(() => {
-    dispatch(setNewTemplateSelectedFieldIds(globalSelectedFieldIds as string[]));
-    setSelectedFieldIds(globalSelectedFieldIds as string[]);
-  }, [globalSelectedFieldIds]);
+    if (isOpen) setSelectedFieldIds(globalSelectedFieldIds as string[]);
+  }, [isOpen]);
 
   const handleModalClose = () => {
     handleClose();
   };
 
   const handleModalSubmit = () => {
-    const selectedRows = gridData.filter((row) => selectedFieldIds?.includes(String(row?.id)));
+    const selectedRows: IValue[] = [];
+    selectedFieldIds.forEach((id) => {
+      const matchField = fieldData?.items?.find((field) => field.id === String(id));
+      selectedRows.push(matchField ?? {});
+    });
+
     dispatch(setSelectedFields(selectedRows));
     dispatch(setNewTemplateSelectedFieldIds(selectedFieldIds));
     handleModalClose();
