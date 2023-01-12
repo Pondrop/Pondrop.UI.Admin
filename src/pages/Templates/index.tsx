@@ -108,6 +108,7 @@ const Templates: FunctionComponent = (): JSX.Element => {
   const menuData = {
     title: filterOptionsData?.['@search.facets']?.title,
     type: filterOptionsData?.['@search.facets']?.type,
+    initiatedBy: filterOptionsData?.['@search.facets']?.initiatedBy,
     isForManualSubmissions: filterOptionsData?.['@search.facets']?.isForManualSubmissions,
     focus: filterOptionsData?.['@search.facets']?.focus,
     createdUtc: filterOptionsData?.['@search.facets']?.createdUtc,
