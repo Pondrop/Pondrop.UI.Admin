@@ -7,11 +7,12 @@ import {
   GridSortDirection,
   GridSortModel,
 } from '@mui/x-data-grid-pro';
-import { ArrowBack, Close } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
 
 // Components
 import Grid from 'components/Grid';
 import SearchField from 'components/SearchField';
+import NewFieldDialog from '../NewFieldDialog';
 
 // Constants
 import { availableFieldsColumns } from 'components/Grid/constants';
@@ -49,6 +50,9 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   const [selectTemplateSortVal, setSelectTemplateSortVal] = useState<ISortItem>(selectedFieldsInitialState.sortValue);
   const [selectTemplateFilterVal, setSelectTemplateFilterVal] = useState<IFilterItem[]>(selectTemplateFilterInitState);
   const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>(globalSelectedFieldIds as string[]);
+
+  // New field
+  const [isNewFieldOpen, setIsNewFieldOpen] = useState<boolean>(false);
 
   const { data: fieldData } = useGetAllFieldsQuery();
 
@@ -160,7 +164,15 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
     else return false;
   };
 
-  const renderLinkedProducts = () => {
+  const handleNewFieldOpen = () => {
+    setIsNewFieldOpen(true);
+  };
+
+  const handleNewFieldClose = () => {
+    setIsNewFieldOpen(false);
+  };
+
+  const renderAvailableFields = () => {
     return (
       <div>
         <div className="select-template-modal" style={{ marginBottom: '24px' }}>
@@ -198,6 +210,12 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           isRowSelectable={handleDisabledFields}
           hideFooterSelectedRowCount={true}
         />
+        <NewFieldDialog
+          isOpen={isNewFieldOpen}
+          handleClose={handleNewFieldClose}
+          handleSubmit={handleNewFieldClose}
+          isLoading={false}
+        />
       </div>
     );
   };
@@ -232,7 +250,6 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           disableElevation
           height={40}
           onClick={handleModalSubmit}
-          startIcon={<ArrowBack />}
         >
           Done
         </StyleOutlinedBtn>
@@ -241,7 +258,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           variant="contained"
           disableElevation
           height={40}
-          onClick={handleModalClose}
+          onClick={handleNewFieldOpen}
         >
           Create new submission field
         </StyledCategoryBtn>
@@ -261,7 +278,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
       dialogWidth={980}
     >
       {renderDialogTitle()}
-      <StyledDialogContent className="dialog-content">{renderLinkedProducts()}</StyledDialogContent>
+      <StyledDialogContent className="dialog-content">{renderAvailableFields()}</StyledDialogContent>
       <DialogActions style={{ padding: '12px 32px 32px' }}>{renderActionButtons()}</DialogActions>
     </StyledDialog>
   );
