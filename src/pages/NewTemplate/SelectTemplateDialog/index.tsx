@@ -83,7 +83,6 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   const [
     createField,
     {
-      data: createFieldResponse,
       isSuccess: isCreateFieldSuccess,
       error: createFieldError,
       reset: resetCreateField,
@@ -176,7 +175,7 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
   };
 
   const handleFieldSubmit = (newTemplateData: INewFieldDialogData) => {
-    createField({ ...newTemplateData, mandatory: false, fieldStatus: 'inactive' });
+    createField({ ...newTemplateData, mandatory: false, fieldStatus: 'active' });
   };
 
   const handleSnackbarClose = () => {
