@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import moment from 'moment';
 
 import { IApiResponse, IFilterItem, ISortItem, IViewResponse } from '../types';
-import { IAddTemplateStep, IAddTemplateStepResponse, ICampaign, ICreateCampaignRequest, ICreateSubmissionTemplate, ICreateSubmissionTemplateResponse, IRemoveTemplateStep, ISubmissionDetailsResponse, IUpdateCampaignRequest, IUpdateSubmissionTemplate, IUpdateSubmissionTemplateResponse } from './types';
+import { IAddTemplateStep, IAddTemplateStepResponse, ICampaign, ICreateCampaignRequest, ICreateSubmissionTemplate, ICreateSubmissionTemplateResponse, ICreateTemplateField, ICreateTemplateFieldResponse, IRemoveTemplateStep, ISubmissionDetailsResponse, IUpdateCampaignRequest, IUpdateSubmissionTemplate, IUpdateSubmissionTemplateResponse } from './types';
 
 export const tasksApi = createApi({
   reducerPath: 'tasksApi',
@@ -75,6 +75,23 @@ export const submissionsMicroService = createApi({
       query: () => {
         return {
           url: `/Field?limit=-1`,
+          method: 'GET',
+        };
+      },
+    }),
+    createField: builder.mutation<ICreateTemplateFieldResponse, ICreateTemplateField>({
+      query: (arg) => {
+        return {
+          url: `/Field/create`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
+    refreshFields: builder.query<void, void>({
+      query: () => {
+        return {
+          url: `/Field/indexer/run`,
           method: 'GET',
         };
       },
@@ -179,4 +196,4 @@ export const submissionsMicroService = createApi({
 });
 
 export const { useGetAllTaskFilterQuery, useGetTasksQuery } = tasksApi;
-export const { useAddTemplateStepMutation, useCreateCampaignMutation, useCreateSubmissionTemplateMutation, useGetFieldsQuery, useGetSubmissionInfoQuery, useGetSubmissionTemplateInfoQuery, useGetSubmissionTemplatesQuery, useLazyRefreshCampaignsQuery, useLazyRefreshTemplatesQuery, useRemoveTemplateStepMutation, useUpdateCampaignMutation, useUpdateTemplateMutation } = submissionsMicroService;
+export const { useAddTemplateStepMutation, useCreateCampaignMutation, useCreateFieldMutation, useCreateSubmissionTemplateMutation, useGetFieldsQuery, useGetSubmissionInfoQuery, useGetSubmissionTemplateInfoQuery, useGetSubmissionTemplatesQuery, useLazyRefreshCampaignsQuery, useLazyRefreshFieldsQuery, useLazyRefreshTemplatesQuery, useRemoveTemplateStepMutation, useUpdateCampaignMutation, useUpdateTemplateMutation } = submissionsMicroService;

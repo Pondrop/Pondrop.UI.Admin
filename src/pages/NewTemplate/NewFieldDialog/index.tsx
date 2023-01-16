@@ -1,12 +1,14 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { DialogActions, DialogContent, DialogTitle, IconButton, SelectChangeEvent } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Info } from '@mui/icons-material';
 
 // Constants
 import { fieldTypeData, newFieldTitles, templateFocusObjectData, templateTypeData } from './constants';
 
 // Styles
 import {
+  MessageWrapper,
+  RowAlignWrapper,
   SpaceBetweenDiv,
   StyledCategoryBtn,
   StyledDialogWSelect,
@@ -23,7 +25,13 @@ import { INewFieldProps } from './types';
 // Utils
 import { renderLoader } from 'pages/utils';
 
-const NewFieldDialog = ({ isOpen, handleClose }: INewFieldProps): JSX.Element => {
+const NewFieldDialog = ({
+  isOpen,
+  handleClose,
+  handleSubmit,
+  errorMessage,
+  isLoading,
+}: INewFieldProps): JSX.Element => {
   // Select component position variables
   const selectTemplateComponent = useRef<HTMLInputElement>(null);
   const [templatePosition, setTemplatePosition] = useState<DOMRect>({} as DOMRect);
@@ -64,6 +72,12 @@ const NewFieldDialog = ({ isOpen, handleClose }: INewFieldProps): JSX.Element =>
       setPickerListValue('');
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    setFocusObject('');
+    setMaxIntegerValue('');
+    setPickerListValue('');
+  }, [fieldType]);
 
   const handleSelectTemplateTypeClose = () => {
     setIsSelectTemplateOpen(false);
@@ -118,14 +132,26 @@ const NewFieldDialog = ({ isOpen, handleClose }: INewFieldProps): JSX.Element =>
   };
 
   const handleModalSubmit = () => {
-    handleModalClose();
-    // handleSubmit({
-    //   title: templateTitle,
-    //   type: TEMPLATE_TYPE[templateType as keyof typeof TEMPLATE_TYPE],
-    //   initiatedBy: TEMPLATE_INITIATED_BY[templateInitiatedBy as keyof typeof TEMPLATE_INITIATED_BY],
-    //   description: templateDescription,
-    //   focus: FOCUS_TYPE[templateFocusObject as keyof typeof FOCUS_TYPE],
-    // });
+    const itemTypeValue = fieldType === 'search' || fieldType === 'focus' ? focusObject : 'unknown';
+    const pickerValuesArray = pickerListValue.split(',').map((pickerVal) => pickerVal.trim());
+    handleSubmit({
+      templateType,
+      label: fieldLabel,
+      fieldType: fieldType,
+      itemType: itemTypeValue,
+      maxValue: maxIntegerValue === '' ? null : Number(maxIntegerValue),
+      pickerValues: pickerValuesArray,
+    });
+  };
+
+  const getCreateDisabled = () => {
+    let isDisabled = false;
+    if (templateType === '' || fieldLabel === '' || fieldType === '') isDisabled = true;
+    if (fieldType === 'focus' || fieldType === 'search') isDisabled = focusObject === '';
+    if (fieldType === 'integer' || fieldType === 'multilineText' || fieldType === 'text')
+      isDisabled = maxIntegerValue === '';
+    if (fieldType === 'picker') isDisabled = pickerListValue === '';
+    return isDisabled;
   };
 
   const renderCreateTemplateField = () => {
@@ -298,8 +324,9 @@ const NewFieldDialog = ({ isOpen, handleClose }: INewFieldProps): JSX.Element =>
           <StyledTextInput
             id={`${newFieldTitles[4].field}-input`}
             margin="none"
+            type="number"
             variant="outlined"
-            value={maxIntegerValue}
+            value={maxIntegerValue ? Number(maxIntegerValue) : ''}
             onChange={handleMaxValueOnChange}
             placeholder={newFieldTitles[4].placeholder}
             sx={{ marginBottom: '24px' }}
@@ -350,24 +377,35 @@ const NewFieldDialog = ({ isOpen, handleClose }: INewFieldProps): JSX.Element =>
   const renderActionButtons = () => {
     return (
       <SpaceBetweenDiv withmargin={false} style={{ width: '100%' }}>
-        <StyleOutlinedBtn
-          data-testid="select-template-done-btn"
-          className="button-with-icon"
-          variant="outlined"
-          disableElevation
-          height={40}
-          onClick={handleModalSubmit}
-        >
-          Cancel
-        </StyleOutlinedBtn>
+        <RowAlignWrapper>
+          <StyleOutlinedBtn
+            data-testid="select-template-done-btn"
+            className="button-with-icon"
+            variant="outlined"
+            disableElevation
+            height={40}
+            onClick={handleModalClose}
+          >
+            Cancel
+          </StyleOutlinedBtn>
+          {errorMessage !== '' && !isLoading && (
+            <MessageWrapper color="red">
+              <div className="info-icon" style={{ margin: '0 4px 0 8px' }}>
+                <Info />
+              </div>
+              {errorMessage}
+            </MessageWrapper>
+          )}
+        </RowAlignWrapper>
         <StyledCategoryBtn
           data-testid="select-template-new-btn"
           variant="contained"
           disableElevation
           height={40}
-          onClick={handleModalClose}
+          onClick={handleModalSubmit}
+          disabled={getCreateDisabled() || isLoading}
         >
-          Create
+          {isLoading ? renderLoader('34px', 17, 6) : 'Create'}
         </StyledCategoryBtn>
       </SpaceBetweenDiv>
     );

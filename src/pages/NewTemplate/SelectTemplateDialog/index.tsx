@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DialogActions, DialogTitle, IconButton } from '@mui/material';
+import { Alert, DialogActions, DialogTitle, IconButton, Snackbar } from '@mui/material';
 import {
   GridFilterModel,
   GridRowParams,
@@ -19,7 +19,12 @@ import { availableFieldsColumns } from 'components/Grid/constants';
 
 // Store / APIs
 import { useAppDispatch, useAppSelector } from 'store';
-import { useGetFieldsQuery as useGetAllFieldsQuery } from 'store/api/tasks/api';
+import {
+  submissionsMicroService,
+  useCreateFieldMutation,
+  useGetFieldsQuery as useGetAllFieldsQuery,
+  useLazyRefreshFieldsQuery,
+} from 'store/api/tasks/api';
 import { useGetAllFieldFilterQuery, useGetFieldsQuery } from 'store/api/templates/api';
 import { selectedFieldsInitialState } from 'store/api/templates/initialState';
 import { selectTemplates, setNewTemplateSelectedFieldIds, setSelectedFields } from 'store/api/templates/slice';
@@ -30,6 +35,7 @@ import { StyledDialogContent } from './styles';
 
 // Types
 import { IFacetValue, IFilterItem, ISortItem, IValue } from 'store/api/types';
+import { INewFieldDialogData } from '../NewFieldDialog/types';
 import { ISelectTemplatesProps } from './types';
 
 // Utils
@@ -53,10 +59,13 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
 
   // New field
   const [isNewFieldOpen, setIsNewFieldOpen] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string>('');
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
+  // APIs
   const { data: fieldData } = useGetAllFieldsQuery();
 
-  const { data, isFetching } = useGetFieldsQuery({
+  const { data, isFetching, refetch } = useGetFieldsQuery({
     searchString: selectTemplateSearchVal,
     sortValue: selectTemplateSortVal,
     filterItem: selectTemplateFilterVal,
@@ -71,32 +80,25 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
     { skip: !gridData.length },
   );
 
+  const [
+    createField,
+    {
+      data: createFieldResponse,
+      isSuccess: isCreateFieldSuccess,
+      error: createFieldError,
+      reset: resetCreateField,
+      isLoading: isCreateFieldLoading,
+    },
+  ] = useCreateFieldMutation();
+
+  const [refreshFields, { isFetching: isRefreshFetching, isSuccess: isRefreshSuccess }] = useLazyRefreshFieldsQuery();
+
   const [rowCount, setRowCount] = useState<number>(0);
 
   const initialGridState = {
     pagination: { pageSize },
     sorting: { sortModel: [{ field: 'fieldStatus', sort: 'asc' as GridSortDirection }] },
   };
-
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectTemplateSearchVal('');
-      setSelectTemplateSortVal(selectedFieldsInitialState.sortValue);
-    } else {
-      setGridData(data?.value ?? []);
-      setRowCount(data?.['@odata.count'] ?? 0);
-      const tempMenuData = {
-        label: filterOptionsData?.['@search.facets']?.label,
-        fieldType: filterOptionsData?.['@search.facets']?.fieldType,
-        maxValue: filterOptionsData?.['@search.facets']?.maxValue,
-      } as IFacetValue;
-      setMenuData(tempMenuData);
-    }
-  }, [data, filterOptionsData, isOpen]);
-
-  useEffect(() => {
-    if (isOpen) setSelectedFieldIds(globalSelectedFieldIds as string[]);
-  }, [isOpen]);
 
   const handleModalClose = () => {
     handleClose();
@@ -170,7 +172,60 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
 
   const handleNewFieldClose = () => {
     setIsNewFieldOpen(false);
+    setErrMsg('');
   };
+
+  const handleFieldSubmit = (newTemplateData: INewFieldDialogData) => {
+    createField({ ...newTemplateData, mandatory: false, fieldStatus: 'inactive' });
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    resetCreateField();
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectTemplateSearchVal('');
+      setSelectTemplateSortVal(selectedFieldsInitialState.sortValue);
+    } else {
+      setGridData(data?.value ?? []);
+      setRowCount(data?.['@odata.count'] ?? 0);
+      const tempMenuData = {
+        label: filterOptionsData?.['@search.facets']?.label,
+        fieldType: filterOptionsData?.['@search.facets']?.fieldType,
+        maxValue: filterOptionsData?.['@search.facets']?.maxValue,
+      } as IFacetValue;
+      setMenuData(tempMenuData);
+    }
+  }, [data, filterOptionsData, isOpen]);
+
+  useEffect(() => {
+    if (isOpen) setSelectedFieldIds(globalSelectedFieldIds as string[]);
+  }, [isOpen]);
+
+  useEffect(() => {
+    setIsSnackbarOpen(isCreateFieldSuccess);
+    if (isCreateFieldSuccess) {
+      handleNewFieldClose();
+      refreshFields();
+    }
+  }, [isCreateFieldSuccess]);
+
+  // When refresh categories is called and is finished, reset API and refetch data after 7s
+  // 7s was determined to be the time it takes to get the correct values from the search index
+  useEffect(() => {
+    if (!isRefreshFetching && isRefreshSuccess) {
+      setTimeout(() => {
+        dispatch(submissionsMicroService.util.resetApiState());
+        refetch();
+      }, 7000);
+    }
+  }, [isRefreshFetching, isRefreshSuccess]);
+
+  useEffect(() => {
+    if (createFieldError && 'data' in createFieldError) setErrMsg(String(createFieldError?.data));
+  }, [createFieldError]);
 
   const renderAvailableFields = () => {
     return (
@@ -210,11 +265,22 @@ const SelectTemplateDialog = ({ isOpen, handleClose }: ISelectTemplatesProps): J
           isRowSelectable={handleDisabledFields}
           hideFooterSelectedRowCount={true}
         />
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={isSnackbarOpen}
+          onClose={handleSnackbarClose}
+          autoHideDuration={3000}
+        >
+          <Alert severity="success" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+            New template field created successfully
+          </Alert>
+        </Snackbar>
         <NewFieldDialog
           isOpen={isNewFieldOpen}
           handleClose={handleNewFieldClose}
-          handleSubmit={handleNewFieldClose}
-          isLoading={false}
+          handleSubmit={handleFieldSubmit}
+          isLoading={isCreateFieldLoading}
+          errorMessage={errMsg}
         />
       </div>
     );

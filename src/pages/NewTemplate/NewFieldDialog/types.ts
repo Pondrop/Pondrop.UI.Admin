@@ -1,10 +1,11 @@
 // Data passed when submitting
 export interface INewFieldDialogData {
-  title: string;
-  type: string;
-  initiatedBy: string;
-  description: string;
-  focus: string;
+  label: string;
+  templateType: string;
+  fieldType: string;
+  itemType: string;
+  maxValue: number | null;
+  pickerValues: string[];
 }
 
 // Props passed to New Template modal
