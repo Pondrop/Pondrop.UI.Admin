@@ -134,7 +134,7 @@ const NewTemplateDialog = ({
     });
   };
 
-  const renderCreateCategory = () => {
+  const renderCreateTemplate = () => {
     return (
       <div>
         <div>
@@ -384,7 +384,7 @@ const NewTemplateDialog = ({
       dialogWidth={560}
     >
       {renderDialogTitle()}
-      <DialogContent className="dialog-content">{renderCreateCategory()}</DialogContent>
+      <DialogContent className="dialog-content">{renderCreateTemplate()}</DialogContent>
       <DialogActions className="dialog-actions">{renderActionButtons()}</DialogActions>
     </StyledDialogWSelect>
   );

@@ -178,3 +178,18 @@ export interface IUpdateCampaignRequest {
   campaignStatus: string;
   publicationlifecycleId?: string;
 }
+
+export interface ICreateTemplateField {
+  label: string;
+  templateType: string;
+  fieldType: string;
+  itemType: string;
+  maxValue: number | null;
+  pickerValues: string[];
+  mandatory: boolean;
+  fieldStatus: string;
+}
+
+export interface ICreateTemplateFieldResponse extends ICreateTemplateField {
+  id: string;
+}

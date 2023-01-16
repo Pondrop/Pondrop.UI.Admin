@@ -386,6 +386,8 @@ export const StyledTextInput = styled(TextField)`
       color: #72787e;
       opacity: 1;
     }
+
+    ${({ disabled }) => `background-color: ${disabled ? '#f0f0f0' : 'transparent'}`}
   }
 
   .MuiOutlinedInput-root,.MuiPaper-root-MuiDialog-paper {
@@ -471,6 +473,8 @@ export const StyledSelect = styled(Select, {
       border: 1px solid rgba(0, 0, 0, 0.24) !important;
       border-radius: 8px !important;
     `}
+
+    ${({ disabled }) => `background-color: ${disabled ? '#f0f0f0' : 'transparent'}`}
   }
 `;
 
