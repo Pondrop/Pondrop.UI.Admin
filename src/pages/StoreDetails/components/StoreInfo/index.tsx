@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { IconButton } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 
+//Components
+import EditStoreDialog from '../EditStoreDialog';
+
 // Constants
 import { storeTitles } from './constants';
 
@@ -11,12 +14,34 @@ import { RowAlignWrapper, SpaceBetweenDiv, StyledCard, StyledCardTitle, StyledTa
 // Types
 import { IValue } from 'store/api/types';
 import { ITabPanelProps } from 'pages/types';
+import { IInitialValues } from '../EditStoreDialog/types';
 
 const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => {
   const [storeInfo, setStoreInfo] = useState<IValue>({});
+  const [initialStoreValues, setInitialStoreValues] = useState<IInitialValues>({} as IInitialValues);
+  const [isEditStoreModalOpen, setIsEditStoreModalOpen] = useState<boolean>(false);
+
+  const handleEditStoreModalOpen = () => {
+    setIsEditStoreModalOpen(true);
+  };
+
+  const handleEditStoreModalClose = () => {
+    setIsEditStoreModalOpen(false);
+  };
 
   useEffect(() => {
+    const retailer = data?.retailer as unknown as IValue;
     setStoreInfo(data ?? {});
+    setInitialStoreValues({
+      isCommunityStore: (data?.isCommunityStore as boolean) ?? false,
+      retailer: { name: retailer.name as string },
+      name: data?.name as string,
+      addressLine1: data?.addressLine1 as string,
+      suburb: data?.suburb as string,
+      state: data?.state as string,
+      postcode: data?.postcode as string,
+      location: `${data?.latitude}, ${data?.longitude}` as string,
+    });
   }, [data]);
 
   const renderStoreDetails = () => {
@@ -75,7 +100,7 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
           <StyledCardTitle variant="h6" gutterBottom>
             <SpaceBetweenDiv withmargin={false}>
               Details
-              <IconButton aria-label="edit" size="small">
+              <IconButton aria-label="edit" size="small" onClick={handleEditStoreModalOpen}>
                 <EditOutlined fontSize="inherit" />
               </IconButton>
             </SpaceBetweenDiv>
@@ -91,6 +116,13 @@ const StoreInfoPanel = ({ value, index, data }: ITabPanelProps): JSX.Element => 
           <RowAlignWrapper></RowAlignWrapper>
         </StyledCard>
       </RowAlignWrapper>
+      <EditStoreDialog
+        isOpen={isEditStoreModalOpen}
+        handleClose={handleEditStoreModalClose}
+        handleSubmit={handleEditStoreModalClose}
+        isLoading={false}
+        initialValue={initialStoreValues}
+      />
     </StyledTabContent>
   );
 };

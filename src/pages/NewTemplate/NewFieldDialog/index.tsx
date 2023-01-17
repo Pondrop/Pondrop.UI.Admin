@@ -379,8 +379,7 @@ const NewFieldDialog = ({
       <SpaceBetweenDiv withmargin={false} style={{ width: '100%' }}>
         <RowAlignWrapper>
           <StyleOutlinedBtn
-            data-testid="select-template-done-btn"
-            className="button-with-icon"
+            data-testid="new-template-cancel-btn"
             variant="outlined"
             disableElevation
             height={40}
@@ -398,7 +397,7 @@ const NewFieldDialog = ({
           )}
         </RowAlignWrapper>
         <StyledCategoryBtn
-          data-testid="select-template-new-btn"
+          data-testid="new-template-create-btn"
           variant="contained"
           disableElevation
           height={40}
