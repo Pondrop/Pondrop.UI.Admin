@@ -7,7 +7,7 @@ import parse from 'autosuggest-highlight/parse';
 
 // Store / APIs
 import { useAppDispatch } from 'store';
-import { categoriesApi, useGetCategoriesQuery } from 'store/api/categories/api';
+import { categoriesApi, useGetSuggestedCategoriesQuery } from 'store/api/categories/api';
 
 // Styles
 import { StyledPaper, StyledPopper, StyledTextField } from './styles';
@@ -26,11 +26,9 @@ const TextAutocomplete = ({ onOptionSelect, isModalOpen, disabledOptions = [] }:
 
   const dispatch = useAppDispatch();
 
-  const { data, isFetching } = useGetCategoriesQuery(
+  const { data, isFetching } = useGetSuggestedCategoriesQuery(
     {
       searchString: searchValue,
-      prevPageItems: 0,
-      pageSize: 100,
     },
     { skip: searchValue.length < 3 },
   );
