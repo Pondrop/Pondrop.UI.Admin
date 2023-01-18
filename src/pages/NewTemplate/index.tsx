@@ -199,8 +199,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       initialSelectedIds.push(matchField?.id as string);
     });
 
-    setModalTitle(data?.steps[1]?.title ?? '');
-    setModalInstructions((data?.steps[1]?.instructions as string) ?? '');
     dispatch(setNewTemplateSelectedFieldIds(initialSelectedIds));
     dispatch(setSelectedFields(initialSelectedFields));
     setRequestData((oldValue) => ({
@@ -208,6 +206,17 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
       submissionId: state?.id,
     }));
   }, [data, fieldData]);
+
+  useEffect(() => {
+    setModalTitle(data?.steps[1]?.title ?? '');
+    setModalInstructions((data?.steps[1]?.instructions as string) ?? '');
+
+    setRequestData((oldValue) => ({
+      ...oldValue,
+      title: data?.steps[1]?.title ?? '',
+      instructions: (data?.steps[1]?.instructions as string) ?? '',
+    }));
+  }, [data]);
 
   useEffect(() => {
     if (isAddTemplateStepSuccess && !isAddTemplateStepLoading) {
