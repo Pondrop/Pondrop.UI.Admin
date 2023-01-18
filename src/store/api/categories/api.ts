@@ -44,6 +44,16 @@ export const categoriesApi = createApi({
         };
       },
     }),
+    getSuggestedCategories: builder.query<IApiResponse, { searchString: string }>({
+      query: (arg) => {
+        const { searchString } = arg;
+
+        return {
+          url: `/indexes/cosmosdb-index-categorygroup/docs/suggest?api-version=2021-04-30-Preview&search=${searchString ? encodeURIComponent(searchString) : '*'}&$count=true&$skip=0&$top=100&suggesterName=sg1&$select=*`,
+          method: 'GET',
+        };
+      },
+    }),
     getCategoryInfo: builder.query<IApiResponse, { categoryField: string, categoryId: string }>({
       query: (arg) => {
         const { categoryField, categoryId } = arg;
@@ -113,5 +123,5 @@ export const categoriesMicroService = createApi({
   }),
 });
 
-export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery, useGetParentCategoriesQuery } = categoriesApi;
+export const { useGetAllCategoriesFilterQuery, useGetCategoriesQuery, useGetCategoryInfoQuery, useGetParentCategoriesQuery, useGetSuggestedCategoriesQuery } = categoriesApi;
 export const { useCreateCategoryMutation, useCreateCategoryGroupingMutation, useLazyRefreshCategoriesQuery } = categoriesMicroService;
