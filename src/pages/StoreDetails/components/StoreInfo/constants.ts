@@ -1,6 +1,10 @@
 // Add Store Details field helper values
 export const storeTitles = [
   {
+    field: 'isCommunityStore',
+    label: 'Community store'
+  },
+  {
     field: 'retailer',
     label: 'Provider'
   },
@@ -22,7 +26,7 @@ export const storeTitles = [
   },
   {
     field: 'postcode',
-    label: 'Post Code'
+    label: 'Post code'
   },
   {
     field: 'location',

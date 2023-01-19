@@ -1,5 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+// Types
 import { IApiResponse, IFilterItem, ISortItem } from '../types';
+import { IFullStoreInfo, IUpdateAddress, IUpdateStore, IUpdateStoreResponse } from './types';
 
 export const storeApi = createApi({
   reducerPath: 'storeApi',
@@ -73,4 +76,54 @@ export const storeApi = createApi({
   }),
 });
 
+export const storesMicroService = createApi({
+  reducerPath: 'storesMicroService',
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: "https://store-service.ashyocean-bde16918.australiaeast.azurecontainerapps.io",
+    prepareHeaders: (headers) => {
+      headers.set('Content-Type', 'application/json');
+      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDlkMzcwOS1jMmY5LTRkMDYtOGVhNy04NTc5OTBjYTdlN2IiLCJlbWFpbCI6ImFkbWluQHhhbS5jb20uYXUiLCJ0eXAiOiJBZG1pbiIsIm5iZiI6MTY2MzA0NjEzMywiZXhwIjoxNjk0NTgyMTMzLCJpYXQiOjE2NjMwNDYxMzN9.zMyjBMXOR6wVAol0UcZC9jdN6p9M2eSJekBJzamXwbs');
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getFullStoreInfo: builder.query<IFullStoreInfo, { storeId: string }>({
+      query: (arg) => {
+        const { storeId } = arg;
+        return {
+          url: `/Store/${storeId}`,
+          method: 'GET'
+        };
+      },
+    }),
+    updateStore: builder.mutation<IUpdateStoreResponse, IUpdateStore>({
+      query: (arg) => {
+        return {
+          url: `/Store/update`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
+    updateAddress: builder.mutation<IUpdateStoreResponse, IUpdateAddress>({
+      query: (arg) => {
+        return {
+          url: `/Store/address/update`,
+          method: 'POST',
+          body: JSON.stringify(arg),
+        };
+      },
+    }),
+    refreshStores: builder.query<void, void>({
+      query: () => {
+        return {
+          url: `/Store/indexer/run`,
+          method: 'GET',
+        };
+      },
+    }),
+  }),
+});
+
 export const { useGetAllStoreFilterQuery, useGetStoreInfoQuery, useGetStoresQuery } = storeApi;
+export const { useGetFullStoreInfoQuery, useLazyRefreshStoresQuery, useUpdateAddressMutation, useUpdateStoreMutation } = storesMicroService;

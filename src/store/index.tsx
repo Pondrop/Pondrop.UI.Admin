@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import { campaignsApi } from './api/campaigns/api';
 import { categoriesApi, categoriesMicroService } from './api/categories/api';
-import { storeApi } from './api/stores/api';
+import { storeApi, storesMicroService } from './api/stores/api';
 import { productsApi, productsMicroService } from './api/products/api';
 import { tasksApi, submissionsMicroService } from './api/tasks/api';
 import { templatesApi } from './api/templates/api';
@@ -30,6 +30,7 @@ export const store = configureStore({
     [categoriesMicroService.reducerPath]: categoriesMicroService.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [storeApi.reducerPath]: storeApi.reducer,
+    [storesMicroService.reducerPath]: storesMicroService.reducer,
     [tasksApi.reducerPath]: tasksApi.reducer,
     [submissionsMicroService.reducerPath]: submissionsMicroService.reducer,
     [productsMicroService.reducerPath]: productsMicroService.reducer,
@@ -48,7 +49,8 @@ export const store = configureStore({
       .concat(submissionsMicroService.middleware)
       .concat(campaignsApi.middleware)
       .concat(productsMicroService.middleware)
-      .concat(templatesApi.middleware),
+      .concat(templatesApi.middleware)
+      .concat(storesMicroService.middleware),
 });
 
 // types
