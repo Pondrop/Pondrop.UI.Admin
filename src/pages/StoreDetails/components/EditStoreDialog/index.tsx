@@ -70,13 +70,16 @@ const EditStoreDialog = ({
   };
 
   const handleModalSubmit = () => {
-    handleModalClose();
-    // handleSubmit({
-    //   name: productName,
-    //   barcodeNumber: barcode,
-    //   shortDescription: description,
-    //   categoryIds: categories,
-    // });
+    handleSubmit({
+      name: storeName,
+      isCommunityStore: !!initialValue?.isCommunityStore,
+      retailer: initialValue?.retailer,
+      addressLine1: storeAddress,
+      suburb: city,
+      state,
+      postcode: postCode,
+      location: geolocation,
+    });
   };
 
   const renderFields = () => {
@@ -191,7 +194,6 @@ const EditStoreDialog = ({
             value={geolocation}
             onChange={handleGeolocationOnChange}
             placeholder={storeTitles[7].label}
-            sx={{ marginBottom: '12px' }}
           />
         </div>
       </div>

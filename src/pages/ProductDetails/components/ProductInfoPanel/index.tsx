@@ -116,19 +116,6 @@ const ProductInfoPanel = ({ value, index, data }: IProductDetailTabProps): JSX.E
         <span className="row-value multiline card-details" style={{ maxWidth: '100%' }}>
           {productInfo?.shortDescription ?? 'N/A'}
         </span>
-        {/* <ul style={{ paddingInlineStart: '16px' }}>
-          <li className="row-value card-details">Rich in calcium</li>
-          <li className="row-value card-details">Natural source of protein</li>
-          <li className="row-value card-details">No artificial additives or preservatives</li>
-        </ul>
-        <span className="row-value card-details">Enjoy as part of a healthy and balanced diet</span>
-        <span className="row-value card-details">Australian milk</span>
-        <span className="row-value card-details">Fresh milk</span>
-        <span className="row-value card-details">From Australian farmers</span>
-        <span className="row-value card-details">Rich in calcium</span>
-        <span className="row-value card-details">Natural source of protein</span>
-        <span className="row-value card-details">High quality.</span>
-        <span className="row-value card-details">Nutritious and delicious milk.</span> */}
       </ColAlignDiv>
     );
   };

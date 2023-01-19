@@ -1,7 +1,5 @@
-import { IProductDialogData } from "store/api/products/types";
-
 // Add Product initial values type
-export interface IInitialValues {
+export interface IEditStoreData {
   isCommunityStore: boolean;
   retailer: { name: string; };
   name: string;
@@ -16,7 +14,7 @@ export interface IInitialValues {
 export interface IAddProductProps {
   isOpen: boolean;
   handleClose: () => void;
-  handleSubmit: (productData: IProductDialogData) => void;
+  handleSubmit: (storeData: IEditStoreData) => void;
   isLoading?: boolean;
-  initialValue?: IInitialValues;
+  initialValue: IEditStoreData;
 }
