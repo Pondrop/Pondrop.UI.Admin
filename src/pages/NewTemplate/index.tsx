@@ -230,12 +230,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setModalTitle(data?.steps[1]?.title ?? '');
     setModalInstructions((data?.steps[1]?.instructions as string) ?? '');
-
-    setRequestData((oldValue) => ({
-      ...oldValue,
-      title: data?.steps[1]?.title ?? '',
-      instructions: (data?.steps[1]?.instructions as string) ?? '',
-    }));
   }, [data]);
 
   useEffect(() => {
