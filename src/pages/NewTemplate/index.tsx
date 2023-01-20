@@ -216,7 +216,7 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
     initialFields.forEach((initField) => {
       const matchField = fieldData?.items.find((field) => field.id === initField.id);
       if (matchField) {
-        initialSelectedFields.push(matchField ?? {});
+        initialSelectedFields.push({ ...matchField, mandatory: !!initField.mandatory });
         initialSelectedIds.push(matchField?.id as string);
       }
     });
