@@ -113,11 +113,31 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   };
 
   const handleRemoveTemplates = () => {
-    setIsRemovingStep2(true);
-    removeTemplateStep({
-      id: data?.steps[1]?.id as string,
-      submissionTemplateId: state?.id,
-    });
+    if (data?.steps && data?.steps.length > 1) {
+      setIsRemovingStep2(true);
+      removeTemplateStep({
+        id: data?.steps[1]?.id as string,
+        submissionTemplateId: state?.id,
+      });
+    } else {
+      const fieldSteps = selectedFields.map((field) => {
+        return {
+          id: field?.id as string,
+          label: field?.label as string,
+          mandatory: field?.mandatory as boolean,
+          maxValue: field?.maxValue as number,
+        };
+      });
+      const requestBody = {
+        ...requestData,
+        isSummary: false,
+        title: modalTitle,
+        instructions: modalInstructions,
+        fieldDefinitions: fieldSteps,
+      };
+      addTemplateStep(requestBody);
+      setIsAddingFields(true);
+    }
   };
 
   const handleUpdateDraft = () => {
@@ -210,12 +230,6 @@ const NewTemplate: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     setModalTitle(data?.steps[1]?.title ?? '');
     setModalInstructions((data?.steps[1]?.instructions as string) ?? '');
-
-    setRequestData((oldValue) => ({
-      ...oldValue,
-      title: data?.steps[1]?.title ?? '',
-      instructions: (data?.steps[1]?.instructions as string) ?? '',
-    }));
   }, [data]);
 
   useEffect(() => {
